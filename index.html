@@ -188,25 +188,11 @@ h1{
 
 [hidden]{display:none!important}
 
-/* 放置在牌卡下方的返回提示列（非懸浮、不擋牌） */
-.screenshot-bar {
-  margin: 16px auto 8px;
-  background: rgba(126, 93, 149, 0.12);
-  border: 1.5px dashed var(--accent);
-  color: var(--accent-d);
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  padding: 12px 20px;
-  border-radius: 12px;
-  cursor: pointer;
+.screenshot-exit-area {
+  margin-top: 16px;
   display: none;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: background 0.15s;
 }
-.screenshot-bar:hover { background: rgba(126, 93, 149, 0.2); }
-.screenshot-bar:active { transform: scale(0.98); }
 
 .floating-toast {
   position: fixed;
@@ -335,13 +321,16 @@ footer{
     <div class="slot"><div class="ph">長生</div></div>
   </section>
 
-  <!-- 放置在牌卡下方的截圖模式返回提示列 -->
-  <div class="screenshot-bar" id="screenshot-bar" role="button">
-    <span>📷 進入截圖模式中 (點擊此處返回)</span>
+  <!-- 牌卡下方的返回按鈕與溫馨提示區塊 -->
+  <div class="screenshot-exit-area" id="screenshot-exit-area">
+    <div class="consultant-tip" style="margin-bottom: 12px;">*記得把結果傳給你的占卜師，讓他為你解讀：）</div>
+    <div>
+      <button class="btn btn-purple" id="exit-screenshot" type="button" style="font-size: 15px; padding: 10px 28px;">返回</button>
+    </div>
   </div>
 
   <div class="actions" id="actions" hidden>
-    <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解答：）</div>
+    <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解讀：）</div>
     <div class="action-row">
       <button class="action-btn" id="copy" type="button">複製結果文字</button>
       <button class="action-btn" id="save-img" type="button">截圖模式</button>
@@ -680,7 +669,7 @@ function enterScreenshotMode(){
   document.getElementById("snd-group").style.pointerEvents = "none";
   $a.style.opacity = "0";
   $a.style.pointerEvents = "none";
-  document.getElementById("screenshot-bar").style.display = "flex";
+  document.getElementById("screenshot-exit-area").style.display = "flex";
 }
 
 function exitScreenshotMode(){
@@ -688,7 +677,7 @@ function exitScreenshotMode(){
   document.getElementById("snd-group").style.pointerEvents = "auto";
   $a.style.opacity = "1";
   $a.style.pointerEvents = "auto";
-  document.getElementById("screenshot-bar").style.display = "none";
+  document.getElementById("screenshot-exit-area").style.display = "none";
 }
 
 $btnQuick.addEventListener("click", quickDraw);
@@ -697,7 +686,7 @@ $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
 $modalConfirm.addEventListener("click", confirmManualDraw);
 document.getElementById("copy").addEventListener("click", copy);
 document.getElementById("save-img").addEventListener("click", enterScreenshotMode);
-document.getElementById("screenshot-bar").addEventListener("click", exitScreenshotMode);
+document.getElementById("exit-screenshot").addEventListener("click", exitScreenshotMode);
 document.getElementById("share-site").addEventListener("click", shareWebsite);
 document.getElementById("reset-draw").addEventListener("click", resetDraw);
 
