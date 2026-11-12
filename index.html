@@ -5,9 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="googlebot" content="noindex, nofollow">
-<title>✨🔮紫靈牌卡 ✦ 線上占卜🔮✨</title>
+
+<!-- 讓 LINE 或其他通訊軟體預覽時顯示正確標題 -->
+<meta property="og:title" content="✨🔮紫靈牌卡 ✦ 線上占卜🔮✨">
+<meta property="og:description" content="請清空思緒、在心中默念問題，並選擇你的占卜方式">
+
+<title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg1:#fcf8fd; --bg2:#f3edf7; --glow:rgba(215,180,255,.45);
@@ -29,17 +34,18 @@ body{
 }
 main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
 
-/* 副標題設計 */
+/* 有質感的英文襯線體副標題 */
 .sub-title {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
   color: var(--accent-d);
-  font-size: 15px;
+  font-size: 16px;
+  font-style: italic;
   letter-spacing: 0.25em;
-  margin-bottom: 10px;
-  font-family: serif;
+  margin-bottom: 12px;
+  font-family: 'Playfair Display', "Noto Serif TC", serif;
 }
 .sub-title::before, .sub-title::after {
   content: "";
@@ -50,13 +56,13 @@ main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
   opacity: 0.6;
 }
 
-/* 主標題加粗 */
+/* 主標題：確保手機版不換行、自動縮放 */
 h1{
   font-weight: 700; 
-  font-size: clamp(28px, 6vw, 42px); 
-  letter-spacing: .25em; 
+  font-size: clamp(20px, 4.8vw, 40px); 
+  letter-spacing: .15em; 
   margin: 0 0 24px; 
-  padding-left: .25em;
+  white-space: nowrap;
 }
 
 /* 說明文字排版（支援空行） */
@@ -188,7 +194,7 @@ h1{
 
 <main>
   <div class="sub-title">Purpling Cards</div>
-  <h1>✨🔮 紫靈牌卡占卜 🔮✨</h1>
+  <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
   <p class="hint">嗨，歡迎你來到這裡。
 
 現在，請試著清空思緒、在心中默念你想獲得解答的問題，並選擇喜歡的占卜方式。</p>
@@ -331,34 +337,35 @@ function startBgm(){
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
     
-    const melodyNotes = [523.25, 659.25, 783.99, 880.00, 1046.50, 1318.51];
+    const healingScale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25, 783.99];
     
-    const playArpeggio = () => {
+    const playHealingNote = () => {
       if(mutedBgm || !bgmCtx) return;
       let t = bgmCtx.currentTime;
       
-      for(let i=0; i<4; i++){
-        const freq = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+      for(let i=0; i<3; i++){
+        const freq = healingScale[Math.floor(Math.random() * healingScale.length)];
         const osc = bgmCtx.createOscillator();
         const gain = bgmCtx.createGain();
         
         osc.type = 'sine';
         osc.frequency.value = freq;
         
-        const noteTime = t + (i * 0.4);
-        gain.gain.setValueAtTime(0, noteTime);
-        gain.gain.linearRampToValueAtTime(0.012, noteTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.2);
+        const noteTime = t + (i * 0.6);
+        gain.gain.setValueAtTime(0.0001, noteTime);
+        // 漸層淡入 (Fade In)：從 0 緩慢放大至舒服的音量 (0.02)
+        gain.gain.linearRampToValueAtTime(0.02, noteTime + 2.0);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 4.5);
         
         osc.connect(gain).connect(bgmCtx.destination);
         osc.start(noteTime);
-        osc.stop(noteTime + 2.5);
+        osc.stop(noteTime + 5.0);
       }
     };
 
-    playArpeggio();
+    playHealingNote();
     if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playArpeggio, 4000);
+    bgmInterval = setInterval(playHealingNote, 5500);
   }catch(e){}
 }
 
@@ -369,7 +376,7 @@ function stopBgm(){
 
 window.addEventListener('load', () => {
   if(!mutedBgm) {
-    setTimeout(startBgm, 500);
+    setTimeout(startBgm, 800);
   }
 });
 
