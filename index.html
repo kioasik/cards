@@ -13,6 +13,8 @@
 <title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+<!-- 引入 html2canvas 截圖套件 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   --bg1:#fcf8fd; --bg2:#f3edf7; --glow:rgba(215,180,255,.45);
@@ -275,6 +277,13 @@ h1{
 }
 .modal-actions{display:flex; justify-content:center; gap:14px; margin-top:24px}
 
+/* 專為截圖準備的專屬外框容器 (僅包含標題與牌卡結果) */
+#capture-container {
+  background: transparent;
+  padding: 10px 0;
+  border-radius: 16px;
+}
+
 footer{
   margin-top: 48px;
   font-size: 11.5px;
@@ -307,25 +316,31 @@ footer{
 <div class="floating-toast" id="toast" role="status"></div>
 
 <main>
-  <div class="sub-title">Purpling Cards</div>
-  <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
-  
-  <div id="welcome-section">
-    <p class="hint">嗨，歡迎你來到這裡。
+  <!-- 截圖專用包裝容器 (僅包含副標題、主標題與卡片結果) -->
+  <div id="capture-container">
+    <div class="sub-title">Purpling Cards</div>
+    <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
+    
+    <div id="welcome-section">
+      <p class="hint">嗨，歡迎你來到這裡。
 現在，請試著清空思緒、在心中默念你的問題，
 並選擇喜歡的占卜方式。</p>
-    
-    <div class="btn-group">
-      <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
-      <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
+      
+      <div class="btn-group">
+        <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
+        <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
+      </div>
     </div>
-  </div>
 
-  <section class="cards" id="cards" aria-live="polite">
-    <div class="slot"><div class="ph">主星</div></div>
-    <div class="slot"><div class="ph">輔星</div></div>
-    <div class="slot"><div class="ph">長生</div></div>
-  </section>
+    <section class="cards" id="cards" aria-live="polite">
+      <div class="slot"><div class="ph">主星</div></div>
+      <div class="slot"><div class="ph">輔星</div></div>
+      <div class="slot"><div class="ph">長生</div></div>
+    </section>
+
+    <!-- 占卜時間標記 (截圖時會自動顯示) -->
+    <div id="capture-time-tag" style="font-size:13px; color:var(--muted); letter-spacing:.1em; margin-top:20px;" hidden></div>
+  </div>
 
   <div class="actions" id="actions" hidden>
     <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解答：）</div>
@@ -426,7 +441,7 @@ const I = {
 
 const MAIN=[["紫微","尊貴・領導・統御"],["天府","穩重・庫藏・守成"],["天機","機智・謀略・變動"],["太陰","緩慢・收斂・累積"],["七殺","果決・孤勇・肅殺"],["破軍","突破・衝勁・開創"],["貪狼","慾望・桃花・多才"],["天梁","蔭庇・清高・化解"],["天同","福氣・小孩・享受"],["廉貞","交際・原則・感性"],["太陽","熱情・名氣・無私"],["武曲","執行力・剛毅・果決"],["天相","輔佐・連結・影響"],["巨門","口才・暗藏・蒐集"]];
 const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突發"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
-const LIFE=[["長生","萌芽・新生・希望",1],["沐浴","洗禮・不穩・桃花",2],["冠帶","成長・裝扮・展現",3],["臨官","事業・自立・上任",4],["帝旺","巔峰・強盛・權威",5],["衰","轉折・退守・沉澱",6],["病","疲憊・弱點・警訊",7],["死","終止・斷捨・放下",8],["墓","收藏・沉潛・積累",9],["絕","絕處・迷茫・轉機",10],["胎","孕育・潛伏・醞釀",11],["養","蓄養・等待・準備",12]];
+const LIFE=[["長生1","萌芽・新生・希望"],["沐浴2","洗禮・不穩・桃花"],["冠帶3","成長・裝扮・展現"],["臨官4","事業・自立・上任"],["帝旺5","巔峰・強盛・權威"],["衰6","轉折・退守・沉澱"],["病7","疲憊・弱點・警訊"],["死8","終止・斷捨・放下"],["墓9","收藏・沉潛・積累"],["絕10","絕處・迷茫・轉機"],["胎11","孕育・潛伏・醞釀"],["養12","蓄養・等待・準備"]];
 
 const SKY='<svg class="sky" viewBox="0 0 200 80" preserveAspectRatio="xMidYMax slice" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="100" cy="78" r="46"/><circle cx="100" cy="78" r="34" stroke-dasharray="2 4"/><path d="M100 32l40 69H60zM60 55h80l-40 69z" transform="translate(0 -24)"/><path d="M24 22l4 8 8 4-8 4-4 8-4-8-8-4 8-4zM170 14l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="currentColor" stroke="none"/><circle cx="46" cy="52" r="1.4" fill="currentColor"/><circle cx="154" cy="46" r="1.4" fill="currentColor"/><circle cx="70" cy="14" r="1.2" fill="currentColor"/><circle cx="132" cy="22" r="1.2" fill="currentColor"/><circle cx="184" cy="60" r="1.4" fill="currentColor"/><circle cx="14" cy="66" r="1.2" fill="currentColor"/><path d="M24 30L46 52M154 46l16-26" stroke-opacity=".6"/></svg>';
 
@@ -434,9 +449,10 @@ function rnd(n){try{const a=new Uint32Array(1),l=Math.floor(4294967296/n)*n;do{c
 const pick=a=>a[rnd(a.length)];
 
 function cardHTML(i,cat,s,delay){
+  const iconKey = s[0].replace(/[0-9]/g, '');
   return '<div class="slot"><div class="card t'+i+'" style="animation-delay:'+delay+'s">'+SKY+
     '<div class="head"><span class="cat">'+cat+'</span><span></span></div>'+
-    '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+I[s[0]]+'</svg></div>'+
+    '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+(I[iconKey]||I['紫微'])+'</svg></div>'+
     '<div class="name">'+s[0]+'</div><div class="kw">'+s[1]+'</div></div></div>';
 }
 
@@ -520,6 +536,7 @@ const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.g
 const $modal = document.getElementById("manual-modal");
 const $deckMain = document.getElementById("deck-main"), $deckAux = document.getElementById("deck-aux"), $deckLife = document.getElementById("deck-life");
 const $modalConfirm = document.getElementById("modal-confirm"), $modalCancel = document.getElementById("modal-cancel");
+const $timeTag = document.getElementById("capture-time-tag");
 
 let selectedMain = null, selectedAux = null, selectedLife = null;
 
@@ -536,12 +553,15 @@ function getFormattedTime() {
 function showResultView(){
   $welcome.hidden = true;
   $a.hidden = false;
+  $timeTag.textContent = `占卜時間：${drawTime}`;
+  $timeTag.hidden = false;
 }
 
 function resetDraw(){
   cur = null;
   $welcome.hidden = false;
   $a.hidden = true;
+  $timeTag.hidden = true;
   $c.innerHTML = '<div class="slot"><div class="ph">主星</div></div><div class="slot"><div class="ph">輔星</div></div><div class="slot"><div class="ph">長生</div></div>';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -665,186 +685,43 @@ async function shareWebsite(){
   }
 }
 
+// 使用 html2canvas 僅截取 #capture-container 範圍（完美避開右上角音效按鈕與底部動作按鈕）
 async function saveImage(){
   if(!cur) return;
-  const canvas = document.createElement('canvas');
-  const scale = 2;
-  canvas.width = 800 * scale;
-  canvas.height = 1100 * scale;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(scale, scale);
+  const target = document.getElementById("capture-container");
+  toast("正在產生圖片...");
+  
+  try {
+    const canvas = await html2canvas(target, {
+      scale: 2, // 2倍高畫質
+      useCORS: true,
+      backgroundColor: null, // 保留漸層背景
+      logging: false
+    });
 
-  const bgGrad = ctx.createLinearGradient(0, 0, 0, 1100);
-  bgGrad.addColorStop(0, '#fcf8fd');
-  bgGrad.addColorStop(1, '#f3edf7');
-  ctx.fillStyle = bgGrad;
-  ctx.fillRect(0, 0, 800, 1100);
-
-  ctx.save();
-  ctx.strokeStyle = 'rgba(157, 127, 178, 0.08)';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(400, 330, 240, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath(); ctx.arc(400, 330, 320, 0, Math.PI * 2); ctx.stroke();
-
-  ctx.fillStyle = 'rgba(157, 127, 178, 0.3)';
-  [[120, 100], [680, 150], [90, 850], [710, 800], [400, 950]].forEach(([px, py]) => {
-    ctx.beginPath(); ctx.arc(px, py, 2, 0, Math.PI*2); ctx.fill();
-  });
-  ctx.restore();
-
-  ctx.strokeStyle = '#e6deee';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(30, 30, 740, 1040);
-
-  ctx.fillStyle = '#7e5d95';
-  ctx.font = 'italic 20px "Playfair Display", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Purpling Cards', 400, 85);
-
-  ctx.fillStyle = '#423b4a';
-  ctx.font = 'bold 30px "Noto Serif TC", serif';
-  ctx.fillText('✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨', 400, 130);
-
-  ctx.fillStyle = '#84788f';
-  ctx.font = '15px "Noto Serif TC", serif';
-  ctx.fillText(`占卜時間：${drawTime}`, 400, 168);
-
-  ctx.strokeStyle = '#e6deee';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(150, 195);
-  ctx.lineTo(650, 195);
-  ctx.stroke();
-
-  const cardsData = [
-    { title: '主星', data: cur.m, tone: '#8a6fc0', hexTone: '#8a6fc0' },
-    { title: '輔星', data: cur.a, tone: '#c47a58', hexTone: '#c47a58' },
-    { title: '長生', data: cur.l, tone: '#5a9a82', hexTone: '#5a9a82' }
-  ];
-
-  const cardWidth = 220;
-  const cardHeight = 320;
-  const gapX = 40;
-  const row1Y = 225;
-  const row2Y = 575;
-  const row1StartX = (800 - (cardWidth * 2 + gapX)) / 2;
-  const row2StartX = (800 - cardWidth) / 2;
-
-  cardsData.forEach((c, idx) => {
-    let cx, cy;
-    if (idx < 2) {
-      cx = row1StartX + idx * (cardWidth + gapX);
-      cy = row1Y;
-    } else {
-      cx = row2StartX;
-      cy = row2Y;
-    }
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
-    ctx.clip();
-
-    const cardBgGrad = ctx.createLinearGradient(cx, cy, cx, cy + cardHeight);
-    cardBgGrad.addColorStop(0, c.hexTone === '#8a6fc0' ? '#f4f0fa' : c.hexTone === '#c47a58' ? '#faf3f0' : '#f0f7f4');
-    cardBgGrad.addColorStop(0.55, '#ffffff');
-    cardBgGrad.addColorStop(1, '#ffffff');
-    ctx.fillStyle = cardBgGrad;
-    ctx.fillRect(cx, cy, cardWidth, cardHeight);
-
-    ctx.strokeStyle = c.tone;
-    ctx.lineWidth = 0.8;
-    ctx.globalAlpha = 0.32;
-    ctx.strokeRect(cx, cy + cardHeight * 0.66, cardWidth, cardHeight * 0.34);
-    ctx.restore();
-
-    ctx.strokeStyle = '#e6deee';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
-    ctx.stroke();
-
-    ctx.fillStyle = c.tone;
-    ctx.font = 'bold 15px "Noto Serif TC", serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(c.title, cx + 20, cy + 35);
-
-    const iboxSize = 75;
-    const iboxX = cx + (cardWidth - iboxSize) / 2;
-    const iboxY = cy + 55;
-    
-    ctx.save();
-    ctx.beginPath();
-    ctx.roundRect(iboxX, iboxY, iboxSize, iboxSize, 18);
-    ctx.fillStyle = c.tone;
-    ctx.globalAlpha = 0.14;
-    ctx.fill();
-    ctx.globalAlpha = 1.0;
-    ctx.strokeStyle = c.tone;
-    ctx.globalAlpha = 0.28;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.restore();
-
-    // 在 Canvas 上精準渲染對應的 SVG 幾何插畫
-    const svgPathStr = I[c.data[0]] || I['紫微'];
-    ctx.save();
-    const iconScale = 42 / 64;
-    ctx.translate(iboxX + (iboxSize - 42) / 2, iboxY + (iboxSize - 42) / 2);
-    ctx.scale(iconScale, iconScale);
-    ctx.strokeStyle = c.tone;
-    ctx.fillStyle = c.tone;
-    ctx.lineWidth = 3;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    try {
-      const p = new Path2D(svgPathStr);
-      ctx.stroke(p);
-      ctx.fill(p);
-    } catch(e) {}
-    ctx.restore();
-
-    ctx.fillStyle = '#423b4a';
-    ctx.font = 'bold 36px "Noto Serif TC", serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 225);
-
-    ctx.fillStyle = c.tone;
-    ctx.font = 'bold 14.5px "Noto Serif TC", serif';
-    ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 272);
-  });
-
-  ctx.fillStyle = '#84788f';
-  ctx.font = '14px "Noto Serif TC", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 955);
-
-  ctx.font = '11px "Noto Serif TC", serif';
-  ctx.fillText('Made with 💜 by YAN-HAN', 400, 995);
-
-  canvas.toBlob(async (blob) => {
-    const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'png' });
-    
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file]
-        });
-        toast("分享成功 ✓");
-        return;
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.log("Share canceled or failed", err);
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'image/png' });
+      
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file] });
+          toast("分享成功 ✓");
+          return;
+        } catch (err) {
+          if (err.name !== 'AbortError') { console.log("Share canceled", err); }
+          return;
         }
-        return;
       }
-    }
-    const link = document.createElement('a');
-    link.download = file.name;
-    link.href = URL.createObjectURL(blob);
-    link.click();
-    toast("圖片已儲存 ✓");
-  }, 'image/png');
+      const link = document.createElement('a');
+      link.download = file.name;
+      link.href = URL.createObjectURL(blob);
+      link.click();
+      toast("圖片已儲存 ✓");
+    }, 'image/png');
+  } catch(err) {
+    console.error(err);
+    toast("儲存圖片失敗，請稍後再試");
+  }
 }
 
 $btnQuick.addEventListener("click", quickDraw);
