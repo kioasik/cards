@@ -82,20 +82,19 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
   main{padding-top:48px; padding-left:14px; padding-right:14px}
   .cards{
     display:grid;
-    grid-template-columns: repeat(2, 1fr); /* 手機上一行兩張 */
+    grid-template-columns: repeat(2, 1fr);
     max-width: 380px;
     margin-left: auto;
     margin-right: auto;
     gap: 12px;
   }
-  /* 第三張牌（長生）跨兩欄並置中，但透過 max-width 限制它不會變大，維持正常卡片比例 */
   .cards .slot:nth-child(3){
     grid-column: 1 / -1;
     max-width: 180px;
     margin: 0 auto;
     width: 100%;
   }
-  .slot{aspect-ratio:3/4.3} /* 維持與原本完全相同的長寬比例 */
+  .slot{aspect-ratio:3/4.3}
 }
 
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
@@ -169,7 +168,7 @@ const I = {
 };
 // [名稱, 關鍵字, 長生序]
 const MAIN=[["紫微","尊貴・領導・統御"],["天府","穩重・庫藏・守成"],["天機","機智・謀略・變動"],["太陰","緩慢・收斂・累積"],["七殺","果決・孤勇・肅殺"],["破軍","突破・衝勁・開創"],["貪狼","慾望・桃花・多才"],["天梁","蔭庇・清高・化解"],["天同","福氣・小孩・享受"],["廉貞","交際・原則・感性"],["太陽","熱情・名氣・無私"],["武曲","執行力・剛毅・果決"],["天相","輔佐・連結・影響"],["巨門","口才・暗藏・蒐集"]];
-const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突發"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
+const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突発"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
 const LIFE=[["長生","萌芽・新生・希望",1],["沐浴","洗禮・不穩・桃花",2],["冠帶","成長・裝扮・展現",3],["臨官","事業・自立・上任",4],["帝旺","巔峰・強盛・權威",5],["衰","轉折・退守・沉澱",6],["病","疲憊・弱點・警訊",7],["死","終止・斷捨・放下",8],["墓","收藏・沉潛・積累",9],["絕","絕處・迷茫・轉機",10],["胎","孕育・潛伏・醞釀",11],["養","蓄養・等待・準備",12]];
 
 // 星空底圖：六芒星 + 星點
@@ -191,22 +190,39 @@ function cardHTML(i,cat,s,delay){
     '<div class="name">'+s[0]+(s[2]||"")+'</div><div class="kw">'+s[1]+'</div></div></div>';
 }
 
-// 音效（WebAudio 合成，無外部檔案）
+// 全新優化的抽卡音效（結合輕柔的過濾滑音與微風鈴聲）
 let ctx=null, muted=false;
-function chime(f,t){const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=f;
-  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+1.1);
-  const o2=ctx.createOscillator(),g2=ctx.createGain();o2.type="sine";o2.frequency.value=f*2;g2.gain.setValueAtTime(.05,t);g2.gain.exponentialRampToValueAtTime(.001,t+.7);
-  o.connect(g).connect(ctx.destination);o2.connect(g2).connect(ctx.destination);o.start(t);o.stop(t+1.2);o2.start(t);o2.stop(t+.7)}
 function sound(){
   if(muted)return;
   try{
     ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();
     if(ctx.state==="suspended")ctx.resume();
-    const t=ctx.currentTime,n=Math.floor(ctx.sampleRate*.4),b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);
-    for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/n)*(.6+.4*Math.sin(i/180));
-    const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
-    s.buffer=b;f.type="bandpass";f.frequency.value=3200;f.Q.value=.8;g.gain.value=.09;
-    s.connect(f).connect(g).connect(ctx.destination);s.start(t);
+    const t=ctx.currentTime;
+
+    // 1. 溫和的空氣感抽卡刷聲（降低頻率並加入滑動效果，聽起來像絲滑的翻牌聲）
+    const n=Math.floor(ctx.sampleRate*.35), b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/n);
+    const src=ctx.createBufferSource(); src.buffer=b;
+    const filt=ctx.createBiquadFilter(); filt.type="bandpass";
+    filt.frequency.setValueAtTime(800, t);
+    filt.frequency.exponentialRampToValueAtTime(2400, t+.35);
+    filt.Q.value=1.2;
+    const gainNode=ctx.createGain();
+    gainNode.gain.setValueAtTime(0.001, t);
+    gainNode.gain.linearRampToValueAtTime(0.08, t+.05);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, t+.35);
+    src.connect(filt).connect(gainNode).connect(ctx.destination);
+    src.start(t);
+
+    // 2. 加上清脆療癒的微風鈴音 (Chime)
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type="sine"; o.frequency.setValueAtTime(1046.5, t+.1); // 高音 C6
+    g.gain.setValueAtTime(0, t+.1);
+    g.gain.linearRampToValueAtTime(0.04, t+.12);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+.8);
+    o.connect(g).connect(ctx.destination);
+    o.start(t+.1); o.stop(t+.85);
+
   }catch(e){}
 }
 
