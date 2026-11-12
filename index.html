@@ -299,7 +299,7 @@ footer{
 </head>
 <body>
 <div class="snd-group">
-  <button class="snd" id="bgm-btn" type="button" aria-pressed="true">♫ 背景音樂 開</button>
+  <button class="snd" id="bgm-btn" type="button" aria-pressed="false">♫ 背景音樂 關</button>
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
 </div>
 
@@ -463,8 +463,8 @@ function sound(){
   }catch(e){}
 }
 
-// 夢幻療癒水晶音樂盒（一進入網頁自動播放，帶 5 秒極緩慢漸入）
-let bgmCtx=null, bgmInterval=null, mutedBgm=false;
+// 夢幻療癒水晶音樂盒（預設關閉，由使用者手動開啟）
+let bgmCtx=null, bgmInterval=null, mutedBgm=true;
 function startBgm(){
   if(mutedBgm) return;
   try{
@@ -513,22 +513,6 @@ function stopBgm(){
   if(bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
   if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
 }
-
-// 頁面載入後立即嘗試自動播放 BGM
-window.addEventListener('load', () => {
-  if(!mutedBgm) {
-    startBgm();
-  }
-});
-// 任何頁面互動（點擊/觸控）都能瞬間解鎖瀏覽器限制並播放 BGM
-window.addEventListener('pointerdown', () => {
-  if(!mutedBgm && bgmCtx && bgmCtx.state === "suspended") {
-    bgmCtx.resume();
-  }
-  if(!mutedBgm && !bgmInterval) {
-    startBgm();
-  }
-}, { once: true });
 
 let cur=null, drawTime="", busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
