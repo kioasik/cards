@@ -221,7 +221,7 @@ footer{
   opacity: 0.7;
 }
 
-/* 手機版排版調整：網頁上的卡片維持原本一列三張排版 */
+/* 手機版排版調整 */
 @media (max-width:640px){
   main{padding-top:48px; padding-left:14px; padding-right:14px}
   .cards{
@@ -285,12 +285,12 @@ footer{
     <div class="modal-subtitle">請從每組牌堆中各選擇一張卡片</div>
     
     <div class="deck-section">
-      <div class="deck-label" id="lbl-m">主星牌 (39張) - 已選 0/1</div>
+      <div class="deck-label" id="lbl-m">主星牌 (14張) - 已選 0/1</div>
       <div class="deck-scroll" id="deck-main"></div>
     </div>
     
     <div class="deck-section">
-      <div class="deck-label" id="lbl-a">輔星牌 (19張) - 已選 0/1</div>
+      <div class="deck-label" id="lbl-a">輔星牌 (18張) - 已選 0/1</div>
       <div class="deck-scroll" id="deck-aux"></div>
     </div>
     
@@ -393,7 +393,7 @@ function sound(){
   }catch(e){}
 }
 
-// 音樂超長 5 秒極緩慢漸入（Fade In），完全消除前幾個高音的刺耳感
+// 夢幻療癒水晶音樂盒結合豎琴風格（72 BPM 平靜神祕水療氛圍、5 秒超長平滑漸入）
 let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
@@ -401,35 +401,49 @@ function startBgm(){
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
     
-    const melodyNotes = [523.25, 659.25, 783.99, 880.00, 1046.50, 1318.51];
+    // 溫暖而神祕的五聲音階/療癒調式頻率 (Hz)
+    const crystalNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25, 783.99, 1046.50];
     
-    const playArpeggio = () => {
+    const playCrystalArpeggio = () => {
       if(mutedBgm || !bgmCtx) return;
       let t = bgmCtx.currentTime;
       
-      for(let i=0; i<4; i++){
-        const freq = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+      // 72 BPM 下的晶瑩豎琴/音樂盒音符流動
+      for(let i=0; i<5; i++){
+        const freq = crystalNotes[Math.floor(Math.random() * crystalNotes.length)];
+        
+        // 主音源：水晶清透 Sine 波動
         const osc = bgmCtx.createOscillator();
+        // 疊加微量 Triangle 創造柔和溫潤的音樂盒共鳴
+        const oscBox = bgmCtx.createOscillator();
         const gain = bgmCtx.createGain();
         
         osc.type = 'sine';
         osc.frequency.value = freq;
         
-        const noteTime = t + (i * 0.5);
+        oscBox.type = 'triangle';
+        oscBox.frequency.value = freq * 0.5; // 低八度共鳴
+        
+        const noteTime = t + (i * 0.83); // 配合 72 BPM 的流動感
+        
         gain.gain.setValueAtTime(0.000001, noteTime);
-        // 拉長至 5.0 秒的極緩慢淡入
-        gain.gain.linearRampToValueAtTime(0.010, noteTime + 5.0);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 6.2);
+        // 5.0 秒超長漸入，讓開頭完全沒有壓迫感，如水療般輕盈通透
+        gain.gain.linearRampToValueAtTime(0.008, noteTime + 5.0);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 7.5);
         
         osc.connect(gain).connect(bgmCtx.destination);
+        oscBox.connect(gain).connect(bgmCtx.destination);
+        
         osc.start(noteTime);
-        osc.stop(noteTime + 6.5);
+        oscBox.start(noteTime);
+        osc.stop(noteTime + 7.8);
+        oscBox.stop(noteTime + 7.8);
       }
     };
 
-    playArpeggio();
+    playCrystalArpeggio();
     if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playArpeggio, 6000);
+    bgmInterval = setInterval(playCrystalArpeggio, 8000);
   }catch(e){}
 }
 
@@ -523,8 +537,8 @@ function buildDeck(container, dataArr, type){
 }
 
 function updateModalState(){
-  document.getElementById('lbl-m').textContent = `主星牌 (39張) - 已選 ${selectedMain ? 1 : 0}/1`;
-  document.getElementById('lbl-a').textContent = `輔星牌 (19張) - 已選 ${selectedAux ? 1 : 0}/1`;
+  document.getElementById('lbl-m').textContent = `主星牌 (14張) - 已選 ${selectedMain ? 1 : 0}/1`;
+  document.getElementById('lbl-a').textContent = `輔星牌 (18張) - 已選 ${selectedAux ? 1 : 0}/1`;
   document.getElementById('lbl-l').textContent = `長生牌 (12張) - 已選 ${selectedLife ? 1 : 0}/1`;
 
   if(selectedMain && selectedAux && selectedLife){
@@ -582,43 +596,37 @@ async function shareWebsite(){
   }
 }
 
-// 產生超高清圖片 (High-DPI Retina Canvas)，上二下一排版，無陰影，帶星空背景
 async function saveImage(){
   if(!cur) return;
   const canvas = document.createElement('canvas');
-  const scale = 2; // 2倍解析度讓圖片極度清晰
+  const scale = 2;
   canvas.width = 800 * scale;
   canvas.height = 1100 * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  // 背景漸層
   const bgGrad = ctx.createLinearGradient(0, 0, 0, 1100);
   bgGrad.addColorStop(0, '#fcf8fd');
   bgGrad.addColorStop(1, '#f3edf7');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, 800, 1100);
 
-  // 繪製背景星空幾何裝飾與星芒
   ctx.save();
   ctx.strokeStyle = 'rgba(157, 127, 178, 0.08)';
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.arc(400, 330, 240, 0, Math.PI * 2); ctx.stroke();
   ctx.beginPath(); ctx.arc(400, 330, 320, 0, Math.PI * 2); ctx.stroke();
 
-  // 星芒點綴
   ctx.fillStyle = 'rgba(157, 127, 178, 0.3)';
   [[120, 100], [680, 150], [90, 850], [710, 800], [400, 950]].forEach(([px, py]) => {
     ctx.beginPath(); ctx.arc(px, py, 2, 0, Math.PI*2); ctx.fill();
   });
   ctx.restore();
 
-  // 邊框
   ctx.strokeStyle = '#e6deee';
   ctx.lineWidth = 2;
   ctx.strokeRect(30, 30, 740, 1040);
 
-  // 標題區
   ctx.fillStyle = '#7e5d95';
   ctx.font = 'italic 20px "Playfair Display", serif';
   ctx.textAlign = 'center';
@@ -639,7 +647,6 @@ async function saveImage(){
   ctx.lineTo(650, 195);
   ctx.stroke();
 
-  // 牌卡資料設定 (上二下一配置)
   const cardsData = [
     { title: '主星', data: cur.m, tone: '#8a6fc0' },
     { title: '輔星', data: cur.a, tone: '#c47a58' },
@@ -651,8 +658,8 @@ async function saveImage(){
   const gapX = 40;
   const row1Y = 225;
   const row2Y = 575;
-  const row1StartX = (800 - (cardWidth * 2 + gapX)) / 2; // 上方兩張置中
-  const row2StartX = (800 - cardWidth) / 2; // 下方一張置中
+  const row1StartX = (800 - (cardWidth * 2 + gapX)) / 2;
+  const row2StartX = (800 - cardWidth) / 2;
 
   cardsData.forEach((c, idx) => {
     let cx, cy;
@@ -664,47 +671,37 @@ async function saveImage(){
       cy = row2Y;
     }
 
-    // 無陰影的乾淨純白卡片底色
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
     ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
     ctx.fill();
 
-    // 卡片邊框與微漸層頂部
     ctx.strokeStyle = '#e6deee';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // 卡片內文標題
     ctx.fillStyle = c.tone;
     ctx.font = 'bold 15px "Noto Serif TC", serif';
     ctx.textAlign = 'left';
     ctx.fillText(c.title, cx + 20, cy + 35);
 
-    // 主標示文字（無陰影、超高清）
     ctx.fillStyle = '#423b4a';
     ctx.font = 'bold 38px "Noto Serif TC", serif';
     ctx.textAlign = 'center';
     ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 175);
 
-    // 關鍵字
     ctx.fillStyle = c.tone;
     ctx.font = 'bold 15px "Noto Serif TC", serif';
     ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 240);
   });
 
-  // 底部溫馨小提示與版權
-  ctx.fillStyle = '#7e5d95';
-  ctx.font = '14.5px "Noto Serif TC", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('*記得把結果傳給你的占卜師，讓他為你解答：）', 400, 935);
-
   ctx.fillStyle = '#84788f';
-  ctx.font = '13.5px "Noto Serif TC", serif';
-  ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 975);
+  ctx.font = '14px "Noto Serif TC", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 955);
 
   ctx.font = '11px "Noto Serif TC", serif';
-  ctx.fillText('Made with 💜 by YAN-HAN', 400, 1015);
+  ctx.fillText('Made with 💜 by YAN-HAN', 400, 995);
 
   canvas.toBlob(async (blob) => {
     const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'png' });
