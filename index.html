@@ -58,7 +58,11 @@ body::before {
   z-index: 0;
 }
 
-main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center; position:relative; z-index:1;}
+main{
+  max-width:900px; margin:0 auto; 
+  padding:56px 20px calc(64px + env(safe-area-inset-bottom, 0px)); 
+  text-align:center; position:relative; z-index:1;
+}
 
 /* 副標題設計 */
 .sub-title {
@@ -105,9 +109,15 @@ h1{
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 .btn{
   font-family:inherit; font-size:17px; letter-spacing:.15em; padding:12px 30px; border:none; border-radius:999px; cursor:pointer;
-  color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.12); transition:transform .15s;
+  color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.12); 
+  transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s ease;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
+/* 按鈕點擊感 (縮放回饋) */
+.btn:hover{transform:translateY(-2px)} 
+.btn:active{transform:scale(0.96)!important} 
+.btn:disabled{opacity:.7;cursor:default; transform: none!important;}
+
 /* 一鍵抽卡 (暖橘色) */
 .btn-orange{
   background: linear-gradient(135deg, #e09f6b, #c47a58);
@@ -119,8 +129,6 @@ h1{
   box-shadow: 0 8px 22px rgba(126,93,149,0.3);
 }
 
-.btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.7;cursor:default}
-
 .snd-group{
   position:fixed; right:14px; top:calc(env(safe-area-inset-top,0px) + 12px); z-index:5;
   display:flex; gap:8px;
@@ -128,17 +136,21 @@ h1{
 .snd{
   font-family:inherit; font-size:12px; color:var(--muted); background:var(--card); border:1px solid var(--line);
   border-radius:999px; padding:6px 10px; cursor:pointer;
+  transition: transform 0.15s;
 }
+.snd:active{transform:scale(0.95)}
 
 .cards{
   display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:42px 0 26px; perspective:1000px;
 }
 .slot{aspect-ratio:3/4.3; position:relative}
 .ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em; background: rgba(255,255,255,0.6); backdrop-filter: blur(4px);}
+
+/* 牌卡依序翻開動畫 (Staggered Flip Animation) */
 .card{
   position:absolute; inset:0; background:var(--card); border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--line);
   overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:16px 14px 0;
-  animation:flip .7s cubic-bezier(.2,.8,.3,1) both;
+  animation: cardFlip 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) both;
   background-image:linear-gradient(180deg,color-mix(in srgb,var(--tone) 9%,var(--card)),var(--card) 55%);
 }
 .t0{--tone:var(--t0)} .t1{--tone:var(--t1)} .t2{--tone:var(--t2)}
@@ -153,17 +165,24 @@ h1{
 .name{font-size:clamp(28px,4.6vw,40px); font-weight:700; letter-spacing:.1em; padding-left:.1em; position:relative; z-index:1}
 .kw{font-size:13.5px; letter-spacing:.06em; color:var(--tone); margin-top:8px; font-weight:600; position:relative; z-index:1; line-height:1.6}
 .sky{position:absolute; left:0; right:0; bottom:0; width:100%; height:34%; color:var(--tone); opacity:.32; pointer-events:none}
-@keyframes flip{from{opacity:0; transform:rotateY(90deg) translateY(10px)} to{opacity:1; transform:none}}
 
-/* 動作按鈕區：雙排設計 */
+@keyframes cardFlip{
+  0% { opacity: 0; transform: rotateY(90deg) translateY(20px) scale(0.9); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* 動作按鈕區 */
 .actions{min-height:52px; display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:10px;}
 .action-row{display:flex; justify-content:center; gap:12px; flex-wrap:wrap; width:100%;}
 .action-btn{
   font-family:inherit; font-size:15px; letter-spacing:.15em; padding:10px 22px; background:var(--card); 
   color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer;
-  display:inline-flex; align-items:center; gap:6px; transition:background .15s; box-shadow: 0 4px 12px rgba(130,100,150,0.08);
+  display:inline-flex; align-items:center; gap:6px; 
+  transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background .15s; 
+  box-shadow: 0 4px 12px rgba(130,100,150,0.08);
 }
 .action-btn:hover{background:rgba(157,127,178,.15)}
+.action-btn:active{transform:scale(0.95)!important}
 
 .consultant-tip{
   font-size: 13.5px;
@@ -173,12 +192,38 @@ h1{
   opacity: 0.9;
 }
 
-.toast{width:100%; height:22px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
+
+/* 頂部現代感玻璃擬態浮動通知 (Floating Toast Notification) */
+.floating-toast {
+  position: fixed;
+  top: max(20px, calc(env(safe-area-inset-top, 0px) + 12px));
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(157, 127, 178, 0.3);
+  box-shadow: 0 10px 30px rgba(126, 93, 149, 0.2);
+  color: var(--accent-d);
+  font-size: 14.5px;
+  letter-spacing: 0.1em;
+  padding: 12px 24px;
+  border-radius: 999px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.3s ease;
+}
+.floating-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
 
 /* 手動選牌彈跳視窗 */
 #manual-modal{
   position:fixed; inset:0; background:rgba(42,35,48,0.75); backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
   z-index:50; display:flex; justify-content:center; align-items:center; padding:20px; overflow-y:auto;
 }
 .modal-box{
@@ -190,8 +235,23 @@ h1{
 .modal-subtitle{font-size:13px; color:var(--muted); text-align:center; letter-spacing:.1em; margin-bottom:24px}
 .deck-section{margin-bottom:20px}
 .deck-label{font-size:14px; font-weight:600; color:var(--text); letter-spacing:.1em; margin-bottom:8px; border-left:3px solid var(--accent); padding-left:8px}
+
+/* 具備滑動提示漸層與陰影的選牌區 */
+.deck-wrapper {
+  position: relative;
+}
+.deck-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 12px; width: 36px;
+  background: linear-gradient(90deg, transparent, var(--bg1));
+  pointer-events: none;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
 .deck-scroll{
-  display:flex; gap:8px; overflow-x:auto; padding:6px 2px 12px; scroll-behavior:smooth;
+  display:flex; gap:10px; overflow-x:auto; padding:6px 4px 12px; scroll-behavior:smooth;
   scrollbar-width:thin; scrollbar-color: var(--accent) var(--line);
 }
 
@@ -200,10 +260,12 @@ h1{
   background: linear-gradient(135deg, #201a24, #312838); 
   border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); 
   border-radius:8px;
-  cursor:pointer; position:relative; transition:transform .15s, border-color .15s; 
+  cursor:pointer; position:relative; 
+  transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s; 
   display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
 }
 .card-back:hover{transform:translateY(-3px); border-color: var(--accent);}
+.card-back:active{transform:scale(0.95)!important}
 .card-back.selected{
   border:2px solid var(--accent-d); box-shadow:0 0 12px rgba(126,93,149,0.6); transform:translateY(-4px);
 }
@@ -241,6 +303,9 @@ footer{
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
 </div>
 
+<!-- 頂部浮動玻璃擬態通知框 -->
+<div class="floating-toast" id="toast" role="status"></div>
+
 <main>
   <div class="sub-title">Purpling Cards</div>
   <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
@@ -272,7 +337,6 @@ footer{
     <div class="action-row" style="margin-top: 4px;">
       <button class="action-btn" id="reset-draw" type="button" style="border-color: #c47a58; color: #c47a58;">↺ 再抽一次</button>
     </div>
-    <div class="toast" id="toast" role="status"></div>
   </div>
 
   <footer>Made with 💜 by YAN-HAN</footer>
@@ -282,21 +346,27 @@ footer{
 <div id="manual-modal" hidden>
   <div class="modal-box">
     <div class="modal-title">手動選牌</div>
-    <div class="modal-subtitle">請從每組牌堆中各選擇一張卡片</div>
+    <div class="modal-subtitle">請左右滑動牌堆，從每組中各選擇一張卡片</div>
     
     <div class="deck-section">
       <div class="deck-label" id="lbl-m">主星牌 (14張) - 已選 0/1</div>
-      <div class="deck-scroll" id="deck-main"></div>
+      <div class="deck-wrapper">
+        <div class="deck-scroll" id="deck-main"></div>
+      </div>
     </div>
     
     <div class="deck-section">
       <div class="deck-label" id="lbl-a">輔星牌 (18張) - 已選 0/1</div>
-      <div class="deck-scroll" id="deck-aux"></div>
+      <div class="deck-wrapper">
+        <div class="deck-scroll" id="deck-aux"></div>
+      </div>
     </div>
     
     <div class="deck-section">
       <div class="deck-label" id="lbl-l">長生牌 (12張) - 已選 0/1</div>
-      <div class="deck-scroll" id="deck-life"></div>
+      <div class="deck-wrapper">
+        <div class="deck-scroll" id="deck-life"></div>
+      </div>
     </div>
 
     <div class="modal-actions">
@@ -490,14 +560,21 @@ function resetDraw(){
 function quickDraw(){
   if(busy)return; busy=true;
   $btnQuick.disabled=true; $btnManual.disabled=true;
-  const m=pick(MAIN), a=pick(AUX), l=pick(LIFE); 
-  cur={m,a,l};
-  drawTime = getFormattedTime();
-  sound();
-  showResultView();
-  $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,.18)+cardHTML(2,"長生",l,.36);
-  $t.textContent="";
-  setTimeout(()=>{busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;},1000);
+  
+  // 洗牌時先清空畫面顯示載入感
+  $c.innerHTML = '<div class="slot"><div class="ph" style="animation: pulse 1s infinite;">洗牌中...</div></div>'.repeat(3);
+  
+  setTimeout(() => {
+    const m=pick(MAIN), a=pick(AUX), l=pick(LIFE); 
+    cur={m,a,l};
+    drawTime = getFormattedTime();
+    sound();
+    showResultView();
+    // 依序以 0秒、0.2秒、0.4秒的時間差依序翻開 (Staggered Animation)
+    $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,0.2)+cardHTML(2,"長生",l,0.4);
+    $t.textContent="";
+    busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;
+  }, 450); // 模擬短暫洗牌沈浸時間
 }
 
 function openManualModal(){
@@ -546,13 +623,27 @@ function confirmManualDraw(){
   cur = { m: selectedMain, a: selectedAux, l: selectedLife };
   drawTime = getFormattedTime();
   $modal.hidden = true;
-  sound();
-  showResultView();
-  $c.innerHTML = cardHTML(0,"主星",cur.m,0) + cardHTML(1,"輔星",cur.a,.18) + cardHTML(2,"長生",cur.l,.36);
-  $t.textContent = "";
+  
+  $c.innerHTML = '<div class="slot"><div class="ph" style="animation: pulse 1s infinite;">翻牌中...</div></div>'.repeat(3);
+  
+  setTimeout(() => {
+    sound();
+    showResultView();
+    $c.innerHTML = cardHTML(0,"主星",cur.m,0) + cardHTML(1,"輔星",cur.a,0.2) + cardHTML(2,"長生",cur.l,0.4);
+    $t.textContent = "";
+  }, 350);
 }
 
-function toast(m){$t.textContent=m;clearTimeout(tt);tt=setTimeout(()=>{$t.textContent=""},2200)}
+// 現代感頂部浮動通知
+function toast(m){
+  $t.textContent = m;
+  $t.classList.add("show");
+  clearTimeout(tt);
+  tt = setTimeout(() => {
+    $t.classList.remove("show");
+  }, 2500);
+}
+
 function fb(text){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok}
 async function copy(){
   if(!cur)return;
@@ -587,43 +678,21 @@ async function shareWebsite(){
   }
 }
 
-// 輔助函式：將 SVG 路徑字串繪製到 Canvas 上
-function drawSvgPath(ctx, pathStr, x, y, size, color) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.strokeStyle = color;
-  ctx.fillStyle = color;
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  
-  // 建立 Path2D 物件來解析 SVG 繪圖指令
-  try {
-    const p = new Path2D(pathStr);
-    ctx.stroke(p);
-  } catch(e) {
-    // 簡單相容處理
-  }
-  ctx.restore();
-}
-
 async function saveImage(){
   if(!cur) return;
   const canvas = document.createElement('canvas');
-  const scale = 2; // 2倍高畫質
+  const scale = 2;
   canvas.width = 800 * scale;
   canvas.height = 1100 * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  // 1. 背景漸層
   const bgGrad = ctx.createLinearGradient(0, 0, 0, 1100);
   bgGrad.addColorStop(0, '#fcf8fd');
   bgGrad.addColorStop(1, '#f3edf7');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, 800, 1100);
 
-  // 2. 星空背景幾何裝飾
   ctx.save();
   ctx.strokeStyle = 'rgba(157, 127, 178, 0.08)';
   ctx.lineWidth = 1;
@@ -636,12 +705,10 @@ async function saveImage(){
   });
   ctx.restore();
 
-  // 外框線
   ctx.strokeStyle = '#e6deee';
   ctx.lineWidth = 2;
   ctx.strokeRect(30, 30, 740, 1040);
 
-  // 標題區
   ctx.fillStyle = '#7e5d95';
   ctx.font = 'italic 20px "Playfair Display", serif';
   ctx.textAlign = 'center';
@@ -662,7 +729,6 @@ async function saveImage(){
   ctx.lineTo(650, 195);
   ctx.stroke();
 
-  // 牌卡資料設定 (上二下一配置)
   const cardsData = [
     { title: '主星', data: cur.m, tone: '#8a6fc0', hexTone: '#8a6fc0' },
     { title: '輔星', data: cur.a, tone: '#c47a58', hexTone: '#c47a58' },
@@ -688,41 +754,34 @@ async function saveImage(){
     }
 
     ctx.save();
-    // 圓角矩形路徑
     ctx.beginPath();
     ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
     ctx.clip();
 
-    // 完美還原網頁卡片的上下漸層背景色
     const cardBgGrad = ctx.createLinearGradient(cx, cy, cx, cy + cardHeight);
-    // 模擬 color-mix(in srgb, tone 9%, white) 與純白漸層
     cardBgGrad.addColorStop(0, c.hexTone === '#8a6fc0' ? '#f4f0fa' : c.hexTone === '#c47a58' ? '#faf3f0' : '#f0f7f4');
     cardBgGrad.addColorStop(0.55, '#ffffff');
     cardBgGrad.addColorStop(1, '#ffffff');
     ctx.fillStyle = cardBgGrad;
     ctx.fillRect(cx, cy, cardWidth, cardHeight);
 
-    // 繪製卡片內的底部星空裝飾線條
     ctx.strokeStyle = c.tone;
     ctx.lineWidth = 0.8;
     ctx.globalAlpha = 0.32;
     ctx.strokeRect(cx, cy + cardHeight * 0.66, cardWidth, cardHeight * 0.34);
     ctx.restore();
 
-    // 卡片邊框
     ctx.strokeStyle = '#e6deee';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
     ctx.stroke();
 
-    // 分類標籤 (主星/輔星/長生)
     ctx.fillStyle = c.tone;
     ctx.font = 'bold 15px "Noto Serif TC", serif';
     ctx.textAlign = 'left';
     ctx.fillText(c.title, cx + 20, cy + 35);
 
-    // 繪製卡片中央插畫框 (ibox) 與 SVG 圖示
     const iboxSize = 75;
     const iboxX = cx + (cardWidth - iboxSize) / 2;
     const iboxY = cy + 55;
@@ -730,23 +789,19 @@ async function saveImage(){
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(iboxX, iboxY, iboxSize, iboxSize, 18);
-    // ibox 背景色
     ctx.fillStyle = c.tone;
     ctx.globalAlpha = 0.14;
     ctx.fill();
     ctx.globalAlpha = 1.0;
-    // ibox 邊框
     ctx.strokeStyle = c.tone;
     ctx.globalAlpha = 0.28;
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.restore();
 
-    // 在 ibox 內繪製 SVG 插畫圖示
     const iconName = c.data[0].replace(/[0-9]/g, '');
     const svgPath = I[iconName] || I['紫微'];
     ctx.save();
-    // 將 SVG 座標系 (64x64) 縮放並平移置中到 ibox 內
     const iconScale = 42 / 64;
     ctx.translate(iboxX + (iboxSize - 42) / 2, iboxY + (iboxSize - 42) / 2);
     ctx.scale(iconScale, iconScale);
@@ -761,19 +816,16 @@ async function saveImage(){
     } catch(e) {}
     ctx.restore();
 
-    // 牌名文字
     ctx.fillStyle = '#423b4a';
     ctx.font = 'bold 36px "Noto Serif TC", serif';
     ctx.textAlign = 'center';
     ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 225);
 
-    // 關鍵字
     ctx.fillStyle = c.tone;
     ctx.font = 'bold 14.5px "Noto Serif TC", serif';
     ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 272);
   });
 
-  // 底部祝福語與版權署名
   ctx.fillStyle = '#84788f';
   ctx.font = '14px "Noto Serif TC", serif';
   ctx.textAlign = 'center';
@@ -785,7 +837,6 @@ async function saveImage(){
   canvas.toBlob(async (blob) => {
     const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'png' });
     
-    // 【修改重點】分享出去時只帶圖片，不帶任何多餘文字訊息
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({
