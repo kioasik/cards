@@ -8,7 +8,7 @@
 
 <!-- 讓 LINE 或其他通訊軟體預覽時顯示正確標題 -->
 <meta property="og:title" content="✨🔮紫靈牌卡 ✦ 線上占卜🔮✨">
-<meta property="og:description" content="請清空思緒、在心中默念問題，並選擇你的占卜方式">
+<meta property="og:description" content="請清空思緒、在心中默念你的問題，並選擇你的占卜方式">
 
 <title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,10 +29,39 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
   margin:0; min-height:100vh; color:var(--text);
   font-family:"Noto Serif TC","PingFang TC","Microsoft JhengHei","Hiragino Mincho ProN",serif;
-  background:radial-gradient(ellipse 80% 45% at 50% -5%,var(--glow),transparent 70%),linear-gradient(180deg,var(--bg1),var(--bg2));
-  background-color:var(--bg1);
+  /* 結合優雅漸層與細緻星空幾何線條背景，營造神祕插圖感卻不雜亂 */
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(200, 170, 235, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(220, 195, 245, 0.15) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(157, 127, 178, 0.04) 0%, rgba(126, 93, 149, 0.08) 100%),
+    radial-gradient(ellipse 80% 45% at 50% -5%, var(--glow), transparent 70%), 
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  background-color: var(--bg1);
+  position: relative;
+  overflow-x: hidden;
 }
-main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
+
+/* 背景精緻的星空線條與星座幾何裝飾層 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    /* 幾何占卜圓環與星軌 */
+    radial-gradient(circle at 50% 30%, transparent 58%, rgba(157, 127, 178, 0.08) 59%, transparent 60%),
+    radial-gradient(circle at 50% 30%, transparent 78%, rgba(157, 127, 178, 0.05) 79%, transparent 80%),
+    /* 微光星芒點綴 */
+    radial-gradient(circle at 20% 15%, rgba(157, 127, 178, 0.3) 1.5px, transparent 2px),
+    radial-gradient(circle at 82% 25%, rgba(157, 127, 178, 0.25) 1px, transparent 2px),
+    radial-gradient(circle at 15% 75%, rgba(157, 127, 178, 0.25) 1px, transparent 2px),
+    radial-gradient(circle at 88% 70%, rgba(157, 127, 178, 0.3) 1.5px, transparent 2px),
+    radial-gradient(circle at 50% 85%, rgba(157, 127, 178, 0.2) 1px, transparent 2px);
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center; position:relative; z-index:1;}
 
 /* 有質感的英文襯線體副標題 */
 .sub-title {
@@ -65,7 +94,7 @@ h1{
   white-space: nowrap;
 }
 
-/* 說明文字排版（支援空行） */
+/* 說明文字排版（精準對齊你指定的換行） */
 .hint{
   color:var(--muted); 
   font-size:15px; 
@@ -108,7 +137,7 @@ h1{
   display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:42px 0 26px; perspective:1000px;
 }
 .slot{aspect-ratio:3/4.3; position:relative}
-.ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em}
+.ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em; background: rgba(255,255,255,0.6); backdrop-filter: blur(4px);}
 .card{
   position:absolute; inset:0; background:var(--card); border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--line);
   overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:16px 14px 0;
@@ -129,10 +158,15 @@ h1{
 .sky{position:absolute; left:0; right:0; bottom:0; width:100%; height:34%; color:var(--tone); opacity:.32; pointer-events:none}
 @keyframes flip{from{opacity:0; transform:rotateY(90deg) translateY(10px)} to{opacity:1; transform:none}}
 
-.actions{min-height:52px}
-.copy{font-family:inherit; font-size:15px; letter-spacing:.2em; padding:10px 28px; background:transparent; color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer}
-.copy:hover{background:rgba(157,127,178,.15)}
-.toast{height:22px; margin-top:10px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
+/* 動作按鈕區 */
+.actions{min-height:52px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;}
+.action-btn{
+  font-family:inherit; font-size:15px; letter-spacing:.2em; padding:10px 24px; background:var(--card); 
+  color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:6px; transition:background .15s; box-shadow: 0 4px 12px rgba(130,100,150,0.08);
+}
+.action-btn:hover{background:rgba(157,127,178,.15)}
+.toast{width:100%; height:22px; margin-top:8px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
 
 /* 手動選牌彈跳視窗 */
@@ -197,7 +231,8 @@ h1{
   <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
   <p class="hint">嗨，歡迎你來到這裡。
 
-現在，請試著清空思緒、在心中默念你想獲得解答的問題，並選擇喜歡的占卜方式。</p>
+現在，請試著清空思緒、在心中默念你的問題，
+並選擇喜歡的占卜方式。</p>
   
   <div class="btn-group">
     <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
@@ -210,7 +245,8 @@ h1{
     <div class="slot"><div class="ph">長生</div></div>
   </section>
   <div class="actions" id="actions" hidden>
-    <button class="copy" id="copy" type="button">複製本次結果</button>
+    <button class="action-btn" id="copy" type="button">複製本次結果</button>
+    <button class="action-btn" id="save-img" type="button">儲存圖片</button>
     <div class="toast" id="toast" role="status"></div>
   </div>
 </main>
@@ -337,35 +373,42 @@ function startBgm(){
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
     
-    const healingScale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25, 783.99];
+    const chords = [
+      [261.63, 329.63, 392.00], 
+      [220.00, 261.63, 329.63], 
+      [174.61, 220.00, 261.63], 
+      [196.00, 246.94, 293.66]  
+    ];
     
-    const playHealingNote = () => {
+    let chordIndex = 0;
+
+    const playMeditationChord = () => {
       if(mutedBgm || !bgmCtx) return;
       let t = bgmCtx.currentTime;
+      const currentChord = chords[chordIndex];
+      chordIndex = (chordIndex + 1) % chords.length;
       
-      for(let i=0; i<3; i++){
-        const freq = healingScale[Math.floor(Math.random() * healingScale.length)];
+      currentChord.forEach((freq, i) => {
         const osc = bgmCtx.createOscillator();
         const gain = bgmCtx.createGain();
         
-        osc.type = 'sine';
+        osc.type = 'sine'; 
         osc.frequency.value = freq;
         
-        const noteTime = t + (i * 0.6);
+        const noteTime = t + (i * 0.7); 
         gain.gain.setValueAtTime(0.0001, noteTime);
-        // 漸層淡入 (Fade In)：從 0 緩慢放大至舒服的音量 (0.02)
-        gain.gain.linearRampToValueAtTime(0.02, noteTime + 2.0);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 4.5);
+        gain.gain.linearRampToValueAtTime(0.015, noteTime + 0.3);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 3.8);
         
         osc.connect(gain).connect(bgmCtx.destination);
         osc.start(noteTime);
-        osc.stop(noteTime + 5.0);
-      }
+        osc.stop(noteTime + 4.2);
+      });
     };
 
-    playHealingNote();
+    playMeditationChord();
     if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playHealingNote, 5500);
+    bgmInterval = setInterval(playMeditationChord, 3200); 
   }catch(e){}
 }
 
@@ -380,7 +423,7 @@ window.addEventListener('load', () => {
   }
 });
 
-let cur=null, busy=false, tt;
+let cur=null, drawTime="", busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
 const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual");
 const $modal = document.getElementById("manual-modal");
@@ -389,10 +432,22 @@ const $modalConfirm = document.getElementById("modal-confirm"), $modalCancel = d
 
 let selectedMain = null, selectedAux = null, selectedLife = null;
 
+function getFormattedTime() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const h = String(now.getHours()).padStart(2, '0');
+  const min = String(now.getMinutes()).padStart(2, '0');
+  return `${y}/${m}/${d} ${h}:${min}`;
+}
+
 function quickDraw(){
   if(busy)return; busy=true;
   $btnQuick.disabled=true; $btnManual.disabled=true;
-  const m=pick(MAIN), a=pick(AUX), l=pick(LIFE); cur={m,a,l};
+  const m=pick(MAIN), a=pick(AUX), l=pick(LIFE); 
+  cur={m,a,l};
+  drawTime = getFormattedTime();
   sound();
   $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,.18)+cardHTML(2,"長生",l,.36);
   $a.hidden=false; $t.textContent="";
@@ -443,6 +498,7 @@ function updateModalState(){
 function confirmManualDraw(){
   if(!selectedMain || !selectedAux || !selectedLife) return;
   cur = { m: selectedMain, a: selectedAux, l: selectedLife };
+  drawTime = getFormattedTime();
   $modal.hidden = true;
   sound();
   $c.innerHTML = cardHTML(0,"主星",cur.m,0) + cardHTML(1,"輔星",cur.a,.18) + cardHTML(2,"長生",cur.l,.36);
@@ -453,11 +509,108 @@ function toast(m){$t.textContent=m;clearTimeout(tt);tt=setTimeout(()=>{$t.textCo
 function fb(text){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok}
 async function copy(){
   if(!cur)return;
-  const text="【紫靈牌卡占卜】\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0]+cur.l[2]+"（"+cur.l[1]+"）";
+  const text="【✨🔮紫靈牌卡 ✦ 線上占卜🔮✨】\n占卜時間："+drawTime+"\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0]+cur.l[2]+"（"+cur.l[1]+"）";
   let ok=false;
   try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true}}catch(e){}
   if(!ok)ok=fb(text);
   toast(ok?"已複製本次結果 ✓":"複製失敗，請手動選取文字");
+}
+
+function saveImage(){
+  if(!cur) return;
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 1100;
+  const ctx = canvas.getContext('2d');
+
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, 1100);
+  bgGrad.addColorStop(0, '#fcf8fd');
+  bgGrad.addColorStop(1, '#f3edf7');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 800, 1100);
+
+  ctx.strokeStyle = '#e6deee';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(30, 30, 740, 1040);
+
+  ctx.fillStyle = '#7e5d95';
+  ctx.font = 'italic 20px "Playfair Display", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Purpling Cards', 400, 95);
+
+  ctx.fillStyle = '#423b4a';
+  ctx.font = 'bold 32px "Noto Serif TC", serif';
+  ctx.fillText('✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨', 400, 145);
+
+  ctx.fillStyle = '#84788f';
+  ctx.font = '16px "Noto Serif TC", serif';
+  ctx.fillText(`占卜時間：${drawTime}`, 400, 185);
+
+  ctx.strokeStyle = '#e6deee';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(150, 215);
+  ctx.lineTo(650, 215);
+  ctx.stroke();
+
+  const cardsData = [
+    { title: '主星', data: cur.m, tone: '#8a6fc0' },
+    { title: '輔星', data: cur.a, tone: '#c47a58' },
+    { title: '長生', data: [cur.l[0] + cur.l[2], cur.l[1]], tone: '#5a9a82' }
+  ];
+
+  const cardWidth = 210;
+  const cardHeight = 310;
+  const startX = 65;
+  const startY = 250;
+  const gapX = 35;
+
+  cardsData.forEach((c, idx) => {
+    const cx = startX + idx * (cardWidth + gapX);
+    const cy = startY;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(130, 100, 150, 0.15)';
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 10;
+    
+    ctx.beginPath();
+    ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.strokeStyle = '#e6deee';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
+    ctx.stroke();
+
+    ctx.fillStyle = c.tone;
+    ctx.font = 'bold 16px "Noto Serif TC", serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(c.title, cx + 20, cy + 35);
+
+    ctx.fillStyle = '#423b4a';
+    ctx.font = 'bold 36px "Noto Serif TC", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 175);
+
+    ctx.fillStyle = c.tone;
+    ctx.font = 'bold 15px "Noto Serif TC", serif';
+    ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 235);
+  });
+
+  ctx.fillStyle = '#84788f';
+  ctx.font = '15px "Noto Serif TC", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 630);
+
+  const link = document.createElement('a');
+  link.download = `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast("圖片已成功儲存到手機相簿 ✓");
 }
 
 $btnQuick.addEventListener("click", quickDraw);
@@ -465,6 +618,7 @@ $btnManual.addEventListener("click", openManualModal);
 $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
 $modalConfirm.addEventListener("click", confirmManualDraw);
 document.getElementById("copy").addEventListener("click", copy);
+document.getElementById("save-img").addEventListener("click", saveImage);
 
 const $sndBtn = document.getElementById("snd-btn");
 $sndBtn.addEventListener("click",()=>{
