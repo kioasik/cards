@@ -437,7 +437,7 @@ function cardHTML(i,cat,s,delay){
   return '<div class="slot"><div class="card t'+i+'" style="animation-delay:'+delay+'s">'+SKY+
     '<div class="head"><span class="cat">'+cat+'</span><span></span></div>'+
     '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+I[s[0]]+'</svg></div>'+
-    '<div class="name">'+s[0]+(s[2]||"")+'</div><div class="kw">'+s[1]+'</div></div></div>';
+    '<div class="name">'+s[0]+'</div><div class="kw">'+s[1]+'</div></div></div>';
 }
 
 let ctx=null, mutedSnd=false;
@@ -463,7 +463,6 @@ function sound(){
   }catch(e){}
 }
 
-// 夢幻療癒水晶音樂盒（預設關閉，由使用者手動開啟）
 let bgmCtx=null, bgmInterval=null, mutedBgm=true;
 function startBgm(){
   if(mutedBgm) return;
@@ -635,7 +634,7 @@ function toast(m){
 function fb(text){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok}
 async function copy(){
   if(!cur)return;
-  const text="【✨🔮紫靈牌卡 ✦ 線上占卜🔮✨】\n占卜時間："+drawTime+"\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0]+cur.l[2]+"（"+cur.l[1]+"）";
+  const text="【✨🔮紫靈牌卡 ✦ 線上占卜🔮✨】\n占卜時間："+drawTime+"\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0]+"（"+cur.l[1]+"）";
   let ok=false;
   try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true}}catch(e){}
   if(!ok)ok=fb(text);
@@ -720,7 +719,7 @@ async function saveImage(){
   const cardsData = [
     { title: '主星', data: cur.m, tone: '#8a6fc0', hexTone: '#8a6fc0' },
     { title: '輔星', data: cur.a, tone: '#c47a58', hexTone: '#c47a58' },
-    { title: '長生', data: [cur.l[0] + cur.l[2], cur.l[1]], tone: '#5a9a82', hexTone: '#5a9a82' }
+    { title: '長生', data: cur.l, tone: '#5a9a82', hexTone: '#5a9a82' }
   ];
 
   const cardWidth = 220;
@@ -787,8 +786,8 @@ async function saveImage(){
     ctx.stroke();
     ctx.restore();
 
-    const iconName = c.data[0].replace(/[0-9]/g, '');
-    const svgPath = I[iconName] || I['紫微'];
+    // 在 Canvas 上精準渲染對應的 SVG 幾何插畫
+    const svgPathStr = I[c.data[0]] || I['紫微'];
     ctx.save();
     const iconScale = 42 / 64;
     ctx.translate(iboxX + (iboxSize - 42) / 2, iboxY + (iboxSize - 42) / 2);
@@ -799,8 +798,9 @@ async function saveImage(){
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     try {
-      const p = new Path2D(svgPath);
+      const p = new Path2D(svgPathStr);
       ctx.stroke(p);
+      ctx.fill(p);
     } catch(e) {}
     ctx.restore();
 
