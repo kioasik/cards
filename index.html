@@ -85,10 +85,15 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
 .toast{height:22px; margin-top:10px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
 @media (max-width:640px){
-  main{padding-top:48px}
-  .cards{grid-template-columns:1fr; max-width:300px; margin-left:auto; margin-right:auto}
-  .slot{aspect-ratio:3/3.9}
-  .ibox{width:30%}
+  main{padding-top:48px; padding-left:10px; padding-right:10px}
+  .cards{grid-template-columns:repeat(3,1fr); gap:8px; max-width:100%; margin-left:auto; margin-right:auto}
+  .slot{aspect-ratio:3/4.2}
+  .ibox{width:28%; margin:10px 0 8px}
+  .card{padding:10px 8px 0}
+  .name{font-size:clamp(18px, 4.2vw, 24px)}
+  .kw{font-size:11px; line-height:1.4; margin-top:4px}
+  .cat{font-size:11px}
+  .pill{font-size:10px; padding:2px 6px}
 }
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
@@ -96,7 +101,7 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
 <body>
 <button class="snd" id="snd" type="button" aria-pressed="true">♪ 音效 開</button>
 <main>
-  <h1>紫靈牌卡占卜</h1>
+  <h1>紫微星象．靈籤抽卡</h1>
   <div class="sub"></div>
   <p class="hint">請清空思緒、在心中默念問題，並按下抽卡鍵</p>
   <button class="btn" id="draw" type="button">抽卡</button>
