@@ -393,7 +393,6 @@ function sound(){
   }catch(e){}
 }
 
-// 夢幻療癒水晶音樂盒結合豎琴風格（72 BPM 平靜神祕水療氛圍、5 秒超長平滑漸入）
 let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
@@ -401,33 +400,25 @@ function startBgm(){
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
     
-    // 溫暖而神祕的五聲音階/療癒調式頻率 (Hz)
     const crystalNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25, 783.99, 1046.50];
     
     const playCrystalArpeggio = () => {
       if(mutedBgm || !bgmCtx) return;
       let t = bgmCtx.currentTime;
       
-      // 72 BPM 下的晶瑩豎琴/音樂盒音符流動
       for(let i=0; i<5; i++){
         const freq = crystalNotes[Math.floor(Math.random() * crystalNotes.length)];
-        
-        // 主音源：水晶清透 Sine 波動
         const osc = bgmCtx.createOscillator();
-        // 疊加微量 Triangle 創造柔和溫潤的音樂盒共鳴
         const oscBox = bgmCtx.createOscillator();
         const gain = bgmCtx.createGain();
         
         osc.type = 'sine';
         osc.frequency.value = freq;
-        
         oscBox.type = 'triangle';
-        oscBox.frequency.value = freq * 0.5; // 低八度共鳴
+        oscBox.frequency.value = freq * 0.5;
         
-        const noteTime = t + (i * 0.83); // 配合 72 BPM 的流動感
-        
+        const noteTime = t + (i * 0.83);
         gain.gain.setValueAtTime(0.000001, noteTime);
-        // 5.0 秒超長漸入，讓開頭完全沒有壓迫感，如水療般輕盈通透
         gain.gain.linearRampToValueAtTime(0.008, noteTime + 5.0);
         gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 7.5);
         
@@ -596,21 +587,43 @@ async function shareWebsite(){
   }
 }
 
+// 輔助函式：將 SVG 路徑字串繪製到 Canvas 上
+function drawSvgPath(ctx, pathStr, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  
+  // 建立 Path2D 物件來解析 SVG 繪圖指令
+  try {
+    const p = new Path2D(pathStr);
+    ctx.stroke(p);
+  } catch(e) {
+    // 簡單相容處理
+  }
+  ctx.restore();
+}
+
 async function saveImage(){
   if(!cur) return;
   const canvas = document.createElement('canvas');
-  const scale = 2;
+  const scale = 2; // 2倍高畫質
   canvas.width = 800 * scale;
   canvas.height = 1100 * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
+  // 1. 背景漸層
   const bgGrad = ctx.createLinearGradient(0, 0, 0, 1100);
   bgGrad.addColorStop(0, '#fcf8fd');
   bgGrad.addColorStop(1, '#f3edf7');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, 800, 1100);
 
+  // 2. 星空背景幾何裝飾
   ctx.save();
   ctx.strokeStyle = 'rgba(157, 127, 178, 0.08)';
   ctx.lineWidth = 1;
@@ -623,10 +636,12 @@ async function saveImage(){
   });
   ctx.restore();
 
+  // 外框線
   ctx.strokeStyle = '#e6deee';
   ctx.lineWidth = 2;
   ctx.strokeRect(30, 30, 740, 1040);
 
+  // 標題區
   ctx.fillStyle = '#7e5d95';
   ctx.font = 'italic 20px "Playfair Display", serif';
   ctx.textAlign = 'center';
@@ -647,10 +662,11 @@ async function saveImage(){
   ctx.lineTo(650, 195);
   ctx.stroke();
 
+  // 牌卡資料設定 (上二下一配置)
   const cardsData = [
-    { title: '主星', data: cur.m, tone: '#8a6fc0' },
-    { title: '輔星', data: cur.a, tone: '#c47a58' },
-    { title: '長生', data: [cur.l[0] + cur.l[2], cur.l[1]], tone: '#5a9a82' }
+    { title: '主星', data: cur.m, tone: '#8a6fc0', hexTone: '#8a6fc0' },
+    { title: '輔星', data: cur.a, tone: '#c47a58', hexTone: '#c47a58' },
+    { title: '長生', data: [cur.l[0] + cur.l[2], cur.l[1]], tone: '#5a9a82', hexTone: '#5a9a82' }
   ];
 
   const cardWidth = 220;
@@ -671,30 +687,93 @@ async function saveImage(){
       cy = row2Y;
     }
 
-    ctx.fillStyle = '#ffffff';
+    ctx.save();
+    // 圓角矩形路徑
     ctx.beginPath();
     ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
-    ctx.fill();
+    ctx.clip();
 
+    // 完美還原網頁卡片的上下漸層背景色
+    const cardBgGrad = ctx.createLinearGradient(cx, cy, cx, cy + cardHeight);
+    // 模擬 color-mix(in srgb, tone 9%, white) 與純白漸層
+    cardBgGrad.addColorStop(0, c.hexTone === '#8a6fc0' ? '#f4f0fa' : c.hexTone === '#c47a58' ? '#faf3f0' : '#f0f7f4');
+    cardBgGrad.addColorStop(0.55, '#ffffff');
+    cardBgGrad.addColorStop(1, '#ffffff');
+    ctx.fillStyle = cardBgGrad;
+    ctx.fillRect(cx, cy, cardWidth, cardHeight);
+
+    // 繪製卡片內的底部星空裝飾線條
+    ctx.strokeStyle = c.tone;
+    ctx.lineWidth = 0.8;
+    ctx.globalAlpha = 0.32;
+    ctx.strokeRect(cx, cy + cardHeight * 0.66, cardWidth, cardHeight * 0.34);
+    ctx.restore();
+
+    // 卡片邊框
     ctx.strokeStyle = '#e6deee';
     ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
     ctx.stroke();
 
+    // 分類標籤 (主星/輔星/長生)
     ctx.fillStyle = c.tone;
     ctx.font = 'bold 15px "Noto Serif TC", serif';
     ctx.textAlign = 'left';
     ctx.fillText(c.title, cx + 20, cy + 35);
 
-    ctx.fillStyle = '#423b4a';
-    ctx.font = 'bold 38px "Noto Serif TC", serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 175);
-
+    // 繪製卡片中央插畫框 (ibox) 與 SVG 圖示
+    const iboxSize = 75;
+    const iboxX = cx + (cardWidth - iboxSize) / 2;
+    const iboxY = cy + 55;
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(iboxX, iboxY, iboxSize, iboxSize, 18);
+    // ibox 背景色
     ctx.fillStyle = c.tone;
-    ctx.font = 'bold 15px "Noto Serif TC", serif';
-    ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 240);
+    ctx.globalAlpha = 0.14;
+    ctx.fill();
+    ctx.globalAlpha = 1.0;
+    // ibox 邊框
+    ctx.strokeStyle = c.tone;
+    ctx.globalAlpha = 0.28;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+
+    // 在 ibox 內繪製 SVG 插畫圖示
+    const iconName = c.data[0].replace(/[0-9]/g, '');
+    const svgPath = I[iconName] || I['紫微'];
+    ctx.save();
+    // 將 SVG 座標系 (64x64) 縮放並平移置中到 ibox 內
+    const iconScale = 42 / 64;
+    ctx.translate(iboxX + (iboxSize - 42) / 2, iboxY + (iboxSize - 42) / 2);
+    ctx.scale(iconScale, iconScale);
+    ctx.strokeStyle = c.tone;
+    ctx.fillStyle = c.tone;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    try {
+      const p = new Path2D(svgPath);
+      ctx.stroke(p);
+    } catch(e) {}
+    ctx.restore();
+
+    // 牌名文字
+    ctx.fillStyle = '#423b4a';
+    ctx.font = 'bold 36px "Noto Serif TC", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 225);
+
+    // 關鍵字
+    ctx.fillStyle = c.tone;
+    ctx.font = 'bold 14.5px "Noto Serif TC", serif';
+    ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 272);
   });
 
+  // 底部祝福語與版權署名
   ctx.fillStyle = '#84788f';
   ctx.font = '14px "Noto Serif TC", serif';
   ctx.textAlign = 'center';
@@ -705,11 +784,11 @@ async function saveImage(){
 
   canvas.toBlob(async (blob) => {
     const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'png' });
+    
+    // 【修改重點】分享出去時只帶圖片，不帶任何多餘文字訊息
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({
-          title: '✨🔮紫靈牌卡 ✦ 線上占卜🔮✨',
-          text: `【紫靈牌卡占卜結果】\n占卜時間：${drawTime}`,
           files: [file]
         });
         toast("分享成功 ✓");
