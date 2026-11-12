@@ -194,17 +194,17 @@ h1{
 
 [hidden]{display:none!important}
 
-/* 頂部現代感玻璃擬態浮動通知 (Floating Toast Notification) */
+/* 畫面下方現代感玻璃擬態浮動通知 (Floating Toast Notification) */
 .floating-toast {
   position: fixed;
-  top: max(20px, calc(env(safe-area-inset-top, 0px) + 12px));
+  bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
   left: 50%;
-  transform: translateX(-50%) translateY(-30px);
-  background: rgba(255, 255, 255, 0.85);
+  transform: translateX(-50%) translateY(30px);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(157, 127, 178, 0.3);
-  box-shadow: 0 10px 30px rgba(126, 93, 149, 0.2);
+  box-shadow: 0 10px 30px rgba(126, 93, 149, 0.22);
   color: var(--accent-d);
   font-size: 14.5px;
   letter-spacing: 0.1em;
@@ -303,7 +303,7 @@ footer{
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
 </div>
 
-<!-- 頂部浮動玻璃擬態通知框 -->
+<!-- 畫面下方現代感玻璃擬態浮動通知 -->
 <div class="floating-toast" id="toast" role="status"></div>
 
 <main>
@@ -463,6 +463,7 @@ function sound(){
   }catch(e){}
 }
 
+// 夢幻療癒水晶音樂盒（一進入網頁自動播放，帶 5 秒極緩慢漸入）
 let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
@@ -513,14 +514,19 @@ function stopBgm(){
   if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
 }
 
+// 頁面載入後立即嘗試自動播放 BGM
 window.addEventListener('load', () => {
   if(!mutedBgm) {
     startBgm();
   }
 });
+// 任何頁面互動（點擊/觸控）都能瞬間解鎖瀏覽器限制並播放 BGM
 window.addEventListener('pointerdown', () => {
   if(!mutedBgm && bgmCtx && bgmCtx.state === "suspended") {
     bgmCtx.resume();
+  }
+  if(!mutedBgm && !bgmInterval) {
+    startBgm();
   }
 }, { once: true });
 
@@ -561,7 +567,6 @@ function quickDraw(){
   if(busy)return; busy=true;
   $btnQuick.disabled=true; $btnManual.disabled=true;
   
-  // 洗牌時先清空畫面顯示載入感
   $c.innerHTML = '<div class="slot"><div class="ph" style="animation: pulse 1s infinite;">洗牌中...</div></div>'.repeat(3);
   
   setTimeout(() => {
@@ -570,11 +575,10 @@ function quickDraw(){
     drawTime = getFormattedTime();
     sound();
     showResultView();
-    // 依序以 0秒、0.2秒、0.4秒的時間差依序翻開 (Staggered Animation)
     $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,0.2)+cardHTML(2,"長生",l,0.4);
     $t.textContent="";
     busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;
-  }, 450); // 模擬短暫洗牌沈浸時間
+  }, 450);
 }
 
 function openManualModal(){
@@ -634,7 +638,7 @@ function confirmManualDraw(){
   }, 350);
 }
 
-// 現代感頂部浮動通知
+// 畫面下方浮動通知
 function toast(m){
   $t.textContent = m;
   $t.classList.add("show");
