@@ -134,7 +134,7 @@ h1{
 .snd:active{transform:scale(0.95)}
 
 .cards{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:42px 0 26px; perspective:1000px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:42px 0 20px; perspective:1000px;
 }
 .slot{aspect-ratio:3/4.3; position:relative}
 .ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em; background: rgba(255,255,255,0.6); backdrop-filter: blur(4px);}
@@ -188,35 +188,25 @@ h1{
 
 [hidden]{display:none!important}
 
+/* 放置在牌卡下方的返回提示列（非懸浮、不擋牌） */
 .screenshot-bar {
-  position: fixed;
-  top: env(safe-area-inset-top, 16px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-50px);
-  background: rgba(126, 93, 149, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #fff;
+  margin: 16px auto 8px;
+  background: rgba(126, 93, 149, 0.12);
+  border: 1.5px dashed var(--accent);
+  color: var(--accent-d);
   font-size: 14px;
-  letter-spacing: 0.12em;
-  padding: 10px 22px;
-  border-radius: 999px;
-  z-index: 1000;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  letter-spacing: 0.1em;
+  padding: 12px 20px;
+  border-radius: 12px;
   cursor: pointer;
-  display: flex;
+  display: none;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.3s ease;
+  transition: background 0.15s;
 }
-.screenshot-bar.show {
-  transform: translateX(-50%) translateY(16px);
-  opacity: 1;
-  pointer-events: auto;
-}
-.screenshot-bar:active { transform: translateX(-50%) translateY(16px) scale(0.96); }
+.screenshot-bar:hover { background: rgba(126, 93, 149, 0.2); }
+.screenshot-bar:active { transform: scale(0.98); }
 
 .floating-toast {
   position: fixed;
@@ -317,10 +307,6 @@ footer{
 </head>
 <body>
 
-<div class="screenshot-bar" id="screenshot-bar" role="button">
-  <span>📷 進入截圖模式中 (點擊此處返回)</span>
-</div>
-
 <div class="snd-group" id="snd-group">
   <button class="snd" id="bgm-btn" type="button" aria-pressed="false">♫ 背景音樂 關</button>
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
@@ -348,6 +334,11 @@ footer{
     <div class="slot"><div class="ph">輔星</div></div>
     <div class="slot"><div class="ph">長生</div></div>
   </section>
+
+  <!-- 放置在牌卡下方的截圖模式返回提示列 -->
+  <div class="screenshot-bar" id="screenshot-bar" role="button">
+    <span>📷 進入截圖模式中 (點擊此處返回)</span>
+  </div>
 
   <div class="actions" id="actions" hidden>
     <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解答：）</div>
@@ -689,7 +680,7 @@ function enterScreenshotMode(){
   document.getElementById("snd-group").style.pointerEvents = "none";
   $a.style.opacity = "0";
   $a.style.pointerEvents = "none";
-  document.getElementById("screenshot-bar").classList.add("show");
+  document.getElementById("screenshot-bar").style.display = "flex";
 }
 
 function exitScreenshotMode(){
@@ -697,7 +688,7 @@ function exitScreenshotMode(){
   document.getElementById("snd-group").style.pointerEvents = "auto";
   $a.style.opacity = "1";
   $a.style.pointerEvents = "auto";
-  document.getElementById("screenshot-bar").classList.remove("show");
+  document.getElementById("screenshot-bar").style.display = "none";
 }
 
 $btnQuick.addEventListener("click", quickDraw);
