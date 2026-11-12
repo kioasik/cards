@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="googlebot" content="noindex, nofollow">
-<title>紫靈牌卡占卜</title>
+<title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg1:#fffdf8; --bg2:#f3f8f6; --glow:rgba(255,226,170,.55);
-  --text:#3d4a47; --muted:#7e8c88; --line:#e3ebe8;
-  --card:#ffffff; --accent:#8fb8a8; --accent-d:#6f9d8c; --btn-text:#fff;
-  --shadow:0 10px 30px rgba(120,150,140,.16);
+  --bg1:#fcf8fd; --bg2:#f3edf7; --glow:rgba(215,180,255,.45);
+  --text:#423b4a; --muted:#84788f; --line:#e6deee;
+  --card:#ffffff; --accent:#9d7fb2; --accent-d:#7e5d95; --btn-text:#fff;
+  --shadow:0 10px 30px rgba(130,100,150,.14);
   --t0:#8a6fc0; --t1:#c47a58; --t2:#5a9a82;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -35,7 +35,7 @@ main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
   align-items: center;
   justify-content: center;
   gap: 16px;
-  color: #c47a58;
+  color: var(--accent-d);
   font-size: 15px;
   letter-spacing: 0.25em;
   margin-bottom: 10px;
@@ -46,7 +46,7 @@ main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
   display: block;
   width: 45px;
   height: 1px;
-  background: #c47a58;
+  background: var(--accent-d);
   opacity: 0.6;
 }
 
@@ -59,7 +59,16 @@ h1{
   padding-left: .25em;
 }
 
-.hint{color:var(--muted); font-size:15px; line-height:1.9; letter-spacing:.08em; margin:0 auto 30px; max-width:30em}
+/* 說明文字排版（支援空行） */
+.hint{
+  color:var(--muted); 
+  font-size:15px; 
+  line-height:2.0; 
+  letter-spacing:.08em; 
+  margin:0 auto 30px; 
+  max-width:32em;
+  white-space: pre-line;
+}
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 .btn{
@@ -72,10 +81,10 @@ h1{
   background: linear-gradient(135deg, #e09f6b, #c47a58);
   box-shadow: 0 8px 22px rgba(196,122,88,0.3);
 }
-/* 手動抽卡 (質感綠色) */
-.btn-green{
+/* 手動抽卡 (紫靈專屬質感紫色) */
+.btn-purple{
   background: linear-gradient(135deg, var(--accent), var(--accent-d));
-  box-shadow: 0 8px 22px rgba(111,157,140,0.32);
+  box-shadow: 0 8px 22px rgba(126,93,149,0.3);
 }
 
 .btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.7;cursor:default}
@@ -116,13 +125,13 @@ h1{
 
 .actions{min-height:52px}
 .copy{font-family:inherit; font-size:15px; letter-spacing:.2em; padding:10px 28px; background:transparent; color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer}
-.copy:hover{background:rgba(143,184,168,.15)}
+.copy:hover{background:rgba(157,127,178,.15)}
 .toast{height:22px; margin-top:10px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
 
 /* 手動選牌彈跳視窗 */
 #manual-modal{
-  position:fixed; inset:0; background:rgba(29,36,35,0.75); backdrop-filter:blur(6px);
+  position:fixed; inset:0; background:rgba(42,35,48,0.75); backdrop-filter:blur(6px);
   z-index:50; display:flex; justify-content:center; align-items:center; padding:20px; overflow-y:auto;
 }
 .modal-box{
@@ -141,15 +150,15 @@ h1{
 
 .card-back{
   flex:0 0 54px; height:78px; 
-  background: linear-gradient(135deg, #162221, #253331); 
+  background: linear-gradient(135deg, #201a24, #312838); 
   border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); 
   border-radius:8px;
   cursor:pointer; position:relative; transition:transform .15s, border-color .15s; 
-  display:flex; flex-direction:column; align-items:center; justify-content:center; color: #a3c1b4;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
 }
 .card-back:hover{transform:translateY(-3px); border-color: var(--accent);}
 .card-back.selected{
-  border:2px solid var(--accent-d); box-shadow:0 0 12px rgba(111,157,140,0.6); transform:translateY(-4px);
+  border:2px solid var(--accent-d); box-shadow:0 0 12px rgba(126,93,149,0.6); transform:translateY(-4px);
 }
 .card-back.selected::after{
   content:'✓'; position:absolute; top:-6px; right:-6px; background:var(--accent-d); color:#fff;
@@ -157,7 +166,7 @@ h1{
 }
 .modal-actions{display:flex; justify-content:center; gap:14px; margin-top:24px}
 
-/* 手機版排版調整：主星、輔星一行，長生換行置中且維持原尺寸 */
+/* 手機版排版調整 */
 @media (max-width:640px){
   main{padding-top:48px; padding-left:14px; padding-right:14px}
   .cards{
@@ -179,18 +188,14 @@ h1{
 
 <main>
   <div class="sub-title">Purpling Cards</div>
-  <h1>紫靈牌卡占卜</h1>
-  <p class="hint">請清空思緒、在心中默念問題，並選擇你的占卜方式</p>
+  <h1>✨🔮 紫靈牌卡占卜 🔮✨</h1>
+  <p class="hint">嗨，歡迎你來到這裡。
+
+現在，請試著清空思緒、在心中默念你想獲得解答的問題，並選擇喜歡的占卜方式。</p>
   
   <div class="btn-group">
-    <button class="btn btn-orange" id="draw-quick" type="button">
-      <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
-      一鍵抽卡
-    </button>
-    <button class="btn btn-green" id="draw-manual" type="button">
-      <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
-      手動抽卡
-    </button>
+    <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
+    <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
   </div>
 
   <section class="cards" id="cards" aria-live="polite">
@@ -226,7 +231,7 @@ h1{
     </div>
 
     <div class="modal-actions">
-      <button class="btn btn-green" id="modal-confirm" type="button" disabled style="opacity:0.5;">確認抽牌</button>
+      <button class="btn btn-purple" id="modal-confirm" type="button" disabled style="opacity:0.5;">確認抽牌</button>
       <button class="btn btn-orange" id="modal-cancel" type="button">取消</button>
     </div>
   </div>
@@ -296,7 +301,6 @@ function cardHTML(i,cat,s,delay){
     '<div class="name">'+s[0]+(s[2]||"")+'</div><div class="kw">'+s[1]+'</div></div></div>';
 }
 
-// 抽卡音效（預設開啟：mutedSnd = false）
 let ctx=null, mutedSnd=false;
 function sound(){
   if(mutedSnd)return;
@@ -320,7 +324,6 @@ function sound(){
   }catch(e){}
 }
 
-// 清新療癒背景音樂（預設開啟：mutedBgm = false）
 let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
@@ -364,10 +367,8 @@ function stopBgm(){
   if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
 }
 
-// 網頁載入後如果瀏覽器允許，自動啟動背景音樂
 window.addEventListener('load', () => {
   if(!mutedBgm) {
-    // 試著自動播放 BGM (部分手機瀏覽器需使用者有任意點擊才會發出聲音，點擊後會正常運作)
     setTimeout(startBgm, 500);
   }
 });
@@ -466,7 +467,6 @@ $sndBtn.addEventListener("click",()=>{
 });
 
 const $bgmBtn = document.getElementById("bgm-btn");
-// 初始化按鈕文字與狀態
 $bgmBtn.textContent = "♫ 背景音樂 開";
 $bgmBtn.setAttribute("aria-pressed", "true");
 
