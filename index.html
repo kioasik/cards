@@ -182,19 +182,22 @@ h1{
   font-size: 13.5px;
   color: var(--accent-d);
   letter-spacing: 0.08em;
-  margin: 6px 0 2px;
+  margin: 12px 0 10px;
   opacity: 0.9;
+  white-space: nowrap;
 }
 
 [hidden]{display:none!important}
 
 .screenshot-exit-area {
-  margin-top: 16px;
+  margin-top: 12px;
   display: none;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
-.floating-toast {
+.floating-toast{
   position: fixed;
   bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
   left: 50%;
@@ -287,6 +290,7 @@ footer{
     grid-column: 1 / -1; max-width: 180px; margin: 0 auto; width: 100%;
   }
   .slot{aspect-ratio:3/4.3}
+  .consultant-tip { font-size: 12px; }
 }
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
@@ -321,9 +325,9 @@ footer{
     <div class="slot"><div class="ph">長生</div></div>
   </section>
 
-  <!-- 牌卡下方的返回按鈕與溫馨提示區塊 -->
+  <!-- 截圖模式專用：完整提示句與置中返回按鈕 -->
   <div class="screenshot-exit-area" id="screenshot-exit-area">
-    <div class="consultant-tip" style="margin-bottom: 12px;">*記得把結果傳給你的占卜師，讓他為你解讀：）</div>
+    <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解讀：）</div>
     <div>
       <button class="btn btn-purple" id="exit-screenshot" type="button" style="font-size: 15px; padding: 10px 28px;">返回</button>
     </div>
@@ -427,7 +431,7 @@ const I = {
 
 const MAIN=[["紫微","尊貴・領導・統御"],["天府","穩重・庫藏・守成"],["天機","機智・謀略・變動"],["太陰","緩慢・收斂・累積"],["七殺","果決・孤勇・肅殺"],["破軍","突破・衝勁・開創"],["貪狼","慾望・桃花・多才"],["天梁","蔭庇・清高・化解"],["天同","福氣・小孩・享受"],["廉貞","交際・原則・感性"],["太陽","熱情・名氣・無私"],["武曲","執行力・剛毅・果決"],["天相","輔佐・連結・影響"],["巨門","口才・暗藏・蒐集"]];
 const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突發"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
-const LIFE=[["長生1",""],["沐浴2",""],["冠帶3",""],["臨官4",""],["帝旺5",""],["衰6",""],["病7",""],["死8",""],["墓9",""],["絕10",""],["胎11",""],["養12",""]];
+const LIFE=[["長生-1",""],["沐浴-2",""],["冠帶-3",""],["臨官-4",""],["帝旺-5",""],["衰-6",""],["病-7",""],["死-8",""],["墓-9",""],["絕-10",""],["胎-11",""],["養-12",""]];
 
 const SKY='<svg class="sky" viewBox="0 0 200 80" preserveAspectRatio="xMidYMax slice" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="100" cy="78" r="46"/><circle cx="100" cy="78" r="34" stroke-dasharray="2 4"/><path d="M100 32l40 69H60zM60 55h80l-40 69z" transform="translate(0 -24)"/><path d="M24 22l4 8 8 4-8 4-4 8-4-8-8-4 8-4zM170 14l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="currentColor" stroke="none"/><circle cx="46" cy="52" r="1.4" fill="currentColor"/><circle cx="154" cy="46" r="1.4" fill="currentColor"/><circle cx="70" cy="14" r="1.2" fill="currentColor"/><circle cx="132" cy="22" r="1.2" fill="currentColor"/><circle cx="184" cy="60" r="1.4" fill="currentColor"/><circle cx="14" cy="66" r="1.2" fill="currentColor"/><path d="M24 30L46 52M154 46l16-26" stroke-opacity=".6"/></svg>';
 
@@ -435,7 +439,7 @@ function rnd(n){try{const a=new Uint32Array(1),l=Math.floor(4294967296/n)*n;do{c
 const pick=a=>a[rnd(a.length)];
 
 function cardHTML(i,cat,s,delay){
-  const iconKey = s[0].replace(/[0-9]/g, '');
+  const iconKey = s[0].replace(/-[0-9]+/g, '').replace(/[0-9]/g, '');
   const kwHtml = s[1] ? '<div class="kw">'+s[1]+'</div>' : '';
   return '<div class="slot"><div class="card t'+i+'" style="animation-delay:'+delay+'s">'+SKY+
     '<div class="head"><span class="cat">'+cat+'</span><span></span></div>'+
