@@ -6,9 +6,9 @@
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="googlebot" content="noindex, nofollow">
 
-<!-- 讓 LINE 或其他通訊軟體預覽時顯示正確標題與描述 -->
+<!-- 讓 LINE 或其他通訊軟體預覽時顯示正確標題與最新文案描述 -->
 <meta property="og:title" content="✨🔮紫靈牌卡 ✦ 線上占卜🔮✨">
-<meta property="og:description" content="請清空思緒、在心中默念問題，並選擇你的占卜方式">
+<meta property="og:description" content="嗨，歡迎你來到這裡。現在，請試著清空思緒、在心中默念你的問題，並選擇喜歡的占卜方式。">
 
 <title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,7 +91,7 @@ h1{
   white-space: nowrap;
 }
 
-/* 說明文字：無空行 */
+/* 說明文字：指定分段換行 */
 .hint{
   color:var(--muted); 
   font-size:15px; 
@@ -99,6 +99,7 @@ h1{
   letter-spacing:.08em; 
   margin:0 auto 30px; 
   max-width:32em;
+  white-space: pre-line;
 }
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
@@ -154,15 +155,25 @@ h1{
 .sky{position:absolute; left:0; right:0; bottom:0; width:100%; height:34%; color:var(--tone); opacity:.32; pointer-events:none}
 @keyframes flip{from{opacity:0; transform:rotateY(90deg) translateY(10px)} to{opacity:1; transform:none}}
 
-/* 動作按鈕區 */
-.actions{min-height:52px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;}
+/* 動作按鈕區：雙排設計 */
+.actions{min-height:52px; display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:10px;}
+.action-row{display:flex; justify-content:center; gap:12px; flex-wrap:wrap; width:100%;}
 .action-btn{
-  font-family:inherit; font-size:15px; letter-spacing:.2em; padding:10px 24px; background:var(--card); 
+  font-family:inherit; font-size:15px; letter-spacing:.15em; padding:10px 22px; background:var(--card); 
   color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer;
   display:inline-flex; align-items:center; gap:6px; transition:background .15s; box-shadow: 0 4px 12px rgba(130,100,150,0.08);
 }
 .action-btn:hover{background:rgba(157,127,178,.15)}
-.toast{width:100%; height:22px; margin-top:8px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
+
+.consultant-tip{
+  font-size: 13.5px;
+  color: var(--accent-d);
+  letter-spacing: 0.08em;
+  margin: 6px 0 2px;
+  opacity: 0.9;
+}
+
+.toast{width:100%; height:22px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
 
 /* 手動選牌彈跳視窗 */
@@ -202,7 +213,15 @@ h1{
 }
 .modal-actions{display:flex; justify-content:center; gap:14px; margin-top:24px}
 
-/* 手機版排版調整 */
+footer{
+  margin-top: 48px;
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+/* 手機版排版調整：網頁上的卡片維持原本一列三張排版 */
 @media (max-width:640px){
   main{padding-top:48px; padding-left:14px; padding-right:14px}
   .cards{
@@ -225,11 +244,16 @@ h1{
 <main>
   <div class="sub-title">Purpling Cards</div>
   <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
-  <p class="hint">嗨，歡迎你來到這裡。現在，請試著清空思緒、在心中默念你的問題，並選擇喜歡的占卜方式。</p>
   
-  <div class="btn-group">
-    <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
-    <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
+  <div id="welcome-section">
+    <p class="hint">嗨，歡迎你來到這裡。
+現在，請試著清空思緒、在心中默念你的問題，
+並選擇喜歡的占卜方式。</p>
+    
+    <div class="btn-group">
+      <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
+      <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
+    </div>
   </div>
 
   <section class="cards" id="cards" aria-live="polite">
@@ -237,11 +261,21 @@ h1{
     <div class="slot"><div class="ph">輔星</div></div>
     <div class="slot"><div class="ph">長生</div></div>
   </section>
+
   <div class="actions" id="actions" hidden>
-    <button class="action-btn" id="copy" type="button">複製本次結果</button>
-    <button class="action-btn" id="save-img" type="button">儲存圖片</button>
+    <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解答：）</div>
+    <div class="action-row">
+      <button class="action-btn" id="copy" type="button">複製結果文字</button>
+      <button class="action-btn" id="save-img" type="button">儲存圖片</button>
+      <button class="action-btn" id="share-site" type="button">分享此網站</button>
+    </div>
+    <div class="action-row" style="margin-top: 4px;">
+      <button class="action-btn" id="reset-draw" type="button" style="border-color: #c47a58; color: #c47a58;">↺ 再抽一次</button>
+    </div>
     <div class="toast" id="toast" role="status"></div>
   </div>
+
+  <footer>Made with 💜 by YAN-HAN</footer>
 </main>
 
 <!-- 手動選牌彈跳視窗 -->
@@ -359,7 +393,7 @@ function sound(){
   }catch(e){}
 }
 
-// 保留水晶豎琴音樂 + 漸層淡入 (Fade In)
+// 音樂超長 5 秒極緩慢漸入（Fade In），完全消除前幾個高音的刺耳感
 let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
@@ -381,21 +415,21 @@ function startBgm(){
         osc.type = 'sine';
         osc.frequency.value = freq;
         
-        const noteTime = t + (i * 0.4);
-        gain.gain.setValueAtTime(0.0001, noteTime);
-        // 漸層淡入：從 0 緩慢放大至舒服的音量 (0.012)
-        gain.gain.linearRampToValueAtTime(0.012, noteTime + 1.2);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.5);
+        const noteTime = t + (i * 0.5);
+        gain.gain.setValueAtTime(0.000001, noteTime);
+        // 拉長至 5.0 秒的極緩慢淡入
+        gain.gain.linearRampToValueAtTime(0.010, noteTime + 5.0);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 6.2);
         
         osc.connect(gain).connect(bgmCtx.destination);
         osc.start(noteTime);
-        osc.stop(noteTime + 2.8);
+        osc.stop(noteTime + 6.5);
       }
     };
 
     playArpeggio();
     if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playArpeggio, 4000);
+    bgmInterval = setInterval(playArpeggio, 6000);
   }catch(e){}
 }
 
@@ -406,12 +440,18 @@ function stopBgm(){
 
 window.addEventListener('load', () => {
   if(!mutedBgm) {
-    setTimeout(startBgm, 800);
+    startBgm();
   }
 });
+window.addEventListener('pointerdown', () => {
+  if(!mutedBgm && bgmCtx && bgmCtx.state === "suspended") {
+    bgmCtx.resume();
+  }
+}, { once: true });
 
 let cur=null, drawTime="", busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
+const $welcome = document.getElementById("welcome-section");
 const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual");
 const $modal = document.getElementById("manual-modal");
 const $deckMain = document.getElementById("deck-main"), $deckAux = document.getElementById("deck-aux"), $deckLife = document.getElementById("deck-life");
@@ -429,6 +469,19 @@ function getFormattedTime() {
   return `${y}/${m}/${d} ${h}:${min}`;
 }
 
+function showResultView(){
+  $welcome.hidden = true;
+  $a.hidden = false;
+}
+
+function resetDraw(){
+  cur = null;
+  $welcome.hidden = false;
+  $a.hidden = true;
+  $c.innerHTML = '<div class="slot"><div class="ph">主星</div></div><div class="slot"><div class="ph">輔星</div></div><div class="slot"><div class="ph">長生</div></div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function quickDraw(){
   if(busy)return; busy=true;
   $btnQuick.disabled=true; $btnManual.disabled=true;
@@ -436,8 +489,9 @@ function quickDraw(){
   cur={m,a,l};
   drawTime = getFormattedTime();
   sound();
+  showResultView();
   $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,.18)+cardHTML(2,"長生",l,.36);
-  $a.hidden=false; $t.textContent="";
+  $t.textContent="";
   setTimeout(()=>{busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;},1000);
 }
 
@@ -488,8 +542,9 @@ function confirmManualDraw(){
   drawTime = getFormattedTime();
   $modal.hidden = true;
   sound();
+  showResultView();
   $c.innerHTML = cardHTML(0,"主星",cur.m,0) + cardHTML(1,"輔星",cur.a,.18) + cardHTML(2,"長生",cur.l,.36);
-  $a.hidden = false; $t.textContent = "";
+  $t.textContent = "";
 }
 
 function toast(m){$t.textContent=m;clearTimeout(tt);tt=setTimeout(()=>{$t.textContent=""},2200)}
@@ -500,99 +555,156 @@ async function copy(){
   let ok=false;
   try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true}}catch(e){}
   if(!ok)ok=fb(text);
-  toast(ok?"已複製本次結果 ✓":"複製失敗，請手動選取文字");
+  toast(ok?"已複製結果文字 ✓":"複製失敗，請手動選取文字");
 }
 
-// 升級為手機原生分享（可選 LINE 傳送或儲存到相簿）
+async function shareWebsite(){
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: '✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨',
+        text: '邀請你一起來體驗精準優雅的紫靈牌卡線上占卜：',
+        url: window.location.href
+      });
+      toast("分享成功 ✓");
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.log("Share failed", err);
+      }
+    }
+  } else {
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      ok = true;
+    } catch(e) {}
+    toast(ok ? "網址已複製到剪貼簿 ✓" : "分享失敗");
+  }
+}
+
+// 產生超高清圖片 (High-DPI Retina Canvas)，上二下一排版，無陰影，帶星空背景
 async function saveImage(){
   if(!cur) return;
   const canvas = document.createElement('canvas');
-  canvas.width = 800;
-  canvas.height = 1100;
+  const scale = 2; // 2倍解析度讓圖片極度清晰
+  canvas.width = 800 * scale;
+  canvas.height = 1100 * scale;
   const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
 
+  // 背景漸層
   const bgGrad = ctx.createLinearGradient(0, 0, 0, 1100);
   bgGrad.addColorStop(0, '#fcf8fd');
   bgGrad.addColorStop(1, '#f3edf7');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, 800, 1100);
 
+  // 繪製背景星空幾何裝飾與星芒
+  ctx.save();
+  ctx.strokeStyle = 'rgba(157, 127, 178, 0.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(400, 330, 240, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(400, 330, 320, 0, Math.PI * 2); ctx.stroke();
+
+  // 星芒點綴
+  ctx.fillStyle = 'rgba(157, 127, 178, 0.3)';
+  [[120, 100], [680, 150], [90, 850], [710, 800], [400, 950]].forEach(([px, py]) => {
+    ctx.beginPath(); ctx.arc(px, py, 2, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+
+  // 邊框
   ctx.strokeStyle = '#e6deee';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 2;
   ctx.strokeRect(30, 30, 740, 1040);
 
+  // 標題區
   ctx.fillStyle = '#7e5d95';
   ctx.font = 'italic 20px "Playfair Display", serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Purpling Cards', 400, 95);
+  ctx.fillText('Purpling Cards', 400, 85);
 
   ctx.fillStyle = '#423b4a';
-  ctx.font = 'bold 32px "Noto Serif TC", serif';
-  ctx.fillText('✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨', 400, 145);
+  ctx.font = 'bold 30px "Noto Serif TC", serif';
+  ctx.fillText('✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨', 400, 130);
 
   ctx.fillStyle = '#84788f';
-  ctx.font = '16px "Noto Serif TC", serif';
-  ctx.fillText(`占卜時間：${drawTime}`, 400, 185);
+  ctx.font = '15px "Noto Serif TC", serif';
+  ctx.fillText(`占卜時間：${drawTime}`, 400, 168);
 
   ctx.strokeStyle = '#e6deee';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(150, 215);
-  ctx.lineTo(650, 215);
+  ctx.moveTo(150, 195);
+  ctx.lineTo(650, 195);
   ctx.stroke();
 
+  // 牌卡資料設定 (上二下一配置)
   const cardsData = [
     { title: '主星', data: cur.m, tone: '#8a6fc0' },
     { title: '輔星', data: cur.a, tone: '#c47a58' },
     { title: '長生', data: [cur.l[0] + cur.l[2], cur.l[1]], tone: '#5a9a82' }
   ];
 
-  const cardWidth = 210;
-  const cardHeight = 310;
-  const startX = 65;
-  const startY = 250;
-  const gapX = 35;
+  const cardWidth = 220;
+  const cardHeight = 320;
+  const gapX = 40;
+  const row1Y = 225;
+  const row2Y = 575;
+  const row1StartX = (800 - (cardWidth * 2 + gapX)) / 2; // 上方兩張置中
+  const row2StartX = (800 - cardWidth) / 2; // 下方一張置中
 
   cardsData.forEach((c, idx) => {
-    const cx = startX + idx * (cardWidth + gapX);
-    const cy = startY;
+    let cx, cy;
+    if (idx < 2) {
+      cx = row1StartX + idx * (cardWidth + gapX);
+      cy = row1Y;
+    } else {
+      cx = row2StartX;
+      cy = row2Y;
+    }
 
+    // 無陰影的乾淨純白卡片底色
     ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = 'rgba(130, 100, 150, 0.15)';
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 10;
-    
     ctx.beginPath();
     ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
     ctx.fill();
-    ctx.shadowBlur = 0;
 
+    // 卡片邊框與微漸層頂部
     ctx.strokeStyle = '#e6deee';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.roundRect(cx, cy, cardWidth, cardHeight, 18);
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
+    // 卡片內文標題
     ctx.fillStyle = c.tone;
-    ctx.font = 'bold 16px "Noto Serif TC", serif';
+    ctx.font = 'bold 15px "Noto Serif TC", serif';
     ctx.textAlign = 'left';
     ctx.fillText(c.title, cx + 20, cy + 35);
 
+    // 主標示文字（無陰影、超高清）
     ctx.fillStyle = '#423b4a';
-    ctx.font = 'bold 36px "Noto Serif TC", serif';
+    ctx.font = 'bold 38px "Noto Serif TC", serif';
     ctx.textAlign = 'center';
     ctx.fillText(c.data[0], cx + cardWidth / 2, cy + 175);
 
+    // 關鍵字
     ctx.fillStyle = c.tone;
     ctx.font = 'bold 15px "Noto Serif TC", serif';
-    ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 235);
+    ctx.fillText(c.data[1], cx + cardWidth / 2, cy + 240);
   });
 
-  ctx.fillStyle = '#84788f';
-  ctx.font = '15px "Noto Serif TC", serif';
+  // 底部溫馨小提示與版權
+  ctx.fillStyle = '#7e5d95';
+  ctx.font = '14.5px "Noto Serif TC", serif';
   ctx.textAlign = 'center';
-  ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 630);
+  ctx.fillText('*記得把結果傳給你的占卜師，讓他為你解答：）', 400, 935);
+
+  ctx.fillStyle = '#84788f';
+  ctx.font = '13.5px "Noto Serif TC", serif';
+  ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 975);
+
+  ctx.font = '11px "Noto Serif TC", serif';
+  ctx.fillText('Made with 💜 by YAN-HAN', 400, 1015);
 
   canvas.toBlob(async (blob) => {
     const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'png' });
@@ -612,7 +724,6 @@ async function saveImage(){
         return;
       }
     }
-    // 備用下載機制（不支援 Share API 的桌面瀏覽器）
     const link = document.createElement('a');
     link.download = file.name;
     link.href = URL.createObjectURL(blob);
@@ -627,6 +738,8 @@ $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
 $modalConfirm.addEventListener("click", confirmManualDraw);
 document.getElementById("copy").addEventListener("click", copy);
 document.getElementById("save-img").addEventListener("click", saveImage);
+document.getElementById("share-site").addEventListener("click", shareWebsite);
+document.getElementById("reset-draw").addEventListener("click", resetDraw);
 
 const $sndBtn = document.getElementById("snd-btn");
 $sndBtn.addEventListener("click",()=>{
@@ -636,9 +749,6 @@ $sndBtn.addEventListener("click",()=>{
 });
 
 const $bgmBtn = document.getElementById("bgm-btn");
-$bgmBtn.textContent = "♫ 背景音樂 開";
-$bgmBtn.setAttribute("aria-pressed", "true");
-
 $bgmBtn.addEventListener("click",()=>{
   mutedBgm = !mutedBgm;
   if(!mutedBgm){
