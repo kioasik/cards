@@ -28,20 +28,56 @@ body{
   background-color:var(--bg1);
 }
 main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
-h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin:0 0 6px; padding-left:.25em}
-.sub{width:48px;height:2px;background:var(--accent);margin:14px auto 22px;border-radius:2px;opacity:.7}
+
+/* 副標題設計 */
+.sub-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #c47a58;
+  font-size: 15px;
+  letter-spacing: 0.25em;
+  margin-bottom: 10px;
+  font-family: serif;
+}
+.sub-title::before, .sub-title::after {
+  content: "";
+  display: block;
+  width: 45px;
+  height: 1px;
+  background: #c47a58;
+  opacity: 0.6;
+}
+
+/* 主標題加粗 */
+h1{
+  font-weight: 700; 
+  font-size: clamp(28px, 6vw, 42px); 
+  letter-spacing: .25em; 
+  margin: 0 0 24px; 
+  padding-left: .25em;
+}
+
 .hint{color:var(--muted); font-size:15px; line-height:1.9; letter-spacing:.08em; margin:0 auto 30px; max-width:30em}
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 .btn{
-  font-family:inherit; font-size:17px; letter-spacing:.2em; padding:12px 32px; border:none; border-radius:999px; cursor:pointer;
-  color:var(--btn-text); background:linear-gradient(135deg,var(--accent),var(--accent-d));
-  box-shadow:0 8px 22px rgba(111,157,140,.32); transition:transform .15s;
+  font-family:inherit; font-size:17px; letter-spacing:.15em; padding:12px 30px; border:none; border-radius:999px; cursor:pointer;
+  color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.12); transition:transform .15s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-outline{
-  background:transparent; color:var(--accent-d); border:1.5px solid var(--accent);
+/* 一鍵抽卡 (暖橘色) */
+.btn-orange{
+  background: linear-gradient(135deg, #e09f6b, #c47a58);
+  box-shadow: 0 8px 22px rgba(196,122,88,0.3);
 }
-.btn-outline:hover{background:rgba(143,184,168,.15)}
+/* 手動抽卡 (質感綠色) */
+.btn-green{
+  background: linear-gradient(135deg, var(--accent), var(--accent-d));
+  box-shadow: 0 8px 22px rgba(111,157,140,0.32);
+}
+
 .btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.7;cursor:default}
 
 .snd-group{
@@ -67,7 +103,6 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
 .t0{--tone:var(--t0)} .t1{--tone:var(--t1)} .t2{--tone:var(--t2)}
 .head{width:100%; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1}
 .cat{font-size:13px; letter-spacing:.25em; color:var(--tone); font-weight:600}
-.pill{font-size:12px; padding:3px 10px; border-radius:999px; color:var(--tone); background:color-mix(in srgb,var(--tone) 15%,transparent)}
 .ibox{
   width:34%; max-width:110px; aspect-ratio:1; margin:16px 0 14px; border-radius:24%; color:var(--tone); position:relative; z-index:1;
   background:color-mix(in srgb,var(--tone) 14%,var(--card)); border:1px solid color-mix(in srgb,var(--tone) 28%,transparent);
@@ -85,7 +120,7 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
 .toast{height:22px; margin-top:10px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
 
-/* 手動選牌區樣式 */
+/* 手動選牌彈跳視窗 */
 #manual-modal{
   position:fixed; inset:0; background:rgba(29,36,35,0.75); backdrop-filter:blur(6px);
   z-index:50; display:flex; justify-content:center; align-items:center; padding:20px; overflow-y:auto;
@@ -103,13 +138,18 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
   display:flex; gap:8px; overflow-x:auto; padding:6px 2px 12px; scroll-behavior:smooth;
   scrollbar-width:thin; scrollbar-color: var(--accent) var(--line);
 }
+
 .card-back{
-  flex:0 0 54px; height:78px; background:#1a2321; border:1px solid var(--line); border-radius:8px;
-  cursor:pointer; position:relative; transition:transform .15s, border-color .15s; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#8ab4f8;
+  flex:0 0 54px; height:78px; 
+  background: linear-gradient(135deg, #162221, #253331); 
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); 
+  border-radius:8px;
+  cursor:pointer; position:relative; transition:transform .15s, border-color .15s; 
+  display:flex; flex-direction:column; align-items:center; justify-content:center; color: #a3c1b4;
 }
-.card-back:hover{transform:translateY(-3px)}
+.card-back:hover{transform:translateY(-3px); border-color: var(--accent);}
 .card-back.selected{
-  border:2px solid var(--accent-d); box-shadow:0 0 10px rgba(111,157,140,0.5); transform:translateY(-4px);
+  border:2px solid var(--accent-d); box-shadow:0 0 12px rgba(111,157,140,0.6); transform:translateY(-4px);
 }
 .card-back.selected::after{
   content:'✓'; position:absolute; top:-6px; right:-6px; background:var(--accent-d); color:#fff;
@@ -133,18 +173,24 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
 </head>
 <body>
 <div class="snd-group">
-  <button class="snd" id="bgm-btn" type="button" aria-pressed="false">♫ 背景音樂 關</button>
+  <button class="snd" id="bgm-btn" type="button" aria-pressed="true">♫ 背景音樂 開</button>
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
 </div>
 
 <main>
+  <div class="sub-title">Purpling Cards</div>
   <h1>紫靈牌卡占卜</h1>
-  <div class="sub"></div>
   <p class="hint">請清空思緒、在心中默念問題，並選擇你的占卜方式</p>
   
   <div class="btn-group">
-    <button class="btn" id="draw-quick" type="button">一鍵抽卡</button>
-    <button class="btn btn-outline" id="draw-manual" type="button">手動抽卡</button>
+    <button class="btn btn-orange" id="draw-quick" type="button">
+      <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+      一鍵抽卡
+    </button>
+    <button class="btn btn-green" id="draw-manual" type="button">
+      <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+      手動抽卡
+    </button>
   </div>
 
   <section class="cards" id="cards" aria-live="polite">
@@ -180,8 +226,8 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
     </div>
 
     <div class="modal-actions">
-      <button class="btn" id="modal-confirm" type="button" disabled style="opacity:0.5;">確認抽牌</button>
-      <button class="btn btn-outline" id="modal-cancel" type="button">取消</button>
+      <button class="btn btn-green" id="modal-confirm" type="button" disabled style="opacity:0.5;">確認抽牌</button>
+      <button class="btn btn-orange" id="modal-cancel" type="button">取消</button>
     </div>
   </div>
 </div>
@@ -250,7 +296,7 @@ function cardHTML(i,cat,s,delay){
     '<div class="name">'+s[0]+(s[2]||"")+'</div><div class="kw">'+s[1]+'</div></div></div>';
 }
 
-// 抽卡音效
+// 抽卡音效（預設開啟：mutedSnd = false）
 let ctx=null, mutedSnd=false;
 function sound(){
   if(mutedSnd)return;
@@ -274,48 +320,42 @@ function sound(){
   }catch(e){}
 }
 
-// 神秘療癒背景音樂 (Ambient BGM 循環合成)
-let bgmCtx=null, bgmInterval=null, mutedBgm=true;
+// 清新療癒背景音樂（預設開啟：mutedBgm = false）
+let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
   try{
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
     
-    // 神秘和弦頻率 (例如 D minor 氣氛和弦)
-    const chords = [
-      [146.83, 220, 293.66, 349.23], // D3, A3, D4, F4
-      [130.81, 196, 261.63, 329.63], // C3, G3, C4, E4
-      [110.00, 164.81, 220, 261.63], // A2, E3, A3, C4
-      [123.47, 185.00, 246.94, 329.63] // B2, F#3, B3, E4
-    ];
-    let chordIdx = 0;
-
-    const playChord = () => {
+    const melodyNotes = [523.25, 659.25, 783.99, 880.00, 1046.50, 1318.51];
+    
+    const playArpeggio = () => {
       if(mutedBgm || !bgmCtx) return;
-      const t = bgmCtx.currentTime;
-      const notes = chords[chordIdx % chords.length];
-      chordIdx++;
-
-      notes.forEach((freq, idx) => {
+      let t = bgmCtx.currentTime;
+      
+      for(let i=0; i<4; i++){
+        const freq = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
         const osc = bgmCtx.createOscillator();
         const gain = bgmCtx.createGain();
-        osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+        
+        osc.type = 'sine';
         osc.frequency.value = freq;
-
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(0.015, t + 2);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 7.5);
-
+        
+        const noteTime = t + (i * 0.4);
+        gain.gain.setValueAtTime(0, noteTime);
+        gain.gain.linearRampToValueAtTime(0.012, noteTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.2);
+        
         osc.connect(gain).connect(bgmCtx.destination);
-        osc.start(t);
-        osc.stop(t + 8);
-      });
+        osc.start(noteTime);
+        osc.stop(noteTime + 2.5);
+      }
     };
 
-    playChord();
+    playArpeggio();
     if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playChord, 7000);
+    bgmInterval = setInterval(playArpeggio, 4000);
   }catch(e){}
 }
 
@@ -324,7 +364,14 @@ function stopBgm(){
   if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
 }
 
-// 互動邏輯
+// 網頁載入後如果瀏覽器允許，自動啟動背景音樂
+window.addEventListener('load', () => {
+  if(!mutedBgm) {
+    // 試著自動播放 BGM (部分手機瀏覽器需使用者有任意點擊才會發出聲音，點擊後會正常運作)
+    setTimeout(startBgm, 500);
+  }
+});
+
 let cur=null, busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
 const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual");
@@ -334,7 +381,6 @@ const $modalConfirm = document.getElementById("modal-confirm"), $modalCancel = d
 
 let selectedMain = null, selectedAux = null, selectedLife = null;
 
-// 一鍵抽卡
 function quickDraw(){
   if(busy)return; busy=true;
   $btnQuick.disabled=true; $btnManual.disabled=true;
@@ -345,25 +391,21 @@ function quickDraw(){
   setTimeout(()=>{busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;},1000);
 }
 
-// 手動選牌初始化
 function openManualModal(){
   selectedMain = null; selectedAux = null; selectedLife = null;
   updateModalState();
-  
-  // 建立牌背清單
   buildDeck($deckMain, MAIN, 'main');
   buildDeck($deckAux, AUX, 'aux');
   buildDeck($deckLife, LIFE, 'life');
-  
   $modal.hidden = false;
 }
 
 function buildDeck(container, dataArr, type){
   container.innerHTML = '';
-  dataArr.forEach((item, idx) => {
+  dataArr.forEach((item) => {
     const el = document.createElement('div');
     el.className = 'card-back';
-    el.innerHTML = '<svg style="width:28px;height:28px" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="24"/><path d="M32 16v32M16 32h32"/></svg>';
+    el.innerHTML = '<svg style="width:26px;height:26px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.3"/></svg>';
     el.onclick = () => {
       container.querySelectorAll('.card-back').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
@@ -390,7 +432,6 @@ function updateModalState(){
   }
 }
 
-// 確認手動抽牌
 function confirmManualDraw(){
   if(!selectedMain || !selectedAux || !selectedLife) return;
   cur = { m: selectedMain, a: selectedAux, l: selectedLife };
@@ -411,14 +452,12 @@ async function copy(){
   toast(ok?"已複製本次結果 ✓":"複製失敗，請手動選取文字");
 }
 
-// 事件綁定
 $btnQuick.addEventListener("click", quickDraw);
 $btnManual.addEventListener("click", openManualModal);
 $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
 $modalConfirm.addEventListener("click", confirmManualDraw);
 document.getElementById("copy").addEventListener("click", copy);
 
-// 音效按鈕
 const $sndBtn = document.getElementById("snd-btn");
 $sndBtn.addEventListener("click",()=>{
   mutedSnd = !mutedSnd;
@@ -426,8 +465,11 @@ $sndBtn.addEventListener("click",()=>{
   $sndBtn.setAttribute("aria-pressed", String(!mutedSnd));
 });
 
-// 背景音樂按鈕
 const $bgmBtn = document.getElementById("bgm-btn");
+// 初始化按鈕文字與狀態
+$bgmBtn.textContent = "♫ 背景音樂 開";
+$bgmBtn.setAttribute("aria-pressed", "true");
+
 $bgmBtn.addEventListener("click",()=>{
   mutedBgm = !mutedBgm;
   if(!mutedBgm){
