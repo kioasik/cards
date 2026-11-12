@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
+<title>紫靈牌卡占卜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#fffdf8; --bg2:#f3f8f6; --glow:rgba(255,226,170,.55);
+  --text:#3d4a47; --muted:#7e8c88; --line:#e3ebe8;
+  --card:#ffffff; --accent:#8fb8a8; --accent-d:#6f9d8c; --btn-text:#fff;
+  --shadow:0 10px 30px rgba(120,150,140,.16);
+  --t0:#8a6fc0; --t1:#c47a58; --t2:#5a9a82;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg1:#1d2423; --bg2:#222b29; --glow:rgba(255,220,160,.08);
+    --text:#e6eeeb; --muted:#9fb0ab; --line:#33403d; --card:#2a3532;
+    --accent:#7fae9c; --accent-d:#9bc7b5; --btn-text:#16201d; --shadow:0 10px 30px rgba(0,0,0,.3);
+    --t0:#b7a2e6; --t1:#e8a07e; --t2:#86c4ab;
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#1d2423; --bg2:#222b29; --glow:rgba(255,220,160,.08);
+  --text:#e6eeeb; --muted:#9fb0ab; --line:#33403d; --card:#2a3532;
+  --accent:#7fae9c; --accent-d:#9bc7b5; --btn-text:#16201d; --shadow:0 10px 30px rgba(0,0,0,.3);
+  --t0:#b7a2e6; --t1:#e8a07e; --t2:#86c4ab;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font-family:"Noto Serif TC","PingFang TC","Microsoft JhengHei","Hiragino Mincho ProN",serif;
+  background:radial-gradient(ellipse 80% 45% at 50% -5%,var(--glow),transparent 70%),linear-gradient(180deg,var(--bg1),var(--bg2));
+  background-color:var(--bg1);
+}
+main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
+h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin:0 0 6px; padding-left:.25em}
+.sub{width:48px;height:2px;background:var(--accent);margin:14px auto 22px;border-radius:2px;opacity:.7}
+.hint{color:var(--muted); font-size:15px; line-height:1.9; letter-spacing:.08em; margin:0 auto 30px; max-width:30em}
+.btn{
+  font-family:inherit; font-size:18px; letter-spacing:.3em; padding:14px 46px 14px 52px; border:none; border-radius:999px; cursor:pointer;
+  color:var(--btn-text); background:linear-gradient(135deg,var(--accent),var(--accent-d));
+  box-shadow:0 8px 22px rgba(111,157,140,.32); transition:transform .15s;
+}
+.btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.7;cursor:default}
+.snd{
+  position:fixed; right:14px; top:calc(env(safe-area-inset-top,0px) + 12px); z-index:5;
+  font-family:inherit; font-size:13px; color:var(--muted); background:var(--card); border:1px solid var(--line);
+  border-radius:999px; padding:6px 12px; cursor:pointer;
+}
+.cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:42px 0 26px; perspective:1000px}
+.slot{aspect-ratio:3/4.3; position:relative}
+.ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em}
+.card{
+  position:absolute; inset:0; background:var(--card); border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--line);
+  overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:16px 14px 0;
+  animation:flip .7s cubic-bezier(.2,.8,.3,1) both;
+  background-image:linear-gradient(180deg,color-mix(in srgb,var(--tone) 9%,var(--card)),var(--card) 55%);
+}
+.t0{--tone:var(--t0)} .t1{--tone:var(--t1)} .t2{--tone:var(--t2)}
+.head{width:100%; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1}
+.cat{font-size:13px; letter-spacing:.25em; color:var(--tone); font-weight:600}
+.pill{font-size:12px; padding:3px 10px; border-radius:999px; color:var(--tone); background:color-mix(in srgb,var(--tone) 15%,transparent)}
+.ibox{
+  width:34%; max-width:110px; aspect-ratio:1; margin:16px 0 14px; border-radius:24%; color:var(--tone); position:relative; z-index:1;
+  background:color-mix(in srgb,var(--tone) 14%,var(--card)); border:1px solid color-mix(in srgb,var(--tone) 28%,transparent);
+  display:flex; align-items:center; justify-content:center;
+}
+.ibox svg{width:64%; height:64%}
+.name{font-size:clamp(28px,4.6vw,40px); font-weight:700; letter-spacing:.1em; padding-left:.1em; position:relative; z-index:1}
+.kw{font-size:13.5px; letter-spacing:.06em; color:var(--tone); margin-top:8px; font-weight:600; position:relative; z-index:1; line-height:1.6}
+.sky{position:absolute; left:0; right:0; bottom:0; width:100%; height:34%; color:var(--tone); opacity:.32; pointer-events:none}
+@keyframes flip{from{opacity:0; transform:rotateY(90deg) translateY(10px)} to{opacity:1; transform:none}}
+.actions{min-height:52px}
+.copy{font-family:inherit; font-size:15px; letter-spacing:.2em; padding:10px 28px; background:transparent; color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer}
+.copy:hover{background:rgba(143,184,168,.15)}
+.toast{height:22px; margin-top:10px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
+[hidden]{display:none!important}
+@media (max-width:640px){
+  main{padding-top:48px}
+  .cards{grid-template-columns:1fr; max-width:300px; margin-left:auto; margin-right:auto}
+  .slot{aspect-ratio:3/3.9}
+  .ibox{width:30%}
+}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+</style>
+</head>
+<body>
+<button class="snd" id="snd" type="button" aria-pressed="true">♪ 音效 開</button>
+<main>
+  <h1>紫靈牌卡占卜</h1>
+  <div class="sub"></div>
+  <p class="hint">請清空思緒、在心中默念問題，並按下抽卡鍵</p>
+  <button class="btn" id="draw" type="button">抽卡</button>
+  <section class="cards" id="cards" aria-live="polite">
+    <div class="slot"><div class="ph">主星</div></div>
+    <div class="slot"><div class="ph">輔星</div></div>
+    <div class="slot"><div class="ph">長生</div></div>
+  </section>
+  <div class="actions" id="actions" hidden>
+    <button class="copy" id="copy" type="button">複製本次結果</button>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+</main>
+
+<script>
+// 圖示（64×64，描邊）
+const I = {
+紫微:'<path d="M12 48h40M12 48L9 22l14 12 9-16 9 16 14-12-3 26z"/><path d="M32 8v4M20 10l2 3M44 10l-2 3"/>',
+天府:'<rect x="10" y="14" width="44" height="36" rx="4"/><circle cx="32" cy="32" r="9"/><path d="M32 26v12M26 32h12M18 50v4M46 50v4"/>',
+天機:'<circle cx="24" cy="40" r="8"/><path d="M24 26v5M24 49v5M10 40h5M33 40h5M14 30l4 4M30 46l4 4M14 50l4-4M30 34l4-4"/><path d="M36 30l18-14 5 7-18 14z"/>',
+太陰:'<path d="M44 10a22 22 0 1 0 10 34A18 18 0 0 1 44 10z"/><path d="M50 12v8M46 16h8"/>',
+七殺:'<path d="M16 30a16 16 0 0 1 32 0c0 6-3 9-6 11v7H22v-7c-3-2-6-5-6-11z"/><circle cx="25" cy="30" r="3.5"/><circle cx="39" cy="30" r="3.5"/><path d="M32 36v4M28 48v-5M36 48v-5"/>',
+破軍:'<path d="M14 38a18 18 0 0 1 36 0z"/><path d="M10 38h44M32 20v-12M32 8l14 4-14 4M20 46h24M26 54h12"/>',
+貪狼:'<path d="M10 8h22l-2 16a9 9 0 0 1-18 0z"/><path d="M21 33v18M13 53h16"/><circle cx="48" cy="28" r="4"/><circle cx="54" cy="35" r="4"/><circle cx="51" cy="43" r="4"/><circle cx="43" cy="43" r="4"/><circle cx="41" cy="35" r="4"/>',
+天梁:'<path d="M32 8v44M20 52h24M8 20h48"/><path d="M8 20l-5 16h10zM56 20l-5 16h10z"/><path d="M3 36a5 5 0 0 0 10 0M51 36a5 5 0 0 0 10 0"/>',
+天同:'<circle cx="32" cy="35" r="18"/><path d="M32 17c-6-4-2-9 3-7"/><circle cx="25" cy="33" r="1.8"/><circle cx="39" cy="33" r="1.8"/><path d="M26 42a8 6 0 0 0 12 0"/>',
+廉貞:'<circle cx="32" cy="18" r="9"/><path d="M12 56c0-14 8-22 20-22s20 8 20 22z"/><path d="M32 36l-4 6 4 14 4-14z"/>',
+太陽:'<circle cx="32" cy="32" r="11"/><path d="M32 6v8M32 50v8M6 32h8M50 32h8M14 14l6 6M44 44l6 6M14 50l6-6M44 20l6-6"/>',
+武曲:'<rect x="8" y="28" width="48" height="26" rx="3"/><path d="M8 36h48M28 36v8h8v-8"/><circle cx="32" cy="16" r="7"/><path d="M32 12v8M29 14h6"/>',
+天相:'<path d="M4 24l12-6 16 5 16-5 12 6v14l-10 4-8 9-6-4-6 4-8-9-10-4z"/><path d="M22 34l8 8M31 30l10 10"/>',
+巨門:'<path d="M16 54V24a16 16 0 0 1 32 0v30M10 54h44M32 8v46"/><circle cx="26" cy="36" r="1.8"/><circle cx="38" cy="36" r="1.8"/>',
+祿存:'<ellipse cx="32" cy="18" rx="17" ry="6"/><path d="M15 18v10c0 3 8 6 17 6s17-3 17-6V18M15 28v10c0 3 8 6 17 6s17-3 17-6V28M15 38v9c0 3 8 6 17 6s17-3 17-6v-9"/>',
+天馬:'<path d="M22 56l4-20-12-10 6-16 10 6 14-4 6 14-8 6-2 24"/><circle cx="35" cy="20" r="1.8"/><path d="M20 10l-4-4"/>',
+地空:'<path d="M18 46a10 10 0 0 1 0-20 14 14 0 0 1 27-3 11 11 0 0 1 2 23z"/><path d="M22 54h20"/>',
+地劫:'<path d="M4 20q7-8 14 0t14 0 14 0 14 0M4 33q7-8 14 0t14 0 14 0 14 0M4 46q7-8 14 0t14 0 14 0 14 0"/>',
+鈴星:'<circle cx="20" cy="40" r="12"/><circle cx="44" cy="40" r="12"/><path d="M20 28l4-14h16l4 14"/><path d="M30 40h4"/>',
+火星:'<path d="M6 56l18-30h16l18 30z"/><path d="M24 26l-4-10M32 24V8M40 26l4-10M26 40l6 6 6-6"/>',
+擎羊:'<path d="M32 6l7 30H25z"/><path d="M18 36h28M32 36v16"/><circle cx="32" cy="56" r="2.5"/>',
+化權:'<path d="M20 56V36M44 56V32M8 56h48"/><circle cx="20" cy="24" r="12"/><circle cx="44" cy="20" r="10"/>',
+化祿:'<path d="M8 32h48c0 14-10 22-24 22S8 46 8 32z"/><circle cx="22" cy="23" r="6"/><circle cx="42" cy="23" r="6"/><circle cx="32" cy="13" r="6"/>',
+化科:'<path d="M32 58V34"/><path d="M32 34L16 14M32 34L12 26M32 34l-3-26M32 34l16-20M32 34l20 12M32 34L14 44M32 34l10 18"/><circle cx="16" cy="14" r="2"/><circle cx="12" cy="26" r="2"/><circle cx="29" cy="8" r="2"/><circle cx="48" cy="14" r="2"/>',
+化忌:'<circle cx="32" cy="32" r="13" fill="currentColor" fill-opacity=".85"/><circle cx="32" cy="32" r="21"/><path d="M32 4v4M32 56v4M4 32h4M56 32h4"/>',
+天鉞:'<circle cx="32" cy="32" r="14"/><circle cx="32" cy="12" r="6"/><path d="M26 30h3M35 30h3M27 39q5 3 10 0M16 56c2-8 8-10 16-10s14 2 16 10"/>',
+天魁:'<circle cx="32" cy="24" r="12"/><path d="M20 30c-2 14 6 26 12 26s14-12 12-26"/><path d="M26 22h4M34 22h4M27 36q5 3 10 0"/>',
+左輔:'<circle cx="32" cy="30" r="14"/><path d="M18 28c0-12 8-16 15-15 7 0 13 5 13 15-4-6-10-8-14-8s-10 2-14 8z"/><circle cx="27" cy="33" r="1.6"/><circle cx="37" cy="33" r="1.6"/><path d="M28 40q4 3 8 0M14 58c2-8 8-10 18-10s16 2 18 10"/>',
+右弼:'<circle cx="32" cy="28" r="12"/><path d="M20 28c0-14 8-18 12-18s12 4 12 18v22c-3 0-4-3-4-8M20 28v22c3 0 4-3 4-8"/><circle cx="27" cy="30" r="1.6"/><circle cx="37" cy="30" r="1.6"/><path d="M28 36q4 3 8 0"/>',
+文昌:'<path d="M50 8l6 6-24 24-6-6z"/><path d="M26 32c-6 2-8 8-10 14-2 4 2 6 6 4 6-2 12-6 12-12"/><path d="M10 56h24"/>',
+文曲:'<path d="M8 50L50 8l6 6L14 56z"/><circle cx="28" cy="30" r="1.8"/><circle cx="35" cy="23" r="1.8"/><circle cx="42" cy="16" r="1.8"/><path d="M48 44v-10l8-2v10"/>',
+陀羅:'<path d="M12 18h40M16 18c0 14 8 24 16 38 8-14 16-24 16-38M32 6v12M20 28h24"/>',
+長生:'<path d="M32 56V32M32 38c-2-10-10-12-18-10 2 10 10 12 18 10zM32 32c2-10 10-14 18-12-2 10-10 14-18 12z"/><path d="M16 56h32"/>',
+沐浴:'<circle cx="24" cy="38" r="14"/><circle cx="44" cy="20" r="8"/><circle cx="46" cy="46" r="5"/><path d="M17 32a8 8 0 0 1 6-6"/>',
+冠帶:'<path d="M26 8h12l-2 10 3 6-7 32-7-32 3-6z"/><path d="M26 8l-8 6 14 10M38 8l8 6-14 10"/>',
+臨官:'<path d="M18 42c0-14 6-24 14-24s14 10 14 24z"/><path d="M6 36l12 6M58 36L46 42M10 50h44M26 30h12"/>',
+帝旺:'<path d="M12 50h40M12 50L9 26l14 12 9-16 9 16 14-12-3 24z"/><path d="M32 6v6M18 8l3 4M46 8l-3 4"/>',
+衰:'<path d="M12 50C12 26 28 12 54 10c0 28-14 42-42 40z"/><path d="M12 50L40 24M30 38l-2-10M38 30l2 8"/>',
+病:'<path d="M32 56V34M32 42l-12-12M32 34l10-12M20 30l-6-4M42 22l6-6M32 26l-4-10M32 26l6-8M18 56h28"/>',
+死:'<ellipse cx="32" cy="34" rx="16" ry="7"/><path d="M16 34v14c0 4 7 7 16 7s16-3 16-7V34"/><ellipse cx="32" cy="34" rx="8" ry="3"/><path d="M42 18l10-10M46 22l8-8"/>',
+墓:'<path d="M27 6h10v14h13v10H37v28H27V30H14V20h13z"/>',
+絕:'<rect x="8" y="8" width="48" height="48" rx="3"/><path d="M20 8v24h12V20h12v24H32v12M8 44h12M44 32h12"/>',
+胎:'<circle cx="32" cy="32" r="24"/><circle cx="27" cy="26" r="8"/><path d="M34 30c10 2 14 12 6 18-6 4-14 2-16-4"/>',
+養:'<path d="M14 28h36l-4 26H18z"/><path d="M10 28h44M22 40h20"/><path d="M26 18q6-6 12 0" stroke-dasharray="2 4"/>'
+};
+// [名稱, 關鍵字, 長生序]
+const MAIN=[["紫微","尊貴・領導・統御"],["天府","穩重・庫藏・守成"],["天機","機智・謀略・變動"],["太陰","緩慢・收斂・累積"],["七殺","果決・孤勇・肅殺"],["破軍","突破・衝勁・開創"],["貪狼","慾望・桃花・多才"],["天梁","蔭庇・清高・化解"],["天同","福氣・小孩・享受"],["廉貞","交際・原則・感性"],["太陽","熱情・名氣・無私"],["武曲","執行力・剛毅・果決"],["天相","輔佐・連結・影響"],["巨門","口才・暗藏・蒐集"]];
+const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突發"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
+const LIFE=[["長生","萌芽・新生・希望",1],["沐浴","洗禮・不穩・桃花",2],["冠帶","成長・裝扮・展現",3],["臨官","事業・自立・上任",4],["帝旺","巔峰・強盛・權威",5],["衰","轉折・退守・沉澱",6],["病","疲憊・弱點・警訊",7],["死","終止・斷捨・放下",8],["墓","收藏・沉潛・積累",9],["絕","絕處・迷茫・轉機",10],["胎","孕育・潛伏・醞釀",11],["養","蓄養・等待・準備",12]];
+
+// 星空底圖：六芒星 + 星點
+const SKY='<svg class="sky" viewBox="0 0 200 80" preserveAspectRatio="xMidYMax slice" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'+
+'<circle cx="100" cy="78" r="46"/><circle cx="100" cy="78" r="34" stroke-dasharray="2 4"/>'+
+'<path d="M100 32l40 69H60zM60 55h80l-40 69z" transform="translate(0 -24)"/>'+
+'<path d="M24 22l4 8 8 4-8 4-4 8-4-8-8-4 8-4zM170 14l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="currentColor" stroke="none"/>'+
+'<circle cx="46" cy="52" r="1.4" fill="currentColor"/><circle cx="154" cy="46" r="1.4" fill="currentColor"/><circle cx="70" cy="14" r="1.2" fill="currentColor"/><circle cx="132" cy="22" r="1.2" fill="currentColor"/><circle cx="184" cy="60" r="1.4" fill="currentColor"/><circle cx="14" cy="66" r="1.2" fill="currentColor"/>'+
+'<path d="M24 30L46 52M154 46l16-26" stroke-opacity=".6"/></svg>';
+
+function rnd(n){try{const a=new Uint32Array(1),l=Math.floor(4294967296/n)*n;do{crypto.getRandomValues(a)}while(a[0]>=l);return a[0]%n}catch(e){return Math.floor(Math.random()*n)}}
+const pick=a=>a[rnd(a.length)];
+
+function cardHTML(i,cat,s,delay){
+  const pill='<span></span>';
+  return '<div class="slot"><div class="card t'+i+'" style="animation-delay:'+delay+'s">'+SKY+
+    '<div class="head"><span class="cat">'+cat+'</span>'+pill+'</div>'+
+    '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+I[s[0]]+'</svg></div>'+
+    '<div class="name">'+s[0]+(s[2]||"")+'</div><div class="kw">'+s[1]+'</div></div></div>';
+}
+
+// 音效（WebAudio 合成，無外部檔案）
+let ctx=null, muted=false;
+function chime(f,t){const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=f;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+1.1);
+  const o2=ctx.createOscillator(),g2=ctx.createGain();o2.type="sine";o2.frequency.value=f*2;g2.gain.setValueAtTime(.05,t);g2.gain.exponentialRampToValueAtTime(.001,t+.6);
+  o.connect(g).connect(ctx.destination);o2.connect(g2).connect(ctx.destination);o.start(t);o.stop(t+1.2);o2.start(t);o2.stop(t+.7)}
+function sound(){
+  if(muted)return;
+  try{
+    ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==="suspended")ctx.resume();
+    const t=ctx.currentTime,n=Math.floor(ctx.sampleRate*.4),b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/n)*(.6+.4*Math.sin(i/180));
+    const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
+    s.buffer=b;f.type="bandpass";f.frequency.value=3200;f.Q.value=.8;g.gain.value=.09;
+    s.connect(f).connect(g).connect(ctx.destination);s.start(t);
+  }catch(e){}
+}
+
+let cur=null,busy=false,tt;
+const $c=document.getElementById("cards"),$d=document.getElementById("draw"),$a=document.getElementById("actions"),$t=document.getElementById("toast"),$s=document.getElementById("snd");
+function draw(){
+  if(busy)return;busy=true;$d.disabled=true;
+  const m=pick(MAIN),a=pick(AUX),l=pick(LIFE);cur={m,a,l};
+  sound();
+  $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,.18)+cardHTML(2,"長生",l,.36);
+  $a.hidden=false;$t.textContent="";
+  setTimeout(()=>{busy=false;$d.disabled=false},1000);
+}
+function toast(m){$t.textContent=m;clearTimeout(tt);tt=setTimeout(()=>{$t.textContent=""},2200)}
+function fb(text){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok}
+async function copy(){
+  if(!cur)return;
+  const text="【紫靈牌卡占卜】\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0]+cur.l[2]+"（"+cur.l[1]+"）";
+  let ok=false;
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true}}catch(e){}
+  if(!ok)ok=fb(text);
+  toast(ok?"已複製本次結果 ✓":"複製失敗，請手動選取文字");
+}
+$d.addEventListener("click",draw);
+document.getElementById("copy").addEventListener("click",copy);
+$s.addEventListener("click",()=>{muted=!muted;$s.textContent=muted?"♪ 音效 關":"♪ 音效 開";$s.setAttribute("aria-pressed",String(!muted))});
+</script>
+</body>
+</html>
