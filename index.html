@@ -6,9 +6,9 @@
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="googlebot" content="noindex, nofollow">
 
-<!-- 讓 LINE 或其他通訊軟體預覽時顯示正確標題 -->
+<!-- 讓 LINE 或其他通訊軟體預覽時顯示正確標題與描述 -->
 <meta property="og:title" content="✨🔮紫靈牌卡 ✦ 線上占卜🔮✨">
-<meta property="og:description" content="請清空思緒、在心中默念你的問題，並選擇你的占卜方式">
+<meta property="og:description" content="請清空思緒、在心中默念問題，並選擇你的占卜方式">
 
 <title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +29,6 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
   margin:0; min-height:100vh; color:var(--text);
   font-family:"Noto Serif TC","PingFang TC","Microsoft JhengHei","Hiragino Mincho ProN",serif;
-  /* 結合優雅漸層與細緻星空幾何線條背景，營造神祕插圖感卻不雜亂 */
   background: 
     radial-gradient(circle at 15% 20%, rgba(200, 170, 235, 0.18) 0%, transparent 40%),
     radial-gradient(circle at 85% 80%, rgba(220, 195, 245, 0.15) 0%, transparent 40%),
@@ -41,16 +40,14 @@ body{
   overflow-x: hidden;
 }
 
-/* 背景精緻的星空線條與星座幾何裝飾層 */
+/* 背景極細星空幾何裝飾層 */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background-image: 
-    /* 幾何占卜圓環與星軌 */
     radial-gradient(circle at 50% 30%, transparent 58%, rgba(157, 127, 178, 0.08) 59%, transparent 60%),
     radial-gradient(circle at 50% 30%, transparent 78%, rgba(157, 127, 178, 0.05) 79%, transparent 80%),
-    /* 微光星芒點綴 */
     radial-gradient(circle at 20% 15%, rgba(157, 127, 178, 0.3) 1.5px, transparent 2px),
     radial-gradient(circle at 82% 25%, rgba(157, 127, 178, 0.25) 1px, transparent 2px),
     radial-gradient(circle at 15% 75%, rgba(157, 127, 178, 0.25) 1px, transparent 2px),
@@ -63,7 +60,7 @@ body::before {
 
 main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center; position:relative; z-index:1;}
 
-/* 有質感的英文襯線體副標題 */
+/* 副標題設計 */
 .sub-title {
   display: flex;
   align-items: center;
@@ -85,7 +82,7 @@ main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center; 
   opacity: 0.6;
 }
 
-/* 主標題：確保手機版不換行、自動縮放 */
+/* 主標題：手機版不換行 */
 h1{
   font-weight: 700; 
   font-size: clamp(20px, 4.8vw, 40px); 
@@ -94,7 +91,7 @@ h1{
   white-space: nowrap;
 }
 
-/* 說明文字排版（精準對齊你指定的換行） */
+/* 說明文字：無空行 */
 .hint{
   color:var(--muted); 
   font-size:15px; 
@@ -102,7 +99,6 @@ h1{
   letter-spacing:.08em; 
   margin:0 auto 30px; 
   max-width:32em;
-  white-space: pre-line;
 }
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
@@ -116,7 +112,7 @@ h1{
   background: linear-gradient(135deg, #e09f6b, #c47a58);
   box-shadow: 0 8px 22px rgba(196,122,88,0.3);
 }
-/* 手動抽卡 (紫靈專屬質感紫色) */
+/* 手動抽卡 (紫靈質感紫色) */
 .btn-purple{
   background: linear-gradient(135deg, var(--accent), var(--accent-d));
   box-shadow: 0 8px 22px rgba(126,93,149,0.3);
@@ -229,10 +225,7 @@ h1{
 <main>
   <div class="sub-title">Purpling Cards</div>
   <h1>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</h1>
-  <p class="hint">嗨，歡迎你來到這裡。
-
-現在，請試著清空思緒、在心中默念你的問題，
-並選擇喜歡的占卜方式。</p>
+  <p class="hint">嗨，歡迎你來到這裡。現在，請試著清空思緒、在心中默念你的問題，並選擇喜歡的占卜方式。</p>
   
   <div class="btn-group">
     <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
@@ -366,6 +359,7 @@ function sound(){
   }catch(e){}
 }
 
+// 保留水晶豎琴音樂 + 漸層淡入 (Fade In)
 let bgmCtx=null, bgmInterval=null, mutedBgm=false;
 function startBgm(){
   if(mutedBgm) return;
@@ -373,42 +367,35 @@ function startBgm(){
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
     
-    const chords = [
-      [261.63, 329.63, 392.00], 
-      [220.00, 261.63, 329.63], 
-      [174.61, 220.00, 261.63], 
-      [196.00, 246.94, 293.66]  
-    ];
+    const melodyNotes = [523.25, 659.25, 783.99, 880.00, 1046.50, 1318.51];
     
-    let chordIndex = 0;
-
-    const playMeditationChord = () => {
+    const playArpeggio = () => {
       if(mutedBgm || !bgmCtx) return;
       let t = bgmCtx.currentTime;
-      const currentChord = chords[chordIndex];
-      chordIndex = (chordIndex + 1) % chords.length;
       
-      currentChord.forEach((freq, i) => {
+      for(let i=0; i<4; i++){
+        const freq = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
         const osc = bgmCtx.createOscillator();
         const gain = bgmCtx.createGain();
         
-        osc.type = 'sine'; 
+        osc.type = 'sine';
         osc.frequency.value = freq;
         
-        const noteTime = t + (i * 0.7); 
+        const noteTime = t + (i * 0.4);
         gain.gain.setValueAtTime(0.0001, noteTime);
-        gain.gain.linearRampToValueAtTime(0.015, noteTime + 0.3);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 3.8);
+        // 漸層淡入：從 0 緩慢放大至舒服的音量 (0.012)
+        gain.gain.linearRampToValueAtTime(0.012, noteTime + 1.2);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.5);
         
         osc.connect(gain).connect(bgmCtx.destination);
         osc.start(noteTime);
-        osc.stop(noteTime + 4.2);
-      });
+        osc.stop(noteTime + 2.8);
+      }
     };
 
-    playMeditationChord();
+    playArpeggio();
     if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playMeditationChord, 3200); 
+    bgmInterval = setInterval(playArpeggio, 4000);
   }catch(e){}
 }
 
@@ -516,7 +503,8 @@ async function copy(){
   toast(ok?"已複製本次結果 ✓":"複製失敗，請手動選取文字");
 }
 
-function saveImage(){
+// 升級為手機原生分享（可選 LINE 傳送或儲存到相簿）
+async function saveImage(){
   if(!cur) return;
   const canvas = document.createElement('canvas');
   canvas.width = 800;
@@ -606,11 +594,31 @@ function saveImage(){
   ctx.textAlign = 'center';
   ctx.fillText('願這組牌卡為你帶來指引與力量 ✦ 祝你有美好的一天', 400, 630);
 
-  const link = document.createElement('a');
-  link.download = `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-  toast("圖片已成功儲存到手機相簿 ✓");
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], `紫靈牌卡占卜結果_${drawTime.replace(/[\/\s:]/g, '')}.png`, { type: 'png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: '✨🔮紫靈牌卡 ✦ 線上占卜🔮✨',
+          text: `【紫靈牌卡占卜結果】\n占卜時間：${drawTime}`,
+          files: [file]
+        });
+        toast("分享成功 ✓");
+        return;
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.log("Share canceled or failed", err);
+        }
+        return;
+      }
+    }
+    // 備用下載機制（不支援 Share API 的桌面瀏覽器）
+    const link = document.createElement('a');
+    link.download = file.name;
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    toast("圖片已儲存 ✓");
+  }, 'image/png');
 }
 
 $btnQuick.addEventListener("click", quickDraw);
