@@ -31,23 +31,30 @@ main{max-width:900px; margin:0 auto; padding:56px 20px 64px; text-align:center}
 h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin:0 0 6px; padding-left:.25em}
 .sub{width:48px;height:2px;background:var(--accent);margin:14px auto 22px;border-radius:2px;opacity:.7}
 .hint{color:var(--muted); font-size:15px; line-height:1.9; letter-spacing:.08em; margin:0 auto 30px; max-width:30em}
+
+.btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 .btn{
-  font-family:inherit; font-size:18px; letter-spacing:.3em; padding:14px 46px 14px 52px; border:none; border-radius:999px; cursor:pointer;
+  font-family:inherit; font-size:17px; letter-spacing:.2em; padding:12px 32px; border:none; border-radius:999px; cursor:pointer;
   color:var(--btn-text); background:linear-gradient(135deg,var(--accent),var(--accent-d));
   box-shadow:0 8px 22px rgba(111,157,140,.32); transition:transform .15s;
 }
-.btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.7;cursor:default}
-.snd{
-  position:fixed; right:14px; top:calc(env(safe-area-inset-top,0px) + 12px); z-index:5;
-  font-family:inherit; font-size:13px; color:var(--muted); background:var(--card); border:1px solid var(--line);
-  border-radius:999px; padding:6px 12px; cursor:pointer;
+.btn-outline{
+  background:transparent; color:var(--accent-d); border:1.5px solid var(--accent);
 }
+.btn-outline:hover{background:rgba(143,184,168,.15)}
+.btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.98)} .btn:disabled{opacity:.7;cursor:default}
+
+.snd-group{
+  position:fixed; right:14px; top:calc(env(safe-area-inset-top,0px) + 12px); z-index:5;
+  display:flex; gap:8px;
+}
+.snd{
+  font-family:inherit; font-size:12px; color:var(--muted); background:var(--card); border:1px solid var(--line);
+  border-radius:999px; padding:6px 10px; cursor:pointer;
+}
+
 .cards{
-  display:grid; 
-  grid-template-columns:repeat(3,1fr); 
-  gap:18px; 
-  margin:42px 0 26px; 
-  perspective:1000px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:42px 0 26px; perspective:1000px;
 }
 .slot{aspect-ratio:3/4.3; position:relative}
 .ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em}
@@ -71,42 +78,75 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
 .kw{font-size:13.5px; letter-spacing:.06em; color:var(--tone); margin-top:8px; font-weight:600; position:relative; z-index:1; line-height:1.6}
 .sky{position:absolute; left:0; right:0; bottom:0; width:100%; height:34%; color:var(--tone); opacity:.32; pointer-events:none}
 @keyframes flip{from{opacity:0; transform:rotateY(90deg) translateY(10px)} to{opacity:1; transform:none}}
+
 .actions{min-height:52px}
 .copy{font-family:inherit; font-size:15px; letter-spacing:.2em; padding:10px 28px; background:transparent; color:var(--accent-d); border:1.5px solid var(--accent); border-radius:999px; cursor:pointer}
 .copy:hover{background:rgba(143,184,168,.15)}
 .toast{height:22px; margin-top:10px; font-size:14px; color:var(--accent-d); letter-spacing:.1em}
 [hidden]{display:none!important}
 
+/* 手動選牌區樣式 */
+#manual-modal{
+  position:fixed; inset:0; background:rgba(29,36,35,0.75); backdrop-filter:blur(6px);
+  z-index:50; display:flex; justify-content:center; align-items:center; padding:20px; overflow-y:auto;
+}
+.modal-box{
+  background:var(--bg1); width:100%; max-width:750px; border-radius:24px; padding:28px 20px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.3); border:1px solid var(--line); text-align:left;
+  max-height:90vh; overflow-y:auto;
+}
+.modal-title{font-size:20px; font-weight:700; letter-spacing:.2em; text-align:center; margin-bottom:6px; color:var(--text)}
+.modal-subtitle{font-size:13px; color:var(--muted); text-align:center; letter-spacing:.1em; margin-bottom:24px}
+.deck-section{margin-bottom:20px}
+.deck-label{font-size:14px; font-weight:600; color:var(--text); letter-spacing:.1em; margin-bottom:8px; border-left:3px solid var(--accent); padding-left:8px}
+.deck-scroll{
+  display:flex; gap:8px; overflow-x:auto; padding:6px 2px 12px; scroll-behavior:smooth;
+  scrollbar-width:thin; scrollbar-color: var(--accent) var(--line);
+}
+.card-back{
+  flex:0 0 54px; height:78px; background:#1a2321; border:1px solid var(--line); border-radius:8px;
+  cursor:pointer; position:relative; transition:transform .15s, border-color .15s; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#8ab4f8;
+}
+.card-back:hover{transform:translateY(-3px)}
+.card-back.selected{
+  border:2px solid var(--accent-d); box-shadow:0 0 10px rgba(111,157,140,0.5); transform:translateY(-4px);
+}
+.card-back.selected::after{
+  content:'✓'; position:absolute; top:-6px; right:-6px; background:var(--accent-d); color:#fff;
+  font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+}
+.modal-actions{display:flex; justify-content:center; gap:14px; margin-top:24px}
+
 /* 手機版排版調整：主星、輔星一行，長生換行置中且維持原尺寸 */
 @media (max-width:640px){
   main{padding-top:48px; padding-left:14px; padding-right:14px}
   .cards{
-    display:grid;
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 380px;
-    margin-left: auto;
-    margin-right: auto;
-    gap: 12px;
+    display:grid; grid-template-columns: repeat(2, 1fr); max-width: 380px; margin-left: auto; margin-right: auto; gap: 12px;
   }
   .cards .slot:nth-child(3){
-    grid-column: 1 / -1;
-    max-width: 180px;
-    margin: 0 auto;
-    width: 100%;
+    grid-column: 1 / -1; max-width: 180px; margin: 0 auto; width: 100%;
   }
   .slot{aspect-ratio:3/4.3}
 }
-
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
 </head>
 <body>
-<button class="snd" id="snd" type="button" aria-pressed="true">♪ 音效 開</button>
+<div class="snd-group">
+  <button class="snd" id="bgm-btn" type="button" aria-pressed="false">♫ 背景音樂 關</button>
+  <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
+</div>
+
 <main>
   <h1>紫靈牌卡占卜</h1>
   <div class="sub"></div>
-  <p class="hint">請清空思緒、在心中默念問題，並按下抽卡鍵</p>
-  <button class="btn" id="draw" type="button">抽卡</button>
+  <p class="hint">請清空思緒、在心中默念問題，並選擇你的占卜方式</p>
+  
+  <div class="btn-group">
+    <button class="btn" id="draw-quick" type="button">一鍵抽卡</button>
+    <button class="btn btn-outline" id="draw-manual" type="button">手動抽卡</button>
+  </div>
+
   <section class="cards" id="cards" aria-live="polite">
     <div class="slot"><div class="ph">主星</div></div>
     <div class="slot"><div class="ph">輔星</div></div>
@@ -118,8 +158,35 @@ h1{font-weight:600; font-size:clamp(28px,6vw,40px); letter-spacing:.25em; margin
   </div>
 </main>
 
+<!-- 手動選牌彈跳視窗 -->
+<div id="manual-modal" hidden>
+  <div class="modal-box">
+    <div class="modal-title">手動選牌</div>
+    <div class="modal-subtitle">請從每組牌堆中各選擇一張卡片</div>
+    
+    <div class="deck-section">
+      <div class="deck-label" id="lbl-m">主星牌 (39張) - 已選 0/1</div>
+      <div class="deck-scroll" id="deck-main"></div>
+    </div>
+    
+    <div class="deck-section">
+      <div class="deck-label" id="lbl-a">輔星牌 (19張) - 已選 0/1</div>
+      <div class="deck-scroll" id="deck-aux"></div>
+    </div>
+    
+    <div class="deck-section">
+      <div class="deck-label" id="lbl-l">長生牌 (12張) - 已選 0/1</div>
+      <div class="deck-scroll" id="deck-life"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="modal-confirm" type="button" disabled style="opacity:0.5;">確認抽牌</button>
+      <button class="btn btn-outline" id="modal-cancel" type="button">取消</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// 圖示（64×64，描邊）
 const I = {
 紫微:'<path d="M12 48h40M12 48L9 22l14 12 9-16 9 16 14-12-3 26z"/><path d="M32 8v4M20 10l2 3M44 10l-2 3"/>',
 天府:'<rect x="10" y="14" width="44" height="36" rx="4"/><circle cx="32" cy="32" r="9"/><path d="M32 26v12M26 32h12M18 50v4M46 50v4"/>',
@@ -166,76 +233,173 @@ const I = {
 胎:'<circle cx="32" cy="32" r="24"/><circle cx="27" cy="26" r="8"/><path d="M34 30c10 2 14 12 6 18-6 4-14 2-16-4"/>',
 養:'<path d="M14 28h36l-4 26H18z"/><path d="M10 28h44M22 40h20"/><path d="M26 18q6-6 12 0" stroke-dasharray="2 4"/>'
 };
-// [名稱, 關鍵字, 長生序]
+
 const MAIN=[["紫微","尊貴・領導・統御"],["天府","穩重・庫藏・守成"],["天機","機智・謀略・變動"],["太陰","緩慢・收斂・累積"],["七殺","果決・孤勇・肅殺"],["破軍","突破・衝勁・開創"],["貪狼","慾望・桃花・多才"],["天梁","蔭庇・清高・化解"],["天同","福氣・小孩・享受"],["廉貞","交際・原則・感性"],["太陽","熱情・名氣・無私"],["武曲","執行力・剛毅・果決"],["天相","輔佐・連結・影響"],["巨門","口才・暗藏・蒐集"]];
-const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突発"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
+const AUX=[["祿存","守財・穩定・保守"],["天馬","奔波・遷動・機會"],["地空","落空・反潮流・期望過高"],["地劫","冒險・投機・耗散"],["鈴星","焦躁・壓力・突發"],["火星","爆發・衝動・熱烈"],["擎羊","鋒利・競爭・衝突"],["化權","成雙・主導・強勢"],["化祿","財運・緣分・豐富"],["化科","名聲・貴人・文雅"],["化忌","焦慮・欠缺・執著"],["天鉞","女貴人・政府・考運"],["天魁","男貴人・政府・考運"],["左輔","男助力・平輩・桃花"],["右弼","女助力・平輩・桃花"],["文昌","文才・考試・理性"],["文曲","才藝・口才・感性"],["陀羅","拖延・糾纏・固執"]];
 const LIFE=[["長生","萌芽・新生・希望",1],["沐浴","洗禮・不穩・桃花",2],["冠帶","成長・裝扮・展現",3],["臨官","事業・自立・上任",4],["帝旺","巔峰・強盛・權威",5],["衰","轉折・退守・沉澱",6],["病","疲憊・弱點・警訊",7],["死","終止・斷捨・放下",8],["墓","收藏・沉潛・積累",9],["絕","絕處・迷茫・轉機",10],["胎","孕育・潛伏・醞釀",11],["養","蓄養・等待・準備",12]];
 
-// 星空底圖：六芒星 + 星點
-const SKY='<svg class="sky" viewBox="0 0 200 80" preserveAspectRatio="xMidYMax slice" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'+
-'<circle cx="100" cy="78" r="46"/><circle cx="100" cy="78" r="34" stroke-dasharray="2 4"/>'+
-'<path d="M100 32l40 69H60zM60 55h80l-40 69z" transform="translate(0 -24)"/>'+
-'<path d="M24 22l4 8 8 4-8 4-4 8-4-8-8-4 8-4zM170 14l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="currentColor" stroke="none"/>'+
-'<circle cx="46" cy="52" r="1.4" fill="currentColor"/><circle cx="154" cy="46" r="1.4" fill="currentColor"/><circle cx="70" cy="14" r="1.2" fill="currentColor"/><circle cx="132" cy="22" r="1.2" fill="currentColor"/><circle cx="184" cy="60" r="1.4" fill="currentColor"/><circle cx="14" cy="66" r="1.2" fill="currentColor"/>'+
-'<path d="M24 30L46 52M154 46l16-26" stroke-opacity=".6"/></svg>';
+const SKY='<svg class="sky" viewBox="0 0 200 80" preserveAspectRatio="xMidYMax slice" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="100" cy="78" r="46"/><circle cx="100" cy="78" r="34" stroke-dasharray="2 4"/><path d="M100 32l40 69H60zM60 55h80l-40 69z" transform="translate(0 -24)"/><path d="M24 22l4 8 8 4-8 4-4 8-4-8-8-4 8-4zM170 14l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="currentColor" stroke="none"/><circle cx="46" cy="52" r="1.4" fill="currentColor"/><circle cx="154" cy="46" r="1.4" fill="currentColor"/><circle cx="70" cy="14" r="1.2" fill="currentColor"/><circle cx="132" cy="22" r="1.2" fill="currentColor"/><circle cx="184" cy="60" r="1.4" fill="currentColor"/><circle cx="14" cy="66" r="1.2" fill="currentColor"/><path d="M24 30L46 52M154 46l16-26" stroke-opacity=".6"/></svg>';
 
 function rnd(n){try{const a=new Uint32Array(1),l=Math.floor(4294967296/n)*n;do{crypto.getRandomValues(a)}while(a[0]>=l);return a[0]%n}catch(e){return Math.floor(Math.random()*n)}}
 const pick=a=>a[rnd(a.length)];
 
 function cardHTML(i,cat,s,delay){
-  const pill='<span></span>';
   return '<div class="slot"><div class="card t'+i+'" style="animation-delay:'+delay+'s">'+SKY+
-    '<div class="head"><span class="cat">'+cat+'</span>'+pill+'</div>'+
+    '<div class="head"><span class="cat">'+cat+'</span><span></span></div>'+
     '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+I[s[0]]+'</svg></div>'+
     '<div class="name">'+s[0]+(s[2]||"")+'</div><div class="kw">'+s[1]+'</div></div></div>';
 }
 
-// 全新優化的抽卡音效（結合輕柔的過濾滑音與微風鈴聲）
-let ctx=null, muted=false;
+// 抽卡音效
+let ctx=null, mutedSnd=false;
 function sound(){
-  if(muted)return;
+  if(mutedSnd)return;
   try{
     ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();
     if(ctx.state==="suspended")ctx.resume();
     const t=ctx.currentTime;
-
-    // 1. 溫和的空氣感抽卡刷聲（降低頻率並加入滑動效果，聽起來像絲滑的翻牌聲）
     const n=Math.floor(ctx.sampleRate*.35), b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0);
     for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/n);
     const src=ctx.createBufferSource(); src.buffer=b;
     const filt=ctx.createBiquadFilter(); filt.type="bandpass";
-    filt.frequency.setValueAtTime(800, t);
-    filt.frequency.exponentialRampToValueAtTime(2400, t+.35);
-    filt.Q.value=1.2;
+    filt.frequency.setValueAtTime(800, t); filt.frequency.exponentialRampToValueAtTime(2400, t+.35); filt.Q.value=1.2;
     const gainNode=ctx.createGain();
-    gainNode.gain.setValueAtTime(0.001, t);
-    gainNode.gain.linearRampToValueAtTime(0.08, t+.05);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, t+.35);
-    src.connect(filt).connect(gainNode).connect(ctx.destination);
-    src.start(t);
+    gainNode.gain.setValueAtTime(0.001, t); gainNode.gain.linearRampToValueAtTime(0.08, t+.05); gainNode.gain.exponentialRampToValueAtTime(0.001, t+.35);
+    src.connect(filt).connect(gainNode).connect(ctx.destination); src.start(t);
 
-    // 2. 加上清脆療癒的微風鈴音 (Chime)
     const o=ctx.createOscillator(), g=ctx.createGain();
-    o.type="sine"; o.frequency.setValueAtTime(1046.5, t+.1); // 高音 C6
-    g.gain.setValueAtTime(0, t+.1);
-    g.gain.linearRampToValueAtTime(0.04, t+.12);
-    g.gain.exponentialRampToValueAtTime(0.0001, t+.8);
-    o.connect(g).connect(ctx.destination);
-    o.start(t+.1); o.stop(t+.85);
-
+    o.type="sine"; o.frequency.setValueAtTime(1046.5, t+.1);
+    g.gain.setValueAtTime(0, t+.1); g.gain.linearRampToValueAtTime(0.04, t+.12); g.gain.exponentialRampToValueAtTime(0.0001, t+.8);
+    o.connect(g).connect(ctx.destination); o.start(t+.1); o.stop(t+.85);
   }catch(e){}
 }
 
-let cur=null,busy=false,tt;
-const $c=document.getElementById("cards"),$d=document.getElementById("draw"),$a=document.getElementById("actions"),$t=document.getElementById("toast"),$s=document.getElementById("snd");
-function draw(){
-  if(busy)return;busy=true;$d.disabled=true;
-  const m=pick(MAIN),a=pick(AUX),l=pick(LIFE);cur={m,a,l};
+// 神秘療癒背景音樂 (Ambient BGM 循環合成)
+let bgmCtx=null, bgmInterval=null, mutedBgm=true;
+function startBgm(){
+  if(mutedBgm) return;
+  try{
+    bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(bgmCtx.state==="suspended") bgmCtx.resume();
+    
+    // 神秘和弦頻率 (例如 D minor 氣氛和弦)
+    const chords = [
+      [146.83, 220, 293.66, 349.23], // D3, A3, D4, F4
+      [130.81, 196, 261.63, 329.63], // C3, G3, C4, E4
+      [110.00, 164.81, 220, 261.63], // A2, E3, A3, C4
+      [123.47, 185.00, 246.94, 329.63] // B2, F#3, B3, E4
+    ];
+    let chordIdx = 0;
+
+    const playChord = () => {
+      if(mutedBgm || !bgmCtx) return;
+      const t = bgmCtx.currentTime;
+      const notes = chords[chordIdx % chords.length];
+      chordIdx++;
+
+      notes.forEach((freq, idx) => {
+        const osc = bgmCtx.createOscillator();
+        const gain = bgmCtx.createGain();
+        osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.value = freq;
+
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.015, t + 2);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 7.5);
+
+        osc.connect(gain).connect(bgmCtx.destination);
+        osc.start(t);
+        osc.stop(t + 8);
+      });
+    };
+
+    playChord();
+    if(bgmInterval) clearInterval(bgmInterval);
+    bgmInterval = setInterval(playChord, 7000);
+  }catch(e){}
+}
+
+function stopBgm(){
+  if(bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
+  if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
+}
+
+// 互動邏輯
+let cur=null, busy=false, tt;
+const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
+const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual");
+const $modal = document.getElementById("manual-modal");
+const $deckMain = document.getElementById("deck-main"), $deckAux = document.getElementById("deck-aux"), $deckLife = document.getElementById("deck-life");
+const $modalConfirm = document.getElementById("modal-confirm"), $modalCancel = document.getElementById("modal-cancel");
+
+let selectedMain = null, selectedAux = null, selectedLife = null;
+
+// 一鍵抽卡
+function quickDraw(){
+  if(busy)return; busy=true;
+  $btnQuick.disabled=true; $btnManual.disabled=true;
+  const m=pick(MAIN), a=pick(AUX), l=pick(LIFE); cur={m,a,l};
   sound();
   $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,.18)+cardHTML(2,"長生",l,.36);
-  $a.hidden=false;$t.textContent="";
-  setTimeout(()=>{busy=false;$d.disabled=false},1000);
+  $a.hidden=false; $t.textContent="";
+  setTimeout(()=>{busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;},1000);
 }
+
+// 手動選牌初始化
+function openManualModal(){
+  selectedMain = null; selectedAux = null; selectedLife = null;
+  updateModalState();
+  
+  // 建立牌背清單
+  buildDeck($deckMain, MAIN, 'main');
+  buildDeck($deckAux, AUX, 'aux');
+  buildDeck($deckLife, LIFE, 'life');
+  
+  $modal.hidden = false;
+}
+
+function buildDeck(container, dataArr, type){
+  container.innerHTML = '';
+  dataArr.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'card-back';
+    el.innerHTML = '<svg style="width:28px;height:28px" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="24"/><path d="M32 16v32M16 32h32"/></svg>';
+    el.onclick = () => {
+      container.querySelectorAll('.card-back').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      if(type==='main') selectedMain = item;
+      if(type==='aux') selectedAux = item;
+      if(type==='life') selectedLife = item;
+      updateModalState();
+    };
+    container.appendChild(el);
+  });
+}
+
+function updateModalState(){
+  document.getElementById('lbl-m').textContent = `主星牌 (39張) - 已選 ${selectedMain ? 1 : 0}/1`;
+  document.getElementById('lbl-a').textContent = `輔星牌 (19張) - 已選 ${selectedAux ? 1 : 0}/1`;
+  document.getElementById('lbl-l').textContent = `長生牌 (12張) - 已選 ${selectedLife ? 1 : 0}/1`;
+
+  if(selectedMain && selectedAux && selectedLife){
+    $modalConfirm.disabled = false;
+    $modalConfirm.style.opacity = '1';
+  } else {
+    $modalConfirm.disabled = true;
+    $modalConfirm.style.opacity = '0.5';
+  }
+}
+
+// 確認手動抽牌
+function confirmManualDraw(){
+  if(!selectedMain || !selectedAux || !selectedLife) return;
+  cur = { m: selectedMain, a: selectedAux, l: selectedLife };
+  $modal.hidden = true;
+  sound();
+  $c.innerHTML = cardHTML(0,"主星",cur.m,0) + cardHTML(1,"輔星",cur.a,.18) + cardHTML(2,"長生",cur.l,.36);
+  $a.hidden = false; $t.textContent = "";
+}
+
 function toast(m){$t.textContent=m;clearTimeout(tt);tt=setTimeout(()=>{$t.textContent=""},2200)}
 function fb(text){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok}
 async function copy(){
@@ -246,9 +410,36 @@ async function copy(){
   if(!ok)ok=fb(text);
   toast(ok?"已複製本次結果 ✓":"複製失敗，請手動選取文字");
 }
-$d.addEventListener("click",draw);
-document.getElementById("copy").addEventListener("click",copy);
-$s.addEventListener("click",()=>{muted=!muted;$s.textContent=muted?"♪ 音效 關":"♪ 音效 開";$s.setAttribute("aria-pressed",String(!muted))});
+
+// 事件綁定
+$btnQuick.addEventListener("click", quickDraw);
+$btnManual.addEventListener("click", openManualModal);
+$modalCancel.addEventListener("click", () => { $modal.hidden = true; });
+$modalConfirm.addEventListener("click", confirmManualDraw);
+document.getElementById("copy").addEventListener("click", copy);
+
+// 音效按鈕
+const $sndBtn = document.getElementById("snd-btn");
+$sndBtn.addEventListener("click",()=>{
+  mutedSnd = !mutedSnd;
+  $sndBtn.textContent = mutedSnd ? "♪ 抽卡音效 關" : "♪ 抽卡音效 開";
+  $sndBtn.setAttribute("aria-pressed", String(!mutedSnd));
+});
+
+// 背景音樂按鈕
+const $bgmBtn = document.getElementById("bgm-btn");
+$bgmBtn.addEventListener("click",()=>{
+  mutedBgm = !mutedBgm;
+  if(!mutedBgm){
+    $bgmBtn.textContent = "♫ 背景音樂 開";
+    $bgmBtn.setAttribute("aria-pressed", "true");
+    startBgm();
+  } else {
+    $bgmBtn.textContent = "♫ 背景音樂 關";
+    $bgmBtn.setAttribute("aria-pressed", "false");
+    stopBgm();
+  }
+});
 </script>
 </body>
 </html>
