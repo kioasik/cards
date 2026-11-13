@@ -229,18 +229,18 @@ h1{
   z-index:50; display:flex; justify-content:center; align-items:center; padding:16px; overflow-y:auto;
 }
 .modal-box{
-  background:var(--bg1); width:100%; max-width:680px; border-radius:24px; padding:28px 20px;
+  background:var(--bg1); width:100%; max-width:720px; border-radius:24px; padding:28px 20px;
   box-shadow:0 20px 50px rgba(0,0,0,0.4); border:1px solid var(--line); text-align:center;
   max-height:92vh; overflow-y:auto;
 }
 .modal-title{font-size:20px; font-weight:700; letter-spacing:.2em; margin-bottom:4px; color:var(--text)}
 .modal-subtitle{font-size:13px; color:var(--muted); letter-spacing:.1em; margin-bottom:20px}
 
-/* 卡牌立體堆疊排列區（具備如示意圖的重疊感） */
+/* 卡牌立體堆疊排列區（2排，放大尺寸） */
 .card-stack-area {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
   align-items: center;
   margin: 16px 0 24px;
   padding: 10px 0;
@@ -252,35 +252,35 @@ h1{
 }
 
 .card-back{
-  width: 52px; height: 76px; 
+  width: 64px; height: 92px; 
   background: linear-gradient(135deg, #201a24, #312838); 
   border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); 
-  border-radius:8px;
+  border-radius:10px;
   cursor:pointer; position:relative; 
   transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s, box-shadow .15s; 
   display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
-  box-shadow: -4px 4px 12px rgba(0,0,0,0.35);
-  margin-left: -22px; /* 製造互相覆蓋堆疊感 */
+  box-shadow: -5px 5px 14px rgba(0,0,0,0.4);
+  margin-left: -28px; /* 完美堆疊感 */
 }
 .card-row .card-back:first-child {
   margin-left: 0;
 }
 .card-back:hover{
-  transform: translateY(-5px) scale(1.05); 
+  transform: translateY(-6px) scale(1.06); 
   border-color: var(--accent); 
-  box-shadow: -6px 8px 18px rgba(126,93,149,0.5); 
+  box-shadow: -7px 10px 20px rgba(126,93,149,0.55); 
   z-index: 20 !important;
 }
 .card-back:active{transform:scale(0.95)!important}
 .card-back.selected{
   border:2px solid var(--accent-d); 
-  box-shadow:0 0 16px rgba(126,93,149,0.8); 
-  transform:translateY(-8px) scale(1.06); 
+  box-shadow:0 0 18px rgba(126,93,149,0.85); 
+  transform:translateY(-10px) scale(1.08); 
   z-index: 30 !important;
 }
 .card-back.selected::after{
   content:'✓'; position:absolute; top:-6px; right:-6px; background:var(--accent-d); color:#fff;
-  font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index: 35;
+  font-size:11px; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index: 35;
 }
 
 .modal-actions{display:flex; justify-content:center; gap:14px; margin-top:20px}
@@ -303,7 +303,7 @@ footer{
   }
   .slot{aspect-ratio:3/4.3}
   .consultant-tip { font-size: 12px; }
-  .card-back { width: 42px; height: 62px; margin-left: -16px; }
+  .card-back { width: 50px; height: 72px; margin-left: -20px; }
 }
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
@@ -596,15 +596,15 @@ function setupManualStep(){
   if(manualStep === 1){
     $modalTitle.textContent = "✧ 手動抽牌 ── 主星牌";
     $modalSubtitle.textContent = "請從下方 14 張主星牌中選擇 1 張";
-    buildStack(MAIN, [5, 5, 4], (item) => { currentSelected = item; updateConfirmState(); });
+    buildStack(MAIN, [7, 7], (item) => { currentSelected = item; updateConfirmState(); });
   } else if(manualStep === 2){
     $modalTitle.textContent = "✧ 手動抽牌 ── 輔星牌";
     $modalSubtitle.textContent = "請從下方 18 張輔星牌中選擇 1 張";
-    buildStack(AUX, [6, 6, 6], (item) => { currentSelected = item; updateConfirmState(); });
+    buildStack(AUX, [9, 9], (item) => { currentSelected = item; updateConfirmState(); });
   } else if(manualStep === 3){
     $modalTitle.textContent = "✧ 手動抽牌 ── 長生牌";
     $modalSubtitle.textContent = "請從下方 12 張長生牌中選擇 1 張";
-    buildStack(LIFE, [4, 4, 4], (item) => { currentSelected = item; updateConfirmState(); });
+    buildStack(LIFE, [6, 6], (item) => { currentSelected = item; updateConfirmState(); });
     $modalConfirm.textContent = "完成抽牌";
   }
 }
@@ -620,9 +620,8 @@ function buildStack(dataArr, rowCounts, onSelect){
       const item = dataArr[dataIndex++];
       const el = document.createElement('div');
       el.className = 'card-back';
-      // 設定遞增的 z-index 讓堆疊前後順序自然
       el.style.zIndex = i + 1;
-      el.innerHTML = '<svg style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.3"/></svg>';
+      el.innerHTML = '<svg style="width:28px;height:28px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.3"/></svg>';
       el.onclick = () => {
         $stackArea.querySelectorAll('.card-back').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
@@ -649,7 +648,6 @@ function confirmManualStep(){
     setupManualStep();
   } else if(manualStep === 2){
     tempAux = currentSelected;
-    manualStep === 3;
     manualStep = 3;
     setupManualStep();
   } else if(manualStep === 3){
@@ -722,7 +720,6 @@ function enterScreenshotMode(){
   if(!cur) return;
   document.getElementById("snd-group").style.opacity = "0";
   document.getElementById("snd-group").style.pointerEvents = "none";
-  // 完美隱藏整塊操作按鈕區
   $a.style.opacity = "0";
   $a.style.pointerEvents = "none";
   $a.style.display = "none";
@@ -732,7 +729,6 @@ function enterScreenshotMode(){
 function exitScreenshotMode(){
   document.getElementById("snd-group").style.opacity = "1";
   document.getElementById("snd-group").style.pointerEvents = "auto";
-  // 恢復顯示操作按鈕區
   $a.style.display = "flex";
   $a.style.opacity = "1";
   $a.style.pointerEvents = "auto";
