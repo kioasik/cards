@@ -296,10 +296,32 @@ h1{
 .modal-box{
   background:var(--bg1); width:100%; max-width:720px; border-radius:24px; padding:28px 20px;
   box-shadow:0 20px 50px rgba(0,0,0,0.4); border:1px solid var(--line); text-align:center;
-  max-height:92vh; overflow-y:auto;
+  max-height:92vh; overflow-y:auto; position:relative;
 }
 .modal-title{font-size:20px; font-weight:700; letter-spacing:.2em; margin-bottom:4px; color:var(--text)}
-.modal-subtitle{font-size:13px; color:var(--muted); letter-spacing:.1em; margin-bottom:20px}
+
+/* 占卜須知視窗右上角關閉按鈕 */
+.modal-close-x {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.modal-close-x:hover {
+  background: rgba(157, 127, 178, 0.12);
+  color: var(--accent-d);
+}
 
 /* 占卜須知視窗內部精美排版樣式 */
 .notice-content {
@@ -308,14 +330,7 @@ h1{
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-.notice-intro {
-  font-size: 14.5px;
-  color: var(--text);
-  line-height: 1.8;
-  letter-spacing: 0.05em;
-  padding-bottom: 8px;
-  border-bottom: 1px dashed var(--line);
+  margin-top: 16px;
 }
 .notice-item {
   background: rgba(255, 255, 255, 0.7);
@@ -459,7 +474,7 @@ footer{
 <button class="notice-fixed-btn" id="open-notice" type="button" title="占卜須知">?</button>
 
 <div class="snd-group" id="snd-group">
-  <button class="snd" id="bgm-btn" type="button" aria-pressed="false">♫ 背景音樂 關</button>
+  <button class="snd" id="bgm-btn" type="button" aria-pressed="true">♫ 背景音樂 開</button>
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
 </div>
 
@@ -524,14 +539,10 @@ footer{
 <!-- 占卜須知說明視窗 -->
 <div class="modal-overlay" id="notice-modal" hidden>
   <div class="modal-box" style="max-width: 650px;">
-    <div class="modal-title">📖 占卜須知指南</div>
-    <div class="modal-subtitle">請在抽牌前撥冗閱讀，讓占卜指引更為清晰</div>
+    <button class="modal-close-x" id="close-notice-x" type="button" aria-label="關閉">×</button>
+    <div class="modal-title">📖 占卜須知</div>
     
     <div class="notice-content">
-      <div class="notice-intro">
-        為了讓占卜結果更清晰、準確，請在抽牌前留意以下事項：
-      </div>
-      
       <div class="notice-item">
         <h3>✦ 一事不二問</h3>
         <p>同一件事請勿<strong>反覆抽牌、重複占卜</strong>。若事情有新發展或改變，再進行下一次占卜。（若不確定提問方向，可以和占卜師先討論）</p>
@@ -678,12 +689,20 @@ function sound(){
   }catch(e){}
 }
 
-let bgmCtx=null, bgmInterval=null, mutedBgm=true;
+let bgmCtx=null, bgmInterval=null, mutedBgm=false, bgmMasterGain=null;
 function startBgm(){
   if(mutedBgm) return;
   try{
     bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
     if(bgmCtx.state==="suspended") bgmCtx.resume();
+    
+    if(!bgmMasterGain) {
+      bgmMasterGain = bgmCtx.createGain();
+      // 淡入效果：初始音量設為 0，再慢慢升起
+      bgmMasterGain.gain.setValueAtTime(0.000001, bgmCtx.currentTime);
+      bgmMasterGain.gain.linearRampToValueAtTime(1.0, bgmCtx.currentTime + 3.0);
+      bgmMasterGain.connect(bgmCtx.destination);
+    }
     
     const crystalNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25, 783.99, 1046.50];
     
@@ -707,8 +726,8 @@ function startBgm(){
         gain.gain.linearRampToValueAtTime(0.008, noteTime + 5.0);
         gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 7.5);
         
-        osc.connect(gain).connect(bgmCtx.destination);
-        oscBox.connect(gain).connect(bgmCtx.destination);
+        osc.connect(gain).connect(bgmMasterGain);
+        oscBox.connect(gain).connect(bgmMasterGain);
         
         osc.start(noteTime);
         oscBox.start(noteTime);
@@ -728,12 +747,27 @@ function stopBgm(){
   if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
 }
 
+// 頁面載入後自動嘗試啟動背景音樂（部分瀏覽器需使用者互動後才能發聲，若遭阻擋可點擊音樂按鈕解鎖）
+window.addEventListener('DOMContentLoaded', () => {
+  startBgm();
+  // 針對部分瀏覽器自動播放限制，點擊任意處自動解鎖一次音訊
+  const unlockAudio = () => {
+    if(bgmCtx && bgmCtx.state === "suspended") {
+      bgmCtx.resume();
+    }
+    window.removeEventListener('click', unlockAudio);
+    window.removeEventListener('touchstart', unlockAudio);
+  };
+  window.addEventListener('click', unlockAudio);
+  window.addEventListener('touchstart', unlockAudio);
+});
+
 let cur=null, drawTime="", userQuestionText="", busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
 const $welcome = document.getElementById("welcome-section");
 const $homeShareArea = document.getElementById("home-share-area");
 const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual"), $openNotice = document.getElementById("open-notice");
-const $noticeModal = document.getElementById("notice-modal"), $closeNotice = document.getElementById("close-notice");
+const $noticeModal = document.getElementById("notice-modal"), $closeNotice = document.getElementById("close-notice"), $closeNoticeX = document.getElementById("close-notice-x");
 const $userQuestionInput = document.getElementById("user-question");
 
 const $modal = document.getElementById("manual-modal");
@@ -975,6 +1009,7 @@ $btnQuick.addEventListener("click", quickDraw);
 $btnManual.addEventListener("click", openManualModal);
 $openNotice.addEventListener("click", () => { $noticeModal.hidden = false; });
 $closeNotice.addEventListener("click", () => { $noticeModal.hidden = true; });
+$closeNoticeX.addEventListener("click", () => { $noticeModal.hidden = true; });
 
 $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
 $modalConfirm.addEventListener("click", confirmManualStep);
