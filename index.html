@@ -204,29 +204,12 @@ h1{
 .slot{aspect-ratio:3/4.3; position:relative}
 .ph{position:absolute; inset:0; border:1.5px dashed var(--line); border-radius:20px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:14px; letter-spacing:.2em; background: rgba(255,255,255,0.6); backdrop-filter: blur(4px);}
 
-.card{position:absolute; inset:0; perspective:900px; cursor:pointer; -webkit-tap-highlight-color:transparent; outline:none;
+.card{
+  position:absolute; inset:0; background:var(--card); border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--line);
+  overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:16px 14px 0;
   animation: cardFlip 1.2s cubic-bezier(0.25, 1, 0.5, 1) both;
+  background-image:linear-gradient(180deg,color-mix(in srgb,var(--tone) 9%,var(--card)),var(--card) 55%);
 }
-.fl{position:absolute; inset:0; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.4,.2,.2,1)}
-.card.flipped .fl{transform:rotateY(180deg)}
-.card:focus-visible .face{outline:2px solid var(--accent); outline-offset:2px}
-.face{position:absolute; inset:0; border-radius:20px; overflow:hidden; background:var(--card); border:1px solid var(--line);
-  box-shadow:var(--shadow); backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; flex-direction:column}
-.face .art{display:block; width:100%; height:auto; flex:0 0 auto}
-.face .pill{position:absolute; top:8px; left:9px; z-index:2; font-size:11px; letter-spacing:.2em; padding:2px 8px 2px 10px; border-radius:999px;
-  background:rgba(255,255,255,.78); color:var(--tone); font-weight:600}
-.face .name{flex:1; display:flex; align-items:center; justify-content:center; font-size:clamp(18px,4.2vw,24px); font-weight:700; letter-spacing:.12em; color:var(--accent-d); padding:0 6px}
-.face.bk{transform:rotateY(180deg); align-items:center; padding:16px 14px 0;
-  background-image:linear-gradient(180deg,color-mix(in srgb,var(--tone) 9%,var(--card)),var(--card) 55%)}
-.bk .bname{font-size:clamp(28px,4.6vw,40px); font-weight:700; letter-spacing:.1em; padding-left:.1em; position:relative; z-index:1; color:var(--accent-d)}
-.face.ft,.face.bk{-webkit-backface-visibility:hidden; backface-visibility:hidden}
-.face{transition:visibility 0s linear .35s}
-.face.bk{visibility:hidden}
-.card.flipped .face.bk{visibility:visible}
-.card.flipped .face.ft{visibility:hidden}
-.t1 .name,.t1 .bname{color:var(--tone)}
-.t2 .name,.t2 .bname{color:var(--tone)}
-.flip-hint{color:var(--muted); font-size:13px; letter-spacing:.14em; margin:0 0 2px}
 .t0{--tone:var(--t0)} .t1{--tone:var(--t1)} .t2{--tone:var(--t2)}
 .head{width:100%; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1}
 .cat{font-size:13px; letter-spacing:.25em; color:var(--tone); font-weight:600}
@@ -482,26 +465,10 @@ footer{
   .consultant-tip { font-size: 12px; }
   .card-back { width: 50px; height: 72px; margin-left: -15px; }
 }
-@media (prefers-reduced-motion:reduce){.card{animation:none} .fl{transition:none}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-<defs>
-  <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#f6efe6"/></linearGradient>
-  <filter id="wob" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter>
-  <filter id="bl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
-  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/><feColorMatrix type="saturate" values="0"/></filter>
-  <filter id="wc" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="6" result="d"/><feGaussianBlur in="d" stdDeviation="1.3" result="b"/><feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="11" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0.35" result="ga"/><feComposite in="b" in2="ga" operator="in"/></filter>
-  <filter id="wob2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.5"/></filter>
-  <filter id="blot" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="21"/><feColorMatrix type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.46  0 0 0 0 0.26  0 0 0 0.9 -0.28"/></filter>
-  <filter id="fib" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.035 0.7" numOctaves="2" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.99  0 0 0 0 0.93  0 0 0 1.6 -0.7"/></filter>
-  <filter id="spk" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="9"/><feColorMatrix type="matrix" values="0 0 0 0 0.36  0 0 0 0 0.26  0 0 0 0 0.16  0 0 0 6 -3.9"/></filter>
-  <radialGradient id="vig" cx="50%" cy="50%" r="75%"><stop offset="0.6" stop-color="#8a6a3a" stop-opacity="0"/><stop offset="1" stop-color="#8a6a3a" stop-opacity="0.28"/></radialGradient>
-  <g id="stars" fill="#b9a6d6" opacity=".7"><path d="M24 40l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M172 30l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z"/><circle cx="170" cy="204" r="1.6"/><circle cx="30" cy="192" r="1.4"/><circle cx="60" cy="24" r="1.4"/><circle cx="150" cy="226" r="1.4"/></g>
-  <g id="fl"><ellipse class="o" fill="#f4b6c2" cx="0" cy="-6" rx="4.5" ry="6"/><ellipse class="o" fill="#f4b6c2" cx="0" cy="-6" rx="4.5" ry="6" transform="rotate(72)"/><ellipse class="o" fill="#f4b6c2" cx="0" cy="-6" rx="4.5" ry="6" transform="rotate(144)"/><ellipse class="o" fill="#f4b6c2" cx="0" cy="-6" rx="4.5" ry="6" transform="rotate(216)"/><ellipse class="o" fill="#f4b6c2" cx="0" cy="-6" rx="4.5" ry="6" transform="rotate(288)"/><circle fill="#efd9a1" r="2.2"/></g>
-</defs>
-</svg>
 
 <!-- 左上角占卜須知小問號按鈕 -->
 <button class="notice-fixed-btn" id="open-notice" type="button" title="占卜須知">?</button>
@@ -552,7 +519,6 @@ footer{
   </div>
 
   <div class="actions" id="actions" hidden>
-    <div class="flip-hint">✦ 輕點牌面，可翻看關鍵字 ✦</div>
     <div class="consultant-tip">*記得把結果傳給你的占卜師，讓他為你解讀：）</div>
     <div class="action-row">
       <button class="action-btn" id="copy" type="button">複製結果文字</button>
@@ -635,89 +601,6 @@ footer{
 </div>
 
 <script>
-/* 紫靈牌面水彩插畫（44 張） */
-(function(){
-const ART={
-紫微:['#cdbfe8','<path class="o" fill="#f4c6cb" d="M46 170Q100 192 154 170L148 190Q100 210 52 190Z"/><path class="o" fill="#efd9a1" d="M56 170L62 118L82 142L100 100L118 142L138 118L144 170Q100 184 56 170Z"/><path class="k" d="M58 156Q100 170 142 156M100 82V66M74 92L64 78M126 92L136 78"/><circle class="o" fill="#e8a0a8" cx="100" cy="98" r="6"/><circle class="o" fill="#bfdaec" cx="62" cy="115" r="5"/><circle class="o" fill="#bfdaec" cx="138" cy="115" r="5"/><circle class="o" fill="#cdbfe8" cx="100" cy="163" r="5"/><circle class="o" fill="#cdbfe8" cx="76" cy="160" r="4"/><circle class="o" fill="#cdbfe8" cx="124" cy="160" r="4"/>'],
-天府:['#efd9a1','<rect class="o" fill="#c9c3d6" x="52" y="86" width="96" height="86" rx="8"/><rect class="o" fill="#ddd8e8" x="60" y="94" width="80" height="70" rx="5"/><circle class="o" fill="#efd9a1" cx="100" cy="129" r="21"/><circle class="o" fill="#fff6e5" cx="100" cy="129" r="10"/><path class="k" d="M100 109V114M100 144V149M80 129H85M115 129H120M100 129L109 121"/><path class="k" d="M62 172V184M138 172V184"/><ellipse class="o" fill="#efd9a1" cx="160" cy="188" rx="14" ry="5"/><ellipse class="o" fill="#efd9a1" cx="160" cy="181" rx="14" ry="5"/><circle class="o" fill="none" cx="42" cy="186" r="6"/><path class="k" d="M48 186H72M64 186V192M69 186V191"/>'],
-天機:['#bfdaec','<circle fill="#bfdaec" fill-opacity=".7" stroke="#4a4458" stroke-width="8" stroke-dasharray="7 6.8" cx="70" cy="122" r="34"/><circle class="o" fill="#bfdaec" cx="70" cy="122" r="24"/><circle class="o" fill="#efd9a1" cx="70" cy="122" r="8"/><path class="k" d="M70 98V114M70 130V146M46 122H62M78 122H94"/><g transform="rotate(-28 110 120)"><rect class="o" fill="#efd9a1" x="84" y="108" width="14" height="10" rx="2"/><rect class="o" fill="#efd9a1" x="96" y="104" width="64" height="18" rx="3"/><rect class="o" fill="#d9b56a" x="156" y="99" width="26" height="28" rx="3"/><path class="k" d="M118 104V122M138 104V122"/></g><path class="k" d="M108 138L90 196M108 138L128 196M108 138V192"/><path fill="#b9a6d6" d="M168 56l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>'],
-太陰:['#cdbfe8','<path class="o" fill="#f7e9b8" d="M124 56A58 58 0 1 0 152 152A46 46 0 0 1 124 56Z"/><path class="k" d="M78 112Q86 119 94 112"/><circle fill="#f4c6cb" opacity=".7" cx="76" cy="126" r="6"/><path class="k" d="M84 136Q92 143 100 136"/><path class="k" style="stroke:#7a5a50;stroke-width:3" d="M44 200Q92 172 164 188"/><g fill="#efd9a1" class="o"><circle cx="70" cy="190" r="3"/><circle cx="92" cy="184" r="3"/><circle cx="116" cy="184" r="3"/><circle cx="140" cy="186" r="3"/></g><path class="k" d="M64 216Q100 208 140 216"/><path fill="#b9a6d6" d="M150 74l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>'],
-七殺:['#d9c3d6','<circle class="o" fill="#f4e7c8" cx="134" cy="80" r="26"/><path class="o" fill="#7d6da0" d="M78 100Q60 150 52 198H148Q140 150 122 100Q100 112 78 100Z"/><path class="o" fill="#6b5b8a" d="M82 74Q100 50 118 74L124 102Q100 114 76 102Z"/><path fill="#2f2a3b" d="M90 84Q100 94 110 84L108 98Q100 104 92 98Z"/><path stroke="#f4e7c8" stroke-width="2" stroke-linecap="round" d="M93 90h4M103 90h4"/><path class="k" style="stroke:#c8606a;stroke-width:5" d="M88 104Q70 114 62 136"/><path class="o" fill="#e6e3ee" d="M122 118L170 180L163 184L116 124Z"/><path class="k" d="M110 124L128 108M116 116L108 108"/>'],
-破軍:['#f6cdb6','<ellipse class="o" fill="#e7dfe9" cx="76" cy="192" rx="26" ry="8"/><ellipse class="o" fill="#e7dfe9" cx="54" cy="198" rx="16" ry="6"/><path class="k" d="M30 100H62M24 118H58M32 136H60"/><path class="k" style="stroke-width:4" d="M104 146L86 184L70 188M114 140L132 168L152 164M114 106L138 96"/><path class="o" fill="#d28a8a" d="M84 96L114 102L126 142L98 148Z"/><circle class="o" fill="#f9dfcb" cx="94" cy="82" r="13"/><path class="o" fill="#b9b3c7" d="M79 82Q94 60 110 82Z"/><path class="k" style="stroke:#c8606a;stroke-width:4" d="M94 66Q98 52 110 54"/><path class="k" d="M122 48L152 198"/><path class="o" fill="#c8606a" d="M128 60Q150 54 168 64L162 80Q144 72 132 82Z"/>'],
-貪狼:['#f4c6cb','<path class="k" style="stroke:#7a5a50;stroke-width:3" d="M26 64Q80 74 124 52"/><use href="#fl" transform="translate(50 68) scale(1.4)"/><use href="#fl" transform="translate(88 70) scale(1.2)"/><use href="#fl" transform="translate(120 54) scale(1.5)"/><use href="#fl" transform="translate(150 78) scale(1)"/><rect class="o" fill="#b98a5a" x="96" y="92" width="16" height="14" rx="3"/><path class="o" fill="#d9a066" d="M100 104Q84 104 84 126Q70 130 70 158Q70 190 104 190Q138 190 138 158Q138 130 124 126Q124 104 108 104Z"/><path class="k" style="stroke:#c8606a;stroke-width:2.5" d="M88 122Q104 132 120 122"/><path fill="#6b5b8a" opacity=".6" d="M90 156L95 142L102 150H110L117 142L122 156Q106 176 90 156Z"/><path class="o" fill="#efd9a1" d="M142 176H172L168 196Q157 202 146 196Z"/><ellipse fill="#f4b6c2" cx="160" cy="150" rx="3" ry="5" transform="rotate(30 160 150)"/><ellipse fill="#f4b6c2" cx="40" cy="150" rx="3" ry="5" transform="rotate(-20 40 150)"/><ellipse fill="#f4b6c2" cx="176" cy="120" rx="3" ry="5"/>'],
-天梁:['#c3e3d4','<rect class="o" fill="#e6dccb" x="94" y="72" width="12" height="116"/><rect class="o" fill="#e6dccb" x="76" y="186" width="48" height="10" rx="2"/><circle class="o" fill="#efd9a1" cx="100" cy="66" r="8"/><path class="k" style="stroke-width:4" d="M48 84H152"/><path class="k" d="M48 84L30 128M48 84L66 128M152 84L134 128M152 84L170 128M100 74Q86 58 72 64M100 74Q114 58 128 64"/><path class="o" fill="#bfdaec" d="M24 128Q48 158 72 128Z"/><path class="o" fill="#f4c6cb" d="M128 128Q152 158 176 128Z"/><path class="o" fill="#c3e3d4" d="M40 124Q48 106 60 120Q50 128 40 124Z"/><circle class="o" fill="#d9d4de" cx="152" cy="120" r="8"/>'],
-天同:['#f6cdb6','<use href="#fl" transform="translate(48 196) scale(1.2)"/><use href="#fl" transform="translate(160 200) scale(1)"/><path class="o" fill="#bfdaec" d="M78 126Q100 116 122 126L130 188H70Z"/><path class="k" style="stroke:#c8606a;stroke-width:5" d="M76 152H124"/><path class="k" style="stroke-width:4" d="M118 134Q132 128 140 114"/><path class="k" d="M146 110L158 196"/><path class="o" fill="#f4c6cb" d="M146 108L146 84L166 96Z"/><path class="o" fill="#efd9a1" d="M146 108L170 108L158 128Z"/><path class="o" fill="#c3e3d4" d="M146 108L146 132L126 120Z"/><path class="o" fill="#cdbfe8" d="M146 108L122 108L134 88Z"/><ellipse class="o" fill="#6b5b8a" cx="86" cy="190" rx="12" ry="5"/><ellipse class="o" fill="#6b5b8a" cx="114" cy="190" rx="12" ry="5"/><circle class="o" fill="#f9dfcb" cx="100" cy="96" r="26"/><path class="o" fill="#5a4a6a" d="M74 92Q76 66 100 68Q124 66 126 92Q112 82 100 84Q88 82 74 92Z"/><circle class="o" fill="#5a4a6a" cx="100" cy="62" r="8"/><path class="k" d="M84 101Q90 94 96 101M104 101Q110 94 116 101"/><circle fill="#f4a6b0" opacity=".7" cx="82" cy="108" r="5"/><circle fill="#f4a6b0" opacity=".7" cx="118" cy="108" r="5"/><path class="k" d="M92 110Q100 118 108 110"/>'],
-廉貞:['#cdbfe8','<path class="o" fill="#cdbfe8" d="M70 112Q100 100 130 112L142 192H58Z"/><path class="o" fill="#bd9fd0" d="M82 138H118L114 156H86Z"/><rect class="o" fill="#fff6e5" x="68" y="148" width="64" height="12" rx="6"/><path class="k" style="stroke:#c8606a;stroke-width:3" d="M100 148V160"/><circle class="o" fill="#f9dfcb" cx="100" cy="88" r="18"/><path class="o" fill="#6b5b8a" d="M76 72H124L120 54H80Z"/><path class="k" d="M64 66H76M124 66H136"/><path class="k" d="M92 88H97M103 88H108M93 100Q100 112 107 100"/><path class="k" style="stroke:#7fa98f" d="M138 80Q126 86 112 94"/><ellipse class="o" fill="#fffaf0" cx="156" cy="78" rx="14" ry="8"/><circle class="o" fill="#fffaf0" cx="145" cy="73" r="6"/><path class="o" fill="#fffaf0" d="M152 76Q160 56 176 60Q168 74 158 82Z"/><path fill="#7fa98f" d="M128 83q6-8 10-2q-4 6-10 2zM118 90q6-8 10-2q-4 6-10 2z"/>'],
-太陽:['#efd9a1','<path id="ry" class="o" fill="#efd9a1" d="M100 38L107 62H93Z"/><use href="#ry" transform="rotate(30 100 118)"/><use href="#ry" transform="rotate(60 100 118)"/><use href="#ry" transform="rotate(90 100 118)"/><use href="#ry" transform="rotate(120 100 118)"/><use href="#ry" transform="rotate(150 100 118)"/><use href="#ry" transform="rotate(180 100 118)"/><use href="#ry" transform="rotate(210 100 118)"/><use href="#ry" transform="rotate(240 100 118)"/><use href="#ry" transform="rotate(270 100 118)"/><use href="#ry" transform="rotate(300 100 118)"/><use href="#ry" transform="rotate(330 100 118)"/><circle class="o" fill="#f7d98c" cx="100" cy="118" r="34"/><circle class="k" stroke-dasharray="2 4" cx="100" cy="118" r="27"/><path class="k" d="M86 114Q91 108 96 114M104 114Q109 108 114 114M92 128Q100 136 108 128"/><circle fill="#f4a6b0" opacity=".7" cx="82" cy="126" r="5"/><circle fill="#f4a6b0" opacity=".7" cx="118" cy="126" r="5"/><path class="o" fill="#fffaf0" d="M40 196Q44 182 60 184Q66 172 82 178Q96 172 104 188Q118 182 126 196Z"/><path class="o" fill="#fffaf0" d="M120 204Q124 192 138 194Q146 184 158 192Q172 188 176 204Z"/>'],
-武曲:['#d9d4de','<circle class="o" fill="#efd9a1" cx="84" cy="94" r="10"/><rect class="k" x="80" y="90" width="8" height="8"/><circle class="o" fill="#efd9a1" cx="112" cy="88" r="10"/><rect class="k" x="108" y="84" width="8" height="8"/><circle class="o" fill="#efd9a1" cx="134" cy="100" r="9"/><rect class="k" x="130.5" y="96.5" width="7" height="7"/><path class="o" fill="#b3aebf" d="M46 130Q46 98 100 98Q154 98 154 130Z"/><rect class="o" fill="#9a95a8" x="46" y="128" width="108" height="60" rx="5"/><path class="k" style="stroke:#6b5b8a;stroke-width:7" d="M74 100V188M126 100V188"/><g fill="#efd9a1" class="o"><circle cx="74" cy="136" r="2.5"/><circle cx="74" cy="168" r="2.5"/><circle cx="126" cy="136" r="2.5"/><circle cx="126" cy="168" r="2.5"/></g><rect class="o" fill="#efd9a1" x="92" y="122" width="16" height="22" rx="3"/><circle fill="#4a4458" cx="100" cy="130" r="2.4"/><path class="k" d="M100 131V138"/><circle class="o" fill="#efd9a1" cx="172" cy="192" r="9"/><rect class="k" x="168.5" y="188.5" width="7" height="7"/>'],
-天相:['#bfdaec','<path class="k" stroke-dasharray="2 5" d="M58 84Q100 56 142 84"/><path class="o" fill="#cdbfe8" d="M20 118L70 110L84 134L68 152L20 150Z"/><path class="o" fill="#bfdaec" d="M180 118L130 110L116 134L132 152L180 150Z"/><path class="o" fill="#f9dfcb" d="M70 112Q100 100 130 112Q138 134 126 152Q100 164 74 152Q62 134 70 112Z"/><path class="k" d="M82 120L88 142M94 116L98 146M106 116L108 146M118 120L116 142M70 112L68 152M130 112L132 152"/><rect class="o" fill="#e8a0a8" x="94" y="160" width="12" height="12" rx="3"/><rect class="o" fill="#e8a0a8" x="82" y="170" width="36" height="30" rx="3"/><path stroke="#fff6e5" stroke-width="2" stroke-linecap="round" d="M90 180H110M90 189H110"/>'],
-巨門:['#b9a6d6','<circle class="o" fill="#f4e7c8" cx="152" cy="52" r="14"/><path class="o" fill="#cfc6dc" d="M50 198V104Q50 52 100 52Q150 52 150 104V198Z"/><path class="o" fill="#3a3350" d="M64 198V108Q64 70 100 70Q136 70 136 108V198Z"/><path fill="#f8e7b0" d="M94 72Q104 130 100 198H124Q120 120 108 74Z"/><path fill="#f8e7b0" opacity=".5" d="M100 198L82 218H152L124 198Z"/><path class="k" d="M64 108Q80 100 94 106"/><circle class="o" fill="#efd9a1" cx="82" cy="140" r="4"/><path class="k" d="M44 206H156M38 214H162"/><path class="k" style="stroke:#7fa98f" d="M50 130Q38 146 46 164Q54 174 50 190"/><path fill="#7fa98f" d="M44 150q-8-2-10-8q8 0 10 8zM52 172q8-2 10-8q-8 0-10 8z"/><circle fill="#f4e7c8" cx="76" cy="118" r="2"/><circle fill="#f4e7c8" cx="86" cy="118" r="2"/>']
-};
-const o=(d,f)=>`<path class="o" fill="${f}" d="${d}"/>`,k=d=>`<path class="k" d="${d}"/>`,c=(x,y,r,f)=>`<circle class="o" fill="${f}" cx="${x}" cy="${y}" r="${r}"/>`;
-const e=(x,y,rx,ry,f)=>`<ellipse class="o" fill="${f}" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`;
-const F=(x,y)=>`<path class="k" d="M${x-12} ${y+1}Q${x-8} ${y-6} ${x-4} ${y+1}M${x+4} ${y+1}Q${x+8} ${y-6} ${x+12} ${y+1}M${x-7} ${y+10}Q${x} ${y+16} ${x+7} ${y+10}"/>`;
-const OF=(x,y)=>`<path class="k" d="M${x-11} ${y}Q${x-8} ${y-3} ${x-5} ${y}M${x+5} ${y}Q${x+8} ${y-3} ${x+11} ${y}M${x-7} ${y+11}Q${x} ${y+15} ${x+7} ${y+11}M${x-12} ${y-8}H${x-4}M${x+4} ${y-8}H${x+12}"/>`;
-const Y='#efd9a1',pk='#f4c6cb',bl='#bfdaec',gr='#c3e3d4',lv='#cdbfe8',sk='#f9dfcb',dk='#6b5b8a',cr='#fff6e5',rd='#c8606a',br='#d9a066';
-const dand=Array.from({length:16},(_,i)=>{const a=i*Math.PI/8,x=100+36*Math.cos(a),y=88+36*Math.sin(a);return k(`M100 88L${x} ${y}`)+c(x,y,3,cr)}).join('');
-const ecl=Array.from({length:16},(_,i)=>{const a=i*Math.PI/8;return k(`M${100+44*Math.cos(a)} ${110+44*Math.sin(a)}L${100+58*Math.cos(a)} ${110+58*Math.sin(a)}`)}).join('');
-const person=(hair,body,extra,face)=>o('M64 196Q62 134 100 120Q138 134 136 196Z',body)+c(100,92,22,sk)+hair+face+extra;
-Object.assign(ART,{
-祿存:[Y,o('M80 112Q100 96 120 112Q152 132 152 168Q152 194 100 194Q48 194 48 168Q48 132 80 112z',Y)+k('M82 112Q100 120 118 112')+c(100,156,17,'#f7d98c')+k('M94 150h12v12h-12z')+e(158,190,14,5,Y)+e(158,183,14,5,Y)+e(158,176,14,5,Y)+c(46,92,8,Y)+c(156,84,8,Y)+k('M42 88h8v8h-8zM152 80h8v8h-8z')],
-天馬:[bl,o('M104 118C100 86 84 56 58 42C60 58 64 68 72 78C62 72 56 72 50 74C62 90 80 102 94 114Z','#e3eef8')+o('M64 142C66 122 90 114 112 118C120 104 126 82 138 66C146 68 158 82 164 98C166 104 160 108 154 106C150 104 146 100 143 96C139 106 135 118 134 130C136 144 134 154 130 160L128 198H114L114 166C104 168 90 168 78 164L78 198H64L66 166C58 160 60 150 64 142Z',cr)+o('M122 106C112 92 122 72 138 66C130 78 126 92 128 108Z',lv)+o('M64 144C44 140 32 160 40 188C50 172 56 162 68 156Z',lv)+o('M138 66L142 50L149 68Z',cr)+o('M114 198H128V204H114ZM64 198H78V204H64Z',dk)+o('M96 126C84 100 64 82 34 74C42 88 46 96 54 104C46 102 40 104 34 108C46 120 60 126 74 128C66 130 60 134 56 138C74 140 88 138 98 132Z',bl)+k('M92 124C78 106 62 92 42 82M86 128C70 118 56 112 42 110')+k('M147 85Q151 81 155 85M159 100H162')],
-地空:['#e3eef8',o('M36 152Q26 126 54 124Q60 98 90 106Q108 88 134 108Q164 104 164 132Q176 152 150 158H50Q40 158 36 152z',cr)+o('M120 82Q124 66 140 70Q152 60 162 74Q176 76 170 90H122Q116 88 120 82z',bl)+k('M50 190H150M70 202H130M82 214H118')],
-地劫:[bl,o('M0 176C40 160 70 176 100 170C130 164 160 150 200 168V240H0Z','#d6e8f4')+o('M22 204C22 152 62 104 112 104C146 104 162 130 150 152C144 132 124 124 110 134C98 144 102 162 118 166C100 180 72 174 58 194Z',bl)+o('M112 104C138 96 158 112 152 136C146 122 132 116 118 118C124 112 120 108 112 104Z',cr)+k('M40 188C46 152 74 124 108 118M62 176C70 156 88 142 106 140')+c(146,108,2.5,cr)+c(158,120,2,cr)+c(136,94,2,cr)+o('M0 208C30 194 60 208 90 202C120 196 150 212 200 200V240H0Z','#9cc2e0')+k('M20 220C50 212 80 222 110 216M120 226C146 220 170 226 188 222')+k('M40 62Q46 54 52 62Q58 54 64 62M150 48Q155 41 160 48Q165 41 170 48')],
-鈴星:[lv,c(66,136,26,'#d9d4de')+c(66,136,15,'#fffaf0')+c(134,136,26,'#d9d4de')+c(134,136,15,'#fffaf0')+o('M70 76H130V96H70z','#b3aebf')+k('M66 96V112M134 96V112')+e(100,146,9,5,Y)+e(100,160,9,5,Y)+e(100,174,9,5,Y)+k('M100 140V180')],
-火星:['#f6cdb6',o('M30 202L84 108H116L170 202z','#9a95a8')+o('M84 108Q100 120 116 108L108 98H92z','#f6b07a')+o('M100 112Q96 152 82 184Q106 194 114 178Q110 148 104 112z','#f08a6a')+e(92,80,16,10,'#e6e3ee')+e(112,64,20,12,'#d9d4de')+e(136,46,14,9,'#e6e3ee')+c(70,90,3,'#f08a6a')+c(140,96,3,'#f08a6a')+c(126,82,2.5,'#f6b07a')],
-擎羊:['#e3eef8','<g transform="rotate(25 100 120)">'+o('M100 36L114 134H86z','#e6e3ee')+k('M100 46V134')+o('M72 134H128V144H72z',Y)+o('M94 144H106V182H94z',rd)+c(100,188,7,Y)+k('M94 154H106M94 164H106M94 174H106')+'</g>'+c(50,196,4,lv)+c(160,60,3,lv)],
-化權:[gr,o('M56 130H72V196H56z','#c9a47a')+c(64,100,26,gr)+c(44,122,18,'#a9d4bc')+c(84,120,18,'#a9d4bc')+o('M130 120H148V196H130z','#c9a47a')+c(139,86,30,gr)+c(116,110,20,'#a9d4bc')+c(162,110,20,'#a9d4bc')+k('M30 198H170M40 208H160')+c(139,72,4,Y)],
-化祿:[Y,c(100,96,18,'#f7d98c')+c(76,110,14,Y)+c(126,108,14,'#f7d98c')+c(100,76,10,Y)+o('M40 124H160Q160 190 100 194Q40 190 40 124z',br)+e(100,124,60,9,'#c9894e')+k('M60 150Q100 164 140 150M70 168Q100 178 130 168')+c(40,190,5,pk)+c(164,194,5,bl)+k('M96 92h8v8h-8z')],
-化科:[cr,dandX()],
-化忌:['#d9c3d6',c(100,110,48,'#f7d98c')+ecl+c(100,110,34,'#3a3350')+k('M72 96Q82 76 106 74')],
-天鉞:[lv,person(o('M78 88Q80 62 100 64Q120 62 122 88Q110 76 100 78Q90 76 78 88z','#e6e3ee')+c(100,60,10,'#e6e3ee'),lv,o('M70 134Q100 156 130 134L126 154Q100 172 74 154z',pk)+k('M146 142V200M146 142Q146 132 158 134'),'')+OF(100,96)],
-天魁:[bl,person(o('M80 92Q100 74 120 92Q114 80 100 80Q86 80 80 92z','#e6e3ee')+o('M80 104Q100 152 120 104Q100 120 80 104z','#fffaf0'),bl,k('M148 142V200M148 142Q148 132 160 134'),'')+OF(100,96)],
-左輔:[bl,person(o('M78 90Q78 62 100 62Q122 62 122 90Q110 74 100 78Q88 74 78 90z','#5a4a6a'),bl,k('M130 150Q150 140 158 120')+o('M92 124L100 150L108 124z','#c8606a'),F(100,96))+c(158,114,6,sk)],
-右弼:[pk,o('M76 94Q72 50 100 52Q128 50 124 94L132 156Q100 146 68 156z','#5a4a6a')+o('M66 196Q64 140 100 126Q136 140 134 196Z',pk)+c(100,96,22,sk)+o('M78 88Q92 66 122 88Q108 76 100 78Q90 74 78 88z','#5a4a6a')+F(100,100)+'<use href="#fl" transform="translate(120 72) scale(1.1)"/>'],
-文昌:[cr,'<g transform="rotate(32 100 110)">'+o('M95 36H105V120H95z',br)+o('M92 118H108V128H92z',Y)+o('M95 128Q100 184 105 128z','#3a3350')+'</g>'+e(70,200,26,9,'#5a4a6a')+e(70,196,20,6,'#2f2a3b')+k('M110 188Q130 178 156 192')],
-文曲:[gr,'<g transform="rotate(-38 100 120)">'+o('M24 112H176Q184 112 184 120Q184 128 176 128H24Q16 128 16 120Q16 112 24 112z','#d9c98a')+k('M60 112V128M120 112V128')+c(76,120,2.5,'#4a3d63')+c(92,120,2.5,'#4a3d63')+c(108,120,2.5,'#4a3d63')+c(138,120,2.5,'#4a3d63')+k('M26 128Q22 148 28 160')+'</g>'+k('M50 70Q60 60 70 70M150 60Q160 50 170 60')+c(60,52,4,lv)+c(160,92,4,lv)],
-陀羅:[lv,o('M60 104H140L100 192z',lv)+o('M68 118H132L124 132H76z',pk)+o('M80 140H120L112 152H88z',Y)+e(100,104,40,9,'#bd9fd0')+k('M100 95V74')+c(100,70,5,Y)+k('M40 150Q30 120 56 96M160 150Q170 120 144 96M70 210Q100 220 130 210')],
-長生1:[gr,o('M36 190Q100 156 164 190V212H36z',br)+k('M100 176V142')+o('M100 152Q74 150 68 124Q96 124 100 152z',gr)+o('M100 146Q126 144 132 118Q104 118 100 146z','#a9d4bc')+k('M60 184V168M70 182V170M140 182V168M150 184V170')+c(46,60,3,Y)],
-沐浴2:[bl,c(96,116,36,bl)+k('M76 100Q82 88 96 86')+c(142,84,18,pk)+k('M134 78Q138 72 146 72')+c(58,76,12,lv)+c(150,150,14,gr)+c(60,170,16,Y)+c(112,172,9,bl)+c(104,60,7,pk)],
-冠帶3:[rd,o('M56 50L96 84L84 102L48 72z',cr)+o('M144 50L104 84L116 102L152 72z',cr)+o('M88 80H112L108 98H92z',rd)+o('M92 98H108L126 176L100 200L74 176z',rd)+k('M88 126L112 120M84 148L116 142M80 164L120 158')],
-臨官4:[Y,o('M20 112H80V126H20z','#5a4a6a')+o('M120 112H180V126H120z','#5a4a6a')+o('M72 128Q68 74 100 74Q132 74 128 128z','#4a3d63')+o('M70 120H130V136H70z',Y)+o('M60 136H140Q152 150 140 156H60Q48 150 60 136z','#5a4a6a')+c(100,100,5,Y)],
-帝旺5:[Y,o('M50 176L56 108L80 138L100 82L120 138L144 108L150 176Q100 192 50 176z',Y)+k('M54 160Q100 176 146 160')+c(100,96,7,rd)+c(60,112,5,bl)+c(140,112,5,bl)+c(100,168,6,lv)+c(76,164,4,pk)+c(124,164,4,pk)+k('M100 66V50M72 76L62 62M128 76L138 62')],
-衰6:[Y,o('M100 58Q152 90 142 152Q122 192 100 200Q78 192 58 152Q48 90 100 58z','#f2c46a')+k('M100 62V204M100 100L124 120M100 100L76 120M100 140L128 160M100 140L72 160')+c(80,150,4,'#d9a066')+c(122,110,3,'#d9a066')+o('M36 70Q50 62 58 76Q46 82 36 70z','#e6b06a')+o('M158 196Q170 188 176 200Q164 206 158 196z','#d9a066')],
-病7:['#d9d4de',o('M88 200L94 130L84 98L96 108L98 70L106 110L118 94L108 132L114 200z','#b9b3c7')+k('M94 130Q70 116 52 84M84 98Q64 90 50 62M98 70Q96 56 88 46M106 110Q130 92 148 70M118 94Q140 88 154 100M108 132Q128 130 146 142')+k('M44 202H156')+o('M130 196Q138 188 146 198Q138 204 130 196z','#d9a066')],
-死8:[br,e(100,186,46,12,'#cfb08a')+o('M54 186V150H146V186Q100 200 54 186z','#cfb08a')+e(100,150,46,12,'#e6d2ae')+e(100,150,32,8,'none')+e(100,150,18,4.5,'none')+k('M44 214H156')+'<g transform="rotate(30 150 120)">'+k('M150 90V170')+o('M150 92Q176 96 178 120Q150 118 150 92z','#b3aebf')+'</g>'+k('M40 176Q36 160 46 150M44 168L36 160')],
-墓9:[lv,o('M88 58H112V104H146V130H112V196H88V130H54V104H88z','#d9d4de')+k('M100 68V190')+o('M30 198Q100 170 170 198V214H30z',gr)+'<use href="#fl" transform="translate(54 190) scale(1)"/><use href="#fl" transform="translate(150 192) scale(1)"/>'+k('M70 60Q76 46 90 40')],
-絕10:['#d9d4de',o('M44 56H156V184H44z',cr)+k('M80 56H44V184H156V56H120M68 76V164H132V76H102M90 96V144H112V96')+c(100,120,5,rd)+k('M126 50L140 44L126 38')+c(70,196,3,lv)],
-胎11:[pk,c(100,118,54,'#f9dfcb')+c(100,100,20,sk)+o('M96 118Q130 110 130 142Q128 170 98 168Q78 164 78 144Q80 128 96 128Q108 130 106 140',pk)+c(92,98,2,'#4a4458')+k('M106 168Q120 188 104 200Q92 208 100 220')+k('M62 96Q100 52 138 96',)],
-養12:[gr,o('M62 144H138L126 198H74z',br)+o('M54 130H146V148H54z','#c9894e')+e(100,130,46,7,'#8a6a4a')+k('M70 160H128M76 176H124')+c(150,70,7,bl)+c(48,84,5,bl)+c(122,56,4,bl)+k('M100 96V108')+c(100,64,12,Y)]
-});
-function dandX(){return dand+k('M100 124Q106 170 96 214')+o('M98 176Q74 170 66 148Q92 152 98 176z',gr)+o('M102 190Q126 186 134 164Q108 168 102 190z',gr)+c(150,60,3,cr)+c(46,50,3,cr)+c(160,110,3,cr)}
-const GR=[['主星',['紫微','天府','天機','太陰','七殺','破軍','貪狼','天梁','天同','廉貞','太陽','武曲','天相','巨門']],['輔星',['祿存','天馬','地空','地劫','鈴星','火星','擎羊','化權','化祿','化科','化忌','天鉞','天魁','左輔','右弼','文昌','文曲','陀羅']],['長生',['長生1','沐浴2','冠帶3','臨官4','帝旺5','衰6','病7','死8','墓9','絕10','胎11','養12']]];
-
-
-function art(n){
-  const a=ART[n];
-  const ink=a[1].replace('id="ry"','id="ry2"').split('href="#ry"').join('href="#ry2"');
-  return '<svg viewBox="0 0 200 240" class="art" role="img" aria-label="'+n+'牌面插畫">'+
-    '<rect width="200" height="240" fill="#f3ead4"/>'+
-    '<rect width="200" height="240" filter="url(#blot)"/>'+
-    '<rect width="200" height="240" filter="url(#fib)" opacity=".7"/>'+
-    '<rect width="200" height="240" filter="url(#spk)" opacity=".5"/>'+
-    '<g filter="url(#wc)" opacity=".55"><ellipse cx="100" cy="118" rx="76" ry="80" fill="'+a[0]+'"/><ellipse cx="112" cy="132" rx="46" ry="50" fill="'+a[0]+'" opacity=".6"/><circle cx="40" cy="60" r="7" fill="'+a[0]+'"/><circle cx="168" cy="190" r="5" fill="'+a[0]+'"/></g>'+
-    '<use href="#stars" opacity=".5"/>'+
-    '<g class="wc" filter="url(#wc)" style="mix-blend-mode:multiply">'+a[1]+'</g>'+
-    '<g class="ln" filter="url(#wob2)">'+ink+'</g>'+
-    '<rect width="200" height="240" fill="url(#vig)"/>'+
-    '<rect x="5" y="5" width="190" height="230" fill="none" stroke="#9d7fb2" stroke-width=".9"/><rect x="9" y="9" width="182" height="222" fill="none" stroke="#9d7fb2" stroke-width=".5"/>'+
-    '</svg>';
-}
-
-window.zlArt=function(name){return ART[name]?art(name):""};
-})();
-</script>
-<script>
 const I = {
 紫微:'<path d="M12 48h40M12 48L9 22l14 12 9-16 9 16 14-12-3 26z"/><path d="M32 8v4M20 10l2 3M44 10l-2 3"/>',
 天府:'<rect x="10" y="14" width="44" height="36" rx="4"/><circle cx="32" cy="32" r="9"/><path d="M32 26v12M26 32h12M18 50v4M46 50v4"/>',
@@ -775,24 +658,16 @@ function rnd(n){try{const a=new Uint32Array(1),l=Math.floor(4294967296/n)*n;do{c
 const pick=a=>a[rnd(a.length)];
 
 function cardHTML(i,cat,s,delay){
-  const key=s[0].replace(/-/g,'');
-  const iconKey=s[0].replace(/-[0-9]+/g,'').replace(/[0-9]/g,'');
-  const disp=s[0].replace(/-(\d+)/,' $1');
-  const kwHtml=s[1]?'<div class="kw">'+s[1]+'</div>':'';
-  const art=(window.zlArt?window.zlArt(key):'')||'';
-  return '<div class="slot"><div class="card t'+i+'" role="button" tabindex="0" aria-pressed="false" aria-label="'+disp+'，點一下翻面看關鍵字" style="animation-delay:'+delay+'s">'+
-    '<div class="fl">'+
-      '<div class="face ft"><span class="pill">'+cat+'</span>'+art+'<div class="name">'+disp+'</div></div>'+
-      '<div class="face bk">'+SKY+
-        '<div class="head"><span class="cat">'+cat+'</span><span></span></div>'+
-        '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+(I[iconKey]||I['紫微'])+'</svg></div>'+
-        '<div class="bname">'+disp+'</div>'+kwHtml+
-      '</div>'+
-    '</div></div></div>';
+  const iconKey = s[0].replace(/-[0-9]+/g, '').replace(/[0-9]/g, '');
+  const kwHtml = s[1] ? '<div class="kw">'+s[1]+'</div>' : '';
+  return '<div class="slot"><div class="card t'+i+'" style="animation-delay:'+delay+'s">'+SKY+
+    '<div class="head"><span class="cat">'+cat+'</span><span></span></div>'+
+    '<div class="ibox"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+(I[iconKey]||I['紫微'])+'</svg></div>'+
+    '<div class="name">'+s[0]+'</div>'+kwHtml+'</div></div>';
 }
 
 let sndCtx=null, mutedSnd=false;
-function sound(noBell){
+function sound(){
   if(mutedSnd)return;
   try{
     sndCtx=sndCtx||new(window.AudioContext||window.webkitAudioContext)();
@@ -806,7 +681,6 @@ function sound(noBell){
     const gainNode=sndCtx.createGain();
     gainNode.gain.setValueAtTime(0.001, t); gainNode.gain.linearRampToValueAtTime(0.08, t+.05); gainNode.gain.exponentialRampToValueAtTime(0.001, t+.35);
     src.connect(filt).connect(gainNode).connect(sndCtx.destination); src.start(t);
-    if(noBell)return;
 
     const o=sndCtx.createOscillator(), g=sndCtx.createGain();
     o.type="sine"; o.frequency.setValueAtTime(1046.5, t+.1);
@@ -1182,16 +1056,6 @@ function exitScreenshotMode(){
   document.getElementById("screenshot-exit-area").style.display = "none";
 }
 
-function toggleFlip(card){
-  sound(true);
-  const on=card.classList.toggle('flipped');
-  card.setAttribute('aria-pressed',on?'true':'false');
-}
-$c.addEventListener('click',e=>{const cd=e.target.closest('.card'); if(cd&&$c.contains(cd)) toggleFlip(cd);});
-$c.addEventListener('keydown',e=>{
-  if(e.key!=='Enter'&&e.key!==' ')return;
-  const cd=e.target.closest('.card'); if(cd){e.preventDefault(); toggleFlip(cd);}
-});
 $btnQuick.addEventListener("click", quickDraw);
 $btnManual.addEventListener("click", openManualModal);
 $openNotice.addEventListener("click", () => { $noticeModal.hidden = false; });
