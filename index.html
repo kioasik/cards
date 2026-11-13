@@ -7,7 +7,7 @@
 <meta name="googlebot" content="noindex, nofollow">
 
 <meta property="og:title" content="✨🔮紫靈牌卡 ✦ 線上占卜🔮✨">
-<meta property="og:description" content="嗨，歡迎你來到這裡。現在，請試著清空思緒、寫下或默想你的問題，並選擇喜歡的占卜方式。">
+<meta property="og:description" content="嗨，歡迎你來到這裡。現在，請試著清空思緒、在心中默念你的問題，並選擇喜歡的占卜方式。">
 
 <title>✨🔮 紫靈牌卡 ✦ 線上占卜 🔮✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -131,37 +131,40 @@ h1{
   transform: scale(0.95);
 }
 
-/* 提問輸入框區塊 */
+.btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
+
+/* 提問輸入框區塊：改為圓角方框、虛線外框、且與下方雙按鈕寬度完美切齊 */
 .question-input-wrapper {
-  max-width: 420px;
-  margin: 0 auto 20px;
+  width: 100%;
+  max-width: 342px; /* 與下方按鈕群組寬度完全一致 */
+  margin: 0 auto 16px;
 }
 .question-input {
   width: 100%;
   padding: 12px 18px;
   font-family: inherit;
-  font-size: 14.5px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.8);
-  border: 1.5px solid var(--line);
-  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px dashed #bfaecb;
+  border-radius: 16px;
   outline: none;
-  box-shadow: 0 4px 16px rgba(130, 100, 150, 0.06);
+  box-shadow: 0 4px 16px rgba(130, 100, 150, 0.04);
   text-align: center;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 .question-input::placeholder {
-  color: #b3aabf;
-  letter-spacing: 0.08em;
+  color: #a89bb8;
+  letter-spacing: 0.06em;
 }
 .question-input:focus {
   border-color: var(--accent);
   background: #ffffff;
-  box-shadow: 0 4px 20px rgba(157, 127, 178, 0.18);
+  border-style: solid;
+  box-shadow: 0 4px 20px rgba(157, 127, 178, 0.16);
 }
 
-.btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 .btn{
   font-family:inherit; font-size:17px; letter-spacing:.15em; padding:12px 30px; border:none; border-radius:999px; cursor:pointer;
   color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.12); 
@@ -336,7 +339,6 @@ h1{
   line-height: 1.75;
   letter-spacing: 0.04em;
 }
-/* 重點粗體字維持原本內文顏色 */
 .notice-item p strong {
   color: #554d5e;
   font-weight: 700;
@@ -369,7 +371,7 @@ h1{
   font-weight: 700;
 }
 
-/* 手動抽牌彈跳視窗（覆蓋面積調整為 20% 左右，間距更舒適） */
+/* 手動抽牌彈跳視窗（覆蓋面積調整為 30% 左右，間距舒適適中） */
 .card-stack-area {
   display: flex;
   flex-direction: column;
@@ -393,7 +395,7 @@ h1{
   transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s, box-shadow .15s; 
   display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
   box-shadow: -4px 4px 12px rgba(0,0,0,0.35);
-  margin-left: -13px; /* 覆蓋約20%寬度 (64px * 0.2 = 約13px) */
+  margin-left: -19px; /* 覆蓋約30%寬度 (64px * 0.3 = 約19px) */
 }
 .card-row .card-back:first-child {
   margin-left: 0;
@@ -436,7 +438,7 @@ footer{
   }
   .slot{aspect-ratio:3/4.3}
   .consultant-tip { font-size: 12px; }
-  .card-back { width: 50px; height: 72px; margin-left: -10px; }
+  .card-back { width: 50px; height: 72px; margin-left: -15px; }
 }
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
@@ -459,7 +461,7 @@ footer{
   
   <div id="welcome-section">
     <p class="hint">嗨，歡迎你來到這裡。
-現在，請試著清空思緒、寫下或想著你的問題，
+現在，請試著清空思緒、寫下或默想你的問題，
 並選擇喜歡的占卜方式。</p>
     
     <div class="question-input-wrapper">
