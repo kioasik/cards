@@ -207,7 +207,8 @@ h1{
 .card{
   position:absolute; inset:0; background:var(--card); border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--line);
   overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:16px 14px 0;
-  animation: cardFlip 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  /* 將翻牌動畫時間拉長至 1.2s，讓轉場更柔和 */
+  animation: cardFlip 1.2s cubic-bezier(0.25, 1, 0.5, 1) both;
   background-image:linear-gradient(180deg,color-mix(in srgb,var(--tone) 9%,var(--card)),var(--card) 55%);
 }
 .t0{--tone:var(--t0)} .t1{--tone:var(--t1)} .t2{--tone:var(--t2)}
@@ -224,7 +225,7 @@ h1{
 .sky{position:absolute; left:0; right:0; bottom:0; width:100%; height:34%; color:var(--tone); opacity:.32; pointer-events:none}
 
 @keyframes cardFlip{
-  0% { opacity: 0; transform: rotateY(90deg) translateY(20px) scale(0.9); }
+  0% { opacity: 0; transform: rotateY(90deg) translateY(24px) scale(0.9); }
   100% { opacity: 1; transform: none; }
 }
 
@@ -698,7 +699,6 @@ function startBgm(){
     
     if(!bgmMasterGain) {
       bgmMasterGain = bgmCtx.createGain();
-      // 淡入效果：初始音量設為 0，再慢慢升起
       bgmMasterGain.gain.setValueAtTime(0.000001, bgmCtx.currentTime);
       bgmMasterGain.gain.linearRampToValueAtTime(1.0, bgmCtx.currentTime + 3.0);
       bgmMasterGain.connect(bgmCtx.destination);
@@ -747,10 +747,8 @@ function stopBgm(){
   if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
 }
 
-// 頁面載入後自動嘗試啟動背景音樂（部分瀏覽器需使用者互動後才能發聲，若遭阻擋可點擊音樂按鈕解鎖）
 window.addEventListener('DOMContentLoaded', () => {
   startBgm();
-  // 針對部分瀏覽器自動播放限制，點擊任意處自動解鎖一次音訊
   const unlockAudio = () => {
     if(bgmCtx && bgmCtx.state === "suspended") {
       bgmCtx.resume();
@@ -817,23 +815,22 @@ function quickDraw(){
     const m=pick(MAIN), a=pick(AUX), l=pick(LIFE); 
     cur={m,a,l};
     drawTime = getFormattedTime();
-    sound();
     showResultView();
     $c.innerHTML = '<div class="slot"><div class="ph">主星</div></div><div class="slot"><div class="ph">輔星</div></div><div class="slot"><div class="ph">長生</div></div>';
     setTimeout(() => {
-      sound();
+      sound(); // 第1聲 (主星)
       $c.children[0].outerHTML = cardHTML(0, "主星", cur.m, 0);
     }, 400);
     setTimeout(() => {
-      sound();
+      sound(); // 第2聲 (輔星)
       $c.children[1].outerHTML = cardHTML(1, "輔星", cur.a, 0);
-    }, 900);
+    }, 1000);
     setTimeout(() => {
-      sound();
+      sound(); // 第3聲 (長生)
       $c.children[2].outerHTML = cardHTML(2, "長生", cur.l, 0);
       $t.textContent="";
       busy=false; $btnQuick.disabled=false; $btnManual.disabled=false; $openNotice.disabled=false; $userQuestionInput.disabled=false;
-    }, 1400);
+    }, 1600);
   }, 450);
 }
 
@@ -924,13 +921,13 @@ function confirmManualStep(){
     setTimeout(() => {
       sound();
       $c.children[1].outerHTML = cardHTML(1, "輔星", cur.a, 0);
-    }, 900);
+    }, 1000);
     setTimeout(() => {
       sound();
       $c.children[2].outerHTML = cardHTML(2, "長生", cur.l, 0);
       $t.textContent = "";
       $a.style.opacity = "1"; 
-    }, 1400);
+    }, 1600);
   }
 }
 
