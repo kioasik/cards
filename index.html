@@ -131,38 +131,33 @@ h1{
   transform: scale(0.95);
 }
 
-.btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
+.btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
 
-/* 提問輸入框區塊：更淡的綠色、更長更細的疏落虛線 */
+/* 提問輸入框區塊：更淡綠色、疏落細虛線、並用縮放技巧呈現更小字體而不觸發手機放大 */
 .question-input-wrapper {
   width: 100%;
   max-width: 342px;
   margin: 0 auto 16px;
 }
 .question-input {
-  width: 100%;
-  padding: 11px 18px;
+  width: 114%; /* 配合scale放大比例讓實際寬度切齊下方按鈕 */
+  margin-left: -7%;
+  padding: 9px 18px;
   font-family: inherit;
-  font-size: 16px; /* 防止iOS點擊自動放大 */
+  font-size: 16px; /* 保持16px防手機自動縮放 */
+  transform: scale(0.88); /* 視覺縮小字體與高度，使其看起來跟上方說明文字一樣精緻 */
   letter-spacing: 0.06em;
   color: #6a8c77;
   background: rgba(255, 255, 255, 0.6);
-  border: 1px dashed #abc2b4; /* 更細、更淡 */
-  border-spacing: 12px;
-  border-radius: 16px;
+  border: 1px dashed #abc2b4;
+  border-radius: 18px;
   outline: none;
   box-shadow: 0 4px 16px rgba(106, 140, 119, 0.03);
   text-align: center;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
-/* 調整虛線的間距讓它看起來更長、更疏落 */
-.question-input {
-  background-image: none;
-  border-style: dashed;
-  border-width: 1px;
-}
 .question-input::placeholder {
-  color: #abc2b4; /* 更淡的綠色 placeholder */
+  color: #abc2b4;
   letter-spacing: 0.06em;
 }
 .question-input:focus {
@@ -435,6 +430,14 @@ footer{
   opacity: 0.7;
 }
 
+.privacy-notice {
+  margin-top: 8px;
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+}
+
 @media (max-width:640px){
   main{padding-top:48px; padding-left:14px; padding-right:14px}
   .cards{
@@ -479,6 +482,10 @@ footer{
       <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
       <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
     </div>
+
+    <div style="margin-top: 10px;">
+      <button class="action-btn" id="share-site-home" type="button">分享此網站</button>
+    </div>
   </div>
 
   <section class="cards" id="cards" aria-live="polite">
@@ -507,7 +514,10 @@ footer{
     </div>
   </div>
 
-  <footer>Made with 💜 by YAN-HAN</footer>
+  <footer>
+    <div>Made with 💜 by YAN-HAN</div>
+    <div class="privacy-notice">本網站不會蒐集任何用戶問題或資料，請放心使用。</div>
+  </footer>
 </main>
 
 <!-- 占卜須知說明視窗 -->
@@ -953,6 +963,8 @@ function exitScreenshotMode(){
   document.getElementById("open-notice").style.pointerEvents = "auto";
   $a.style.display = "flex";
   $a.style.opacity = "1";
+  $a.style.display = "flex";
+  $a.style.opacity = "1";
   $a.style.pointerEvents = "auto";
   document.getElementById("screenshot-exit-area").style.display = "none";
 }
@@ -968,6 +980,7 @@ document.getElementById("copy").addEventListener("click", copy);
 document.getElementById("save-img").addEventListener("click", enterScreenshotMode);
 document.getElementById("exit-screenshot").addEventListener("click", exitScreenshotMode);
 document.getElementById("share-site").addEventListener("click", shareWebsite);
+document.getElementById("share-site-home").addEventListener("click", shareWebsite);
 document.getElementById("reset-draw").addEventListener("click", resetDraw);
 
 const $sndBtn = document.getElementById("snd-btn");
