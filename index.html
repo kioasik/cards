@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="googlebot" content="noindex, nofollow">
 
@@ -120,7 +120,7 @@ h1{
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(130, 100, 150, 0.08);
-  transition: transform 0.15s, border-color 0.15s, color 0.15s;
+  transition: transform 0.15s, border-color 0.15s, color 0.15s, opacity 0.3s;
 }
 .notice-fixed-btn:hover {
   transform: scale(1.08);
@@ -133,36 +133,37 @@ h1{
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 
-/* 提問輸入框區塊：改為圓角方框、虛線外框、且與下方雙按鈕寬度完美切齊 */
+/* 提問輸入框區塊：淡綠色細虛線、圓體、16px防自動縮放 */
 .question-input-wrapper {
   width: 100%;
-  max-width: 342px; /* 與下方按鈕群組寬度完全一致 */
+  max-width: 342px;
   margin: 0 auto 16px;
 }
 .question-input {
   width: 100%;
-  padding: 12px 18px;
-  font-family: inherit;
-  font-size: 14px;
+  padding: 11px 18px;
+  font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", sans-serif;
+  font-weight: 500;
+  font-size: 16px; /* 設為16px可防止iOS手機點擊時畫面自動放大 */
   letter-spacing: 0.06em;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.7);
-  border: 2px dashed #bfaecb;
+  color: #527963;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1.5px dashed #8fb29e;
   border-radius: 16px;
   outline: none;
-  box-shadow: 0 4px 16px rgba(130, 100, 150, 0.04);
+  box-shadow: 0 4px 16px rgba(82, 121, 99, 0.04);
   text-align: center;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 .question-input::placeholder {
-  color: #a89bb8;
+  color: #8fb29e;
   letter-spacing: 0.06em;
 }
 .question-input:focus {
-  border-color: var(--accent);
+  border-color: #729b84;
   background: #ffffff;
   border-style: solid;
-  box-shadow: 0 4px 20px rgba(157, 127, 178, 0.16);
+  box-shadow: 0 4px 20px rgba(114, 155, 132, 0.14);
 }
 
 .btn{
@@ -371,7 +372,7 @@ h1{
   font-weight: 700;
 }
 
-/* 手動抽牌彈跳視窗（覆蓋面積調整為 30% 左右，間距舒適適中） */
+/* 手動抽牌彈跳視窗（覆蓋面積維持 30%） */
 .card-stack-area {
   display: flex;
   flex-direction: column;
@@ -395,7 +396,7 @@ h1{
   transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s, box-shadow .15s; 
   display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
   box-shadow: -4px 4px 12px rgba(0,0,0,0.35);
-  margin-left: -19px; /* 覆蓋約30%寬度 (64px * 0.3 = 約19px) */
+  margin-left: -19px;
 }
 .card-row .card-back:first-child {
   margin-left: 0;
@@ -931,6 +932,8 @@ function enterScreenshotMode(){
   if(!cur) return;
   document.getElementById("snd-group").style.opacity = "0";
   document.getElementById("snd-group").style.pointerEvents = "none";
+  document.getElementById("open-notice").style.opacity = "0";
+  document.getElementById("open-notice").style.pointerEvents = "none";
   $a.style.opacity = "0";
   $a.style.pointerEvents = "none";
   $a.style.display = "none";
@@ -940,6 +943,8 @@ function enterScreenshotMode(){
 function exitScreenshotMode(){
   document.getElementById("snd-group").style.opacity = "1";
   document.getElementById("snd-group").style.pointerEvents = "auto";
+  document.getElementById("open-notice").style.opacity = "1";
+  document.getElementById("open-notice").style.pointerEvents = "auto";
   $a.style.display = "flex";
   $a.style.opacity = "1";
   $a.style.pointerEvents = "auto";
