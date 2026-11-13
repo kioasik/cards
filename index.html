@@ -96,9 +96,38 @@ h1{
   font-size:15px; 
   line-height:2.0; 
   letter-spacing:.08em; 
-  margin:0 auto 24px; 
+  margin:0 auto 20px; 
   max-width:32em;
   white-space: pre-line;
+}
+
+/* 占卜須知小按鈕（上方獨立區塊） */
+.notice-btn-wrapper {
+  margin-bottom: 20px;
+}
+.btn-notice-sm {
+  font-family: inherit;
+  font-size: 13.5px;
+  letter-spacing: 0.12em;
+  padding: 6px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  background: transparent;
+  color: #527963;
+  border: 1.5px solid #729b84;
+  box-shadow: 0 2px 8px rgba(82, 121, 99, 0.08);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-notice-sm:hover {
+  transform: translateY(-2px);
+  background: rgba(114, 155, 132, 0.1);
+  box-shadow: 0 4px 12px rgba(82, 121, 99, 0.15);
+}
+.btn-notice-sm:active {
+  transform: scale(0.96) !important;
 }
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
@@ -119,10 +148,6 @@ h1{
 .btn-purple{
   background: linear-gradient(135deg, var(--accent), var(--accent-d));
   box-shadow: 0 8px 22px rgba(126,93,149,0.3);
-}
-.btn-green{
-  background: linear-gradient(135deg, #729b84, #527963);
-  box-shadow: 0 8px 22px rgba(82,121,99,0.3);
 }
 
 .snd-group{
@@ -280,6 +305,10 @@ h1{
   line-height: 1.75;
   letter-spacing: 0.04em;
 }
+.notice-item p strong {
+  color: var(--accent-d);
+  font-weight: 700;
+}
 .notice-quote {
   background: linear-gradient(135deg, rgba(157,127,178,0.1), rgba(126,93,149,0.15));
   border-left: 4px solid var(--accent);
@@ -301,6 +330,11 @@ h1{
   line-height: 1.8;
   font-style: italic;
   letter-spacing: 0.05em;
+}
+.notice-quote p strong {
+  font-style: normal;
+  color: var(--accent-d);
+  font-weight: 700;
 }
 
 /* 手動抽牌彈跳視窗 */
@@ -393,10 +427,13 @@ footer{
 現在，請試著清空思緒、在心中默念你的問題，
 並選擇喜歡的占卜方式。</p>
     
+    <div class="notice-btn-wrapper">
+      <button class="btn-notice-sm" id="open-notice" type="button">📖 占卜須知</button>
+    </div>
+
     <div class="btn-group">
       <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
       <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
-      <button class="btn btn-green" id="open-notice" type="button">📖 占卜須知</button>
     </div>
   </div>
 
@@ -437,42 +474,42 @@ footer{
     
     <div class="notice-content">
       <div class="notice-intro">
-        為了讓占卜結果更清晰、準確，請在抽牌前留意以下事項：
+        為了讓占卜結果更清晰,準確,請在抽牌前留意以下事項:
       </div>
       
       <div class="notice-item">
         <h3>✦ 一事不二問</h3>
-        <p>同一件事請勿**反覆抽牌、重複占卜**。若事情有新發展或改變，再進行下一次占卜。（若不確定提問方向，可以和占卜師先討論）</p>
+        <p>同一件事請勿<strong>反覆抽牌、重複占卜</strong>。若事情有新發展或改變,再進行下一次占卜。(若不確定提問方向,可以和占卜師先討論)</p>
       </div>
 
       <div class="notice-item">
         <h3>✦ 以三個月內的事情為限</h3>
-        <p>紫靈牌適合占卜短期發展，建議以**未來三個月內**可能發生的事情為主。</p>
+        <p>紫靈牌適合占卜短期發展,建議以<strong>未來三個月內</strong>可能發生的事情為主。</p>
       </div>
 
       <div class="notice-item">
         <h3>✦ 問題越明確越好</h3>
-        <p>占卜前請先釐清自己真正想知道的事情，盡量提出**具體、明確的問題**，避免過於籠統或模糊的提問。</p>
+        <p>占卜前請先釐清自己真正想知道的事情,盡量提出<strong>具體、明確的問題</strong>,避免過於籠統或模糊的提問。</p>
       </div>
 
       <div class="notice-item">
         <h3>✦ 一次專注於一個問題</h3>
-        <p>請勿將多個問題混合在同一次占卜中。一次占卜**聚焦一件事情**，能讓牌卡呈現的訊息更容易解讀。</p>
+        <p>請勿將多個問題混合在同一次占卜中。一次占卜<strong>聚焦一件事情</strong>,能讓牌卡呈現的訊息更容易解讀。</p>
       </div>
 
       <div class="notice-item">
-        <h3>✦ 保持平靜，避免情緒化占卜</h3>
-        <p>當情緒焦躁不安，或急於得到特定答案時，建議先**讓自己沉澱一下**，再進行占卜。</p>
+        <h3>✦ 保持平靜,避免情緒化占卜</h3>
+        <p>當情緒焦躁不安,或急於得到特定答案時,建議先<strong>讓自己沉澱一下</strong>,再進行占卜。</p>
       </div>
 
       <div class="notice-item">
         <h3>✦ 占卜結果僅供參考</h3>
-        <p>牌卡提供的是趨勢與自我探索的參考，並非絕對的命運定論。未來仍會受到**個人選擇、環境及外在因素**影響，請理性看待占卜結果。</p>
+        <p>牌卡提供的是趨勢與自我探索的參考,並非絕對的命運定論。未來仍會受到<strong>個人選擇、環境及外在因素</strong>影響,請理性看待占卜結果。</p>
       </div>
 
       <div class="notice-quote">
-        <h4>☽ 最後，請記得：</h4>
-        <p>占卜不是為了尋求一個自己想聽的答案，而是透過牌卡，**重新看見事情的可能性與自己尚未察覺的方向**。</p>
+        <h4>☽ 最後,請記得:</h4>
+        <p>占卜不是為了尋求一個自己想聽的答案,而是透過牌卡,<strong>重新看見事情的可能性與自己尚未察覺的方向</strong>。</p>
       </div>
     </div>
 
@@ -812,7 +849,7 @@ function toast(m){
 function fb(text){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok}
 async function copy(){
   if(!cur)return;
-  const text="【✨🔮紫靈牌卡 ✦ 線上占卜🔮✨】\n占卜時間："+drawTime+"\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0];
+  const text="✨🔮紫靈牌占卜結果🔮✨\n主星："+cur.m[0]+"（"+cur.m[1]+"）\n輔星："+cur.a[0]+"（"+cur.a[1]+"）\n長生："+cur.l[0]+"\n占卜時間："+drawTime;
   let ok=false;
   try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true}}catch(e){}
   if(!ok)ok=fb(text);
