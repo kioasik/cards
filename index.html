@@ -207,7 +207,6 @@ h1{
 .card{
   position:absolute; inset:0; background:var(--card); border-radius:20px; box-shadow:var(--shadow); border:1px solid var(--line);
   overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:16px 14px 0;
-  /* 將翻牌動畫時間拉長至 1.2s，讓轉場更柔和 */
   animation: cardFlip 1.2s cubic-bezier(0.25, 1, 0.5, 1) both;
   background-image:linear-gradient(180deg,color-mix(in srgb,var(--tone) 9%,var(--card)),var(--card) 55%);
 }
@@ -475,7 +474,7 @@ footer{
 <button class="notice-fixed-btn" id="open-notice" type="button" title="占卜須知">?</button>
 
 <div class="snd-group" id="snd-group">
-  <button class="snd" id="bgm-btn" type="button" aria-pressed="true">♫ 背景音樂 開</button>
+  <button class="snd" id="bgm-btn" type="button" aria-pressed="true">♫ 音樂 開</button>
   <button class="snd" id="snd-btn" type="button" aria-pressed="true">♪ 抽卡音效 開</button>
 </div>
 
@@ -667,97 +666,152 @@ function cardHTML(i,cat,s,delay){
     '<div class="name">'+s[0]+'</div>'+kwHtml+'</div></div>';
 }
 
-let ctx=null, mutedSnd=false;
+let sndCtx=null, mutedSnd=false;
 function sound(){
   if(mutedSnd)return;
   try{
-    ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();
-    if(ctx.state==="suspended")ctx.resume();
-    const t=ctx.currentTime;
-    const n=Math.floor(ctx.sampleRate*.35), b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0);
+    sndCtx=sndCtx||new(window.AudioContext||window.webkitAudioContext)();
+    if(sndCtx.state==="suspended")sndCtx.resume();
+    const t=sndCtx.currentTime;
+    const n=Math.floor(sndCtx.sampleRate*.35), b=sndCtx.createBuffer(1,n,sndCtx.sampleRate), d=b.getChannelData(0);
     for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/n);
-    const src=ctx.createBufferSource(); src.buffer=b;
-    const filt=ctx.createBiquadFilter(); filt.type="bandpass";
+    const src=sndCtx.createBufferSource(); src.buffer=b;
+    const filt=sndCtx.createBiquadFilter(); filt.type="bandpass";
     filt.frequency.setValueAtTime(800, t); filt.frequency.exponentialRampToValueAtTime(2400, t+.35); filt.Q.value=1.2;
-    const gainNode=ctx.createGain();
+    const gainNode=sndCtx.createGain();
     gainNode.gain.setValueAtTime(0.001, t); gainNode.gain.linearRampToValueAtTime(0.08, t+.05); gainNode.gain.exponentialRampToValueAtTime(0.001, t+.35);
-    src.connect(filt).connect(gainNode).connect(ctx.destination); src.start(t);
+    src.connect(filt).connect(gainNode).connect(sndCtx.destination); src.start(t);
 
-    const o=ctx.createOscillator(), g=ctx.createGain();
+    const o=sndCtx.createOscillator(), g=sndCtx.createGain();
     o.type="sine"; o.frequency.setValueAtTime(1046.5, t+.1);
     g.gain.setValueAtTime(0, t+.1); g.gain.linearRampToValueAtTime(0.04, t+.12); g.gain.exponentialRampToValueAtTime(0.0001, t+.8);
-    o.connect(g).connect(ctx.destination); o.start(t+.1); o.stop(t+.85);
+    o.connect(g).connect(sndCtx.destination); o.start(t+.1); o.stop(t+.85);
   }catch(e){}
 }
 
-let bgmCtx=null, bgmInterval=null, mutedBgm=false, bgmMasterGain=null;
-function startBgm(){
-  if(mutedBgm) return;
-  try{
-    bgmCtx = bgmCtx || new (window.AudioContext || window.webkitAudioContext)();
-    if(bgmCtx.state==="suspended") bgmCtx.resume();
-    
-    if(!bgmMasterGain) {
-      bgmMasterGain = bgmCtx.createGain();
-      bgmMasterGain.gain.setValueAtTime(0.000001, bgmCtx.currentTime);
-      bgmMasterGain.gain.linearRampToValueAtTime(1.0, bgmCtx.currentTime + 3.0);
-      bgmMasterGain.connect(bgmCtx.destination);
-    }
-    
-    const crystalNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25, 783.99, 1046.50];
-    
-    const playCrystalArpeggio = () => {
-      if(mutedBgm || !bgmCtx) return;
-      let t = bgmCtx.currentTime;
-      
-      for(let i=0; i<5; i++){
-        const freq = crystalNotes[Math.floor(Math.random() * crystalNotes.length)];
-        const osc = bgmCtx.createOscillator();
-        const oscBox = bgmCtx.createOscillator();
-        const gain = bgmCtx.createGain();
-        
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        oscBox.type = 'triangle';
-        oscBox.frequency.value = freq * 0.5;
-        
-        const noteTime = t + (i * 0.83);
-        gain.gain.setValueAtTime(0.000001, noteTime);
-        gain.gain.linearRampToValueAtTime(0.008, noteTime + 5.0);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 7.5);
-        
-        osc.connect(gain).connect(bgmMasterGain);
-        oscBox.connect(gain).connect(bgmMasterGain);
-        
-        osc.start(noteTime);
-        oscBox.start(noteTime);
-        osc.stop(noteTime + 7.8);
-        oscBox.stop(noteTime + 7.8);
-      }
-    };
+// ----------------------------------------------------
+// 新版背景音樂引擎（豎琴／水晶音色）
+// ----------------------------------------------------
+const $m=document.getElementById('bgm-btn');
+let musicOn=true,musicUserOff=false,mBus=null,mTimer=null,mKey=0,mIdx=3,mNotes=0,ctx=null;
+const ROOTS=[0,-5,5,0];
 
-    playCrystalArpeggio();
-    if(bgmInterval) clearInterval(bgmInterval);
-    bgmInterval = setInterval(playCrystalArpeggio, 8000);
-  }catch(e){}
+function getCtx(){
+  ctx=ctx||new(window.AudioContext||window.webkitAudioContext)();
+  if(ctx.state==='suspended')ctx.resume();
+  return ctx;
+}
+
+function buildBus(){
+  const c=getCtx();if(mBus)return;
+  const bus=c.createGain();bus.gain.value=0;
+  const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=300;
+  const sf=c.createBiquadFilter();sf.type='lowpass';sf.frequency.value=1800;sf.Q.value=.3;
+  const verb=c.createConvolver(),n=Math.floor(c.sampleRate*3.6),b=c.createBuffer(2,n,c.sampleRate);
+  for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.6)}
+  verb.buffer=b;
+  const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2500;
+  const wet=c.createGain();wet.gain.value=.55;
+  const dry=c.createGain();dry.gain.value=.6;
+  bus.connect(sf);sf.connect(hp);hp.connect(dry);dry.connect(c.destination);
+  hp.connect(verb);verb.connect(lp);lp.connect(wet);wet.connect(c.destination);
+  mBus=bus;
+}
+
+function pluck(f,t,v){
+  const c=ctx,g=c.createGain();
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(v,t+.025);
+  g.gain.exponentialRampToValueAtTime(.0008,t+3.2);
+  const o1=c.createOscillator(),o2=c.createOscillator(),g2=c.createGain(),o3=c.createOscillator(),g3=c.createGain();
+  o1.type='sine';o1.frequency.value=f;
+  o2.type='sine';o2.frequency.value=f*2;g2.gain.value=.15;
+  o3.type='sine';o3.frequency.value=f*4.01;
+  g3.gain.setValueAtTime(.025,t);g3.gain.exponentialRampToValueAtTime(.0005,t+.9);
+  o1.connect(g);o2.connect(g2);g2.connect(g);o3.connect(g3);g3.connect(g);g.connect(mBus);
+  [o1,o2,o3].forEach(o=>{o.start(t);o.stop(t+3.3)});
+}
+
+function scaleNow(){
+  const root=523.25*Math.pow(2,ROOTS[mKey]/12),out=[];
+  [-1,0,1,2].forEach(o=>[0,2,4,7,9].forEach(s=>{
+    const f=root*Math.pow(2,(s+12*o)/12);
+    if(f>=320&&f<=880)out.push(f);
+  }));
+  return out.sort((a,b)=>a-b);
+}
+
+function mStep(){
+  if(!musicOn)return;
+  if(document.hidden){mTimer=setTimeout(mStep,1000);return}
+  const t=ctx.currentTime+.05,sc=scaleNow(),mx=sc.length-1;
+  mIdx=Math.max(0,Math.min(mx,mIdx+Math.round((Math.random()*2-1)*2.2)));
+  let gap=900+Math.random()*900;
+  if(Math.random()<.22){
+    const n=3+Math.floor(Math.random()*2),dir=Math.random()<.7?1:-1;
+    for(let k=0;k<n;k++){
+      const i=Math.max(0,Math.min(mx,mIdx+dir*k*(Math.random()<.5?1:2)));
+      pluck(sc[i],t+k*.26,.09-.012*k);
+    }
+    gap=2200+Math.random()*1200;
+  }else{
+    pluck(sc[mIdx],t,.1+Math.random()*.03);
+    if(Math.random()<.3)pluck(sc[Math.max(0,mIdx-2)],t+.02,.05);
+  }
+  if(++mNotes%26===0)mKey=(mKey+1)%ROOTS.length;
+  mTimer=setTimeout(mStep,gap);
+}
+
+function updMus(){
+  if(!$m)return;
+  $m.textContent=musicOn?'♫ 背景音樂 開':'♫ 背景音樂 關';
+  $m.setAttribute('aria-pressed',String(musicOn));
+}
+
+function startBgm(){
+  if(musicOn&&mBus)return;
+  try{buildBus()}catch(e){return}
+  musicOn=true;const c=ctx;
+  mBus.gain.cancelScheduledValues(c.currentTime);
+  mBus.gain.setValueAtTime(mBus.gain.value,c.currentTime);
+  mBus.gain.linearRampToValueAtTime(.7,c.currentTime+3.0);
+  mStep();updMus();
 }
 
 function stopBgm(){
-  if(bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
-  if(bgmCtx && bgmCtx.state === "running") { bgmCtx.suspend(); }
+  if(!musicOn)return;
+  musicOn=false;clearTimeout(mTimer);
+  if(mBus){
+    mBus.gain.cancelScheduledValues(ctx.currentTime);
+    mBus.gain.setValueAtTime(mBus.gain.value,ctx.currentTime);
+    mBus.gain.linearRampToValueAtTime(0,ctx.currentTime+1.2);
+  }
+  updMus();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  startBgm();
+  try{
+    startBgm();
+  }catch(e){}
   const unlockAudio = () => {
-    if(bgmCtx && bgmCtx.state === "suspended") {
-      bgmCtx.resume();
+    if(ctx && ctx.state === "suspended") {
+      ctx.resume();
     }
     window.removeEventListener('click', unlockAudio);
     window.removeEventListener('touchstart', unlockAudio);
   };
   window.addEventListener('click', unlockAudio);
   window.addEventListener('touchstart', unlockAudio);
+});
+
+document.addEventListener('visibilitychange',()=>{
+  if(ctx&&musicOn&&!document.hidden&&ctx.state==='suspended')ctx.resume();
+});
+
+// 音樂開關按鈕
+$m.addEventListener('click',()=>{
+  if(musicOn){musicUserOff=true;stopBgm()}
+  else{musicUserOff=false;startBgm()}
 });
 
 let cur=null, drawTime="", userQuestionText="", busy=false, tt;
@@ -1014,7 +1068,7 @@ document.getElementById("copy").addEventListener("click", copy);
 document.getElementById("save-img").addEventListener("click", enterScreenshotMode);
 document.getElementById("exit-screenshot").addEventListener("click", exitScreenshotMode);
 document.getElementById("share-site").addEventListener("click", shareWebsite);
-document.getElementById("share-site-home").addEventListener("click", shareWebsite);
+document.getElementById("share-site-home", "").addEventListener("click", shareWebsite);
 document.getElementById("reset-draw").addEventListener("click", resetDraw);
 
 const $sndBtn = document.getElementById("snd-btn");
@@ -1022,20 +1076,6 @@ $sndBtn.addEventListener("click",()=>{
   mutedSnd = !mutedSnd;
   $sndBtn.textContent = mutedSnd ? "♪ 抽卡音效 關" : "♪ 抽卡音效 開";
   $sndBtn.setAttribute("aria-pressed", String(!mutedSnd));
-});
-
-const $bgmBtn = document.getElementById("bgm-btn");
-$bgmBtn.addEventListener("click",()=>{
-  mutedBgm = !mutedBgm;
-  if(!mutedBgm){
-    $bgmBtn.textContent = "♫ 背景音樂 開";
-    $bgmBtn.setAttribute("aria-pressed", "true");
-    startBgm();
-  } else {
-    $bgmBtn.textContent = "♫ 背景音樂 關";
-    $bgmBtn.setAttribute("aria-pressed", "false");
-    stopBgm();
-  }
 });
 </script>
 </body>
