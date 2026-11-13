@@ -133,19 +133,19 @@ h1{
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
 
-/* 提問輸入框區塊：更淡綠色、疏落細虛線、並用縮放技巧呈現更小字體而不觸發手機放大 */
+/* 提問輸入框區塊 */
 .question-input-wrapper {
   width: 100%;
   max-width: 342px;
   margin: 0 auto 16px;
 }
 .question-input {
-  width: 114%; /* 配合scale放大比例讓實際寬度切齊下方按鈕 */
+  width: 114%;
   margin-left: -7%;
   padding: 9px 18px;
   font-family: inherit;
-  font-size: 16px; /* 保持16px防手機自動縮放 */
-  transform: scale(0.88); /* 視覺縮小字體與高度，使其看起來跟上方說明文字一樣精緻 */
+  font-size: 16px;
+  transform: scale(0.88);
   letter-spacing: 0.06em;
   color: #6a8c77;
   background: rgba(255, 255, 255, 0.6);
@@ -482,10 +482,6 @@ footer{
       <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
       <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
     </div>
-
-    <div style="margin-top: 10px;">
-      <button class="action-btn" id="share-site-home" type="button">分享此網站</button>
-    </div>
   </div>
 
   <section class="cards" id="cards" aria-live="polite">
@@ -493,6 +489,11 @@ footer{
     <div class="slot"><div class="ph">輔星</div></div>
     <div class="slot"><div class="ph">長生</div></div>
   </section>
+
+  <!-- 首頁專用：長生牌下方的「分享此網站」按鈕 -->
+  <div id="home-share-area" style="margin-top: 24px;">
+    <button class="action-btn" id="share-site-home" type="button">分享此網站</button>
+  </div>
 
   <!-- 截圖模式專用：完整提示句與置中返回按鈕 -->
   <div class="screenshot-exit-area" id="screenshot-exit-area">
@@ -730,6 +731,7 @@ function stopBgm(){
 let cur=null, drawTime="", userQuestionText="", busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
 const $welcome = document.getElementById("welcome-section");
+const $homeShareArea = document.getElementById("home-share-area");
 const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual"), $openNotice = document.getElementById("open-notice");
 const $noticeModal = document.getElementById("notice-modal"), $closeNotice = document.getElementById("close-notice");
 const $userQuestionInput = document.getElementById("user-question");
@@ -755,6 +757,7 @@ function getFormattedTime() {
 
 function showResultView(){
   $welcome.hidden = true;
+  $homeShareArea.hidden = true;
   $a.hidden = false;
 }
 
@@ -763,6 +766,7 @@ function resetDraw(){
   userQuestionText = "";
   $userQuestionInput.value = "";
   $welcome.hidden = false;
+  $homeShareArea.hidden = false;
   $a.hidden = true;
   $c.innerHTML = '<div class="slot"><div class="ph">主星</div></div><div class="slot"><div class="ph">輔星</div></div><div class="slot"><div class="ph">長生</div></div>';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -961,8 +965,6 @@ function exitScreenshotMode(){
   document.getElementById("snd-group").style.pointerEvents = "auto";
   document.getElementById("open-notice").style.opacity = "1";
   document.getElementById("open-notice").style.pointerEvents = "auto";
-  $a.style.display = "flex";
-  $a.style.opacity = "1";
   $a.style.display = "flex";
   $a.style.opacity = "1";
   $a.style.pointerEvents = "auto";
