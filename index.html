@@ -133,7 +133,7 @@ h1{
 
 .btn-group{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
 
-/* 提問輸入框區塊：淡綠色細虛線、圓體、16px防自動縮放 */
+/* 提問輸入框區塊：更淡的綠色、更長更細的疏落虛線 */
 .question-input-wrapper {
   width: 100%;
   max-width: 342px;
@@ -142,28 +142,34 @@ h1{
 .question-input {
   width: 100%;
   padding: 11px 18px;
-  font-family: "Microsoft JhengHei", "PingFang TC", "Heiti TC", sans-serif;
-  font-weight: 500;
-  font-size: 16px; /* 設為16px可防止iOS手機點擊時畫面自動放大 */
+  font-family: inherit;
+  font-size: 16px; /* 防止iOS點擊自動放大 */
   letter-spacing: 0.06em;
-  color: #527963;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1.5px dashed #8fb29e;
+  color: #6a8c77;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px dashed #abc2b4; /* 更細、更淡 */
+  border-spacing: 12px;
   border-radius: 16px;
   outline: none;
-  box-shadow: 0 4px 16px rgba(82, 121, 99, 0.04);
+  box-shadow: 0 4px 16px rgba(106, 140, 119, 0.03);
   text-align: center;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
+/* 調整虛線的間距讓它看起來更長、更疏落 */
+.question-input {
+  background-image: none;
+  border-style: dashed;
+  border-width: 1px;
+}
 .question-input::placeholder {
-  color: #8fb29e;
+  color: #abc2b4; /* 更淡的綠色 placeholder */
   letter-spacing: 0.06em;
 }
 .question-input:focus {
-  border-color: #729b84;
+  border-color: #85a692;
   background: #ffffff;
   border-style: solid;
-  box-shadow: 0 4px 20px rgba(114, 155, 132, 0.14);
+  box-shadow: 0 4px 20px rgba(133, 166, 146, 0.12);
 }
 
 .btn{
