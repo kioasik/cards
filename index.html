@@ -222,56 +222,56 @@ h1{
   opacity: 1;
 }
 
+/* 手動抽牌彈跳視窗（3階段階層式卡牌佈局） */
 #manual-modal{
-  position:fixed; inset:0; background:rgba(42,35,48,0.75); backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-  z-index:50; display:flex; justify-content:center; align-items:center; padding:20px; overflow-y:auto;
+  position:fixed; inset:0; background:rgba(42,35,48,0.82); backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:50; display:flex; justify-content:center; align-items:center; padding:16px; overflow-y:auto;
 }
 .modal-box{
-  background:var(--bg1); width:100%; max-width:750px; border-radius:24px; padding:28px 20px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.3); border:1px solid var(--line); text-align:left;
-  max-height:90vh; overflow-y:auto;
+  background:var(--bg1); width:100%; max-width:680px; border-radius:24px; padding:28px 20px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.4); border:1px solid var(--line); text-align:center;
+  max-height:92vh; overflow-y:auto;
 }
-.modal-title{font-size:20px; font-weight:700; letter-spacing:.2em; text-align:center; margin-bottom:6px; color:var(--text)}
-.modal-subtitle{font-size:13px; color:var(--muted); text-align:center; letter-spacing:.1em; margin-bottom:24px}
-.deck-section{margin-bottom:20px}
-.deck-label{font-size:14px; font-weight:600; color:var(--text); letter-spacing:.1em; margin-bottom:8px; border-left:3px solid var(--accent); padding-left:8px}
+.modal-title{font-size:20px; font-weight:700; letter-spacing:.2em; margin-bottom:4px; color:var(--text)}
+.modal-subtitle{font-size:13px; color:var(--muted); letter-spacing:.1em; margin-bottom:20px}
 
-.deck-wrapper { position: relative; }
-.deck-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0; right: 0; bottom: 12px; width: 36px;
-  background: linear-gradient(90deg, transparent, var(--bg1));
-  pointer-events: none;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+/* 卡牌立體堆疊排列區 */
+.card-stack-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0 24px;
+  padding: 10px 0;
 }
-
-.deck-scroll{
-  display:flex; gap:10px; overflow-x:auto; padding:6px 4px 12px; scroll-behavior:smooth;
-  scrollbar-width:thin; scrollbar-color: var(--accent) var(--line);
+.card-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .card-back{
-  flex:0 0 54px; height:78px; 
+  width: 52px; height: 76px; 
   background: linear-gradient(135deg, #201a24, #312838); 
   border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); 
   border-radius:8px;
   cursor:pointer; position:relative; 
-  transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s; 
+  transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s, box-shadow .15s; 
   display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
+  box-shadow: -3px 4px 10px rgba(0,0,0,0.3);
 }
-.card-back:hover{transform:translateY(-3px); border-color: var(--accent);}
+.card-back:hover{transform:translateY(-4px); border-color: var(--accent); box-shadow: -4px 6px 14px rgba(126,93,149,0.4);}
 .card-back:active{transform:scale(0.95)!important}
 .card-back.selected{
-  border:2px solid var(--accent-d); box-shadow:0 0 12px rgba(126,93,149,0.6); transform:translateY(-4px);
+  border:2px solid var(--accent-d); box-shadow:0 0 14px rgba(126,93,149,0.7); transform:translateY(-6px);
 }
 .card-back.selected::after{
   content:'✓'; position:absolute; top:-6px; right:-6px; background:var(--accent-d); color:#fff;
   font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
 }
-.modal-actions{display:flex; justify-content:center; gap:14px; margin-top:24px}
+.modal-actions{display:flex; justify-content:center; gap:14px; margin-top:20px}
 
 footer{
   margin-top: 48px;
@@ -291,6 +291,7 @@ footer{
   }
   .slot{aspect-ratio:3/4.3}
   .consultant-tip { font-size: 12px; }
+  .card-back { width: 44px; height: 64px; }
 }
 @media (prefers-reduced-motion:reduce){.card{animation:none}}
 </style>
@@ -348,31 +349,13 @@ footer{
   <footer>Made with 💜 by YAN-HAN</footer>
 </main>
 
+<!-- 分階段手動抽牌彈跳視窗 -->
 <div id="manual-modal" hidden>
   <div class="modal-box">
-    <div class="modal-title">手動選牌</div>
-    <div class="modal-subtitle">請左右滑動牌堆，從每組中各選擇一張卡片</div>
+    <div class="modal-title" id="modal-title">手動選牌</div>
+    <div class="modal-subtitle" id="modal-subtitle">請從下方牌堆中選擇一張卡片</div>
     
-    <div class="deck-section">
-      <div class="deck-label" id="lbl-m">主星牌 (14張) - 已選 0/1</div>
-      <div class="deck-wrapper">
-        <div class="deck-scroll" id="deck-main"></div>
-      </div>
-    </div>
-    
-    <div class="deck-section">
-      <div class="deck-label" id="lbl-a">輔星牌 (18張) - 已選 0/1</div>
-      <div class="deck-wrapper">
-        <div class="deck-scroll" id="deck-aux"></div>
-      </div>
-    </div>
-    
-    <div class="deck-section">
-      <div class="deck-label" id="lbl-l">長生牌 (12張) - 已選 0/1</div>
-      <div class="deck-wrapper">
-        <div class="deck-scroll" id="deck-life"></div>
-      </div>
-    </div>
+    <div class="card-stack-area" id="stack-area"></div>
 
     <div class="modal-actions">
       <button class="btn btn-purple" id="modal-confirm" type="button" disabled style="opacity:0.5;">確認抽牌</button>
@@ -525,10 +508,13 @@ const $c=document.getElementById("cards"), $a=document.getElementById("actions")
 const $welcome = document.getElementById("welcome-section");
 const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual");
 const $modal = document.getElementById("manual-modal");
-const $deckMain = document.getElementById("deck-main"), $deckAux = document.getElementById("deck-aux"), $deckLife = document.getElementById("deck-life");
+const $modalTitle = document.getElementById("modal-title");
+const $modalSubtitle = document.getElementById("modal-subtitle");
+const $stackArea = document.getElementById("stack-area");
 const $modalConfirm = document.getElementById("modal-confirm"), $modalCancel = document.getElementById("modal-cancel");
 
-let selectedMain = null, selectedAux = null, selectedLife = null;
+let manualStep = 1; // 1: 主星, 2: 輔星, 3: 長生
+let tempMain = null, tempAux = null, tempLife = null, currentSelected = null;
 
 function getFormattedTime() {
   const now = new Date();
@@ -565,67 +551,119 @@ function quickDraw(){
     drawTime = getFormattedTime();
     sound();
     showResultView();
-    $c.innerHTML=cardHTML(0,"主星",m,0)+cardHTML(1,"輔星",a,0.2)+cardHTML(2,"長生",l,0.4);
-    $t.textContent="";
-    busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;
+    // 一鍵抽卡依序揭曉
+    $c.innerHTML = '<div class="slot"><div class="ph">主星</div></div><div class="slot"><div class="ph">輔星</div></div><div class="slot"><div class="ph">長生</div></div>';
+    setTimeout(() => {
+      sound();
+      $c.children[0].outerHTML = cardHTML(0, "主星", cur.m, 0);
+    }, 400);
+    setTimeout(() => {
+      sound();
+      $c.children[1].outerHTML = cardHTML(1, "輔星", cur.a, 0);
+    }, 900);
+    setTimeout(() => {
+      sound();
+      $c.children[2].outerHTML = cardHTML(2, "長生", cur.l, 0);
+      $t.textContent="";
+      busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;
+    }, 1400);
   }, 450);
 }
 
 function openManualModal(){
-  selectedMain = null; selectedAux = null; selectedLife = null;
-  updateModalState();
-  buildDeck($deckMain, MAIN, 'main');
-  buildDeck($deckAux, AUX, 'aux');
-  buildDeck($deckLife, LIFE, 'life');
+  manualStep = 1;
+  tempMain = null; tempAux = null; tempLife = null; currentSelected = null;
+  setupManualStep();
   $modal.hidden = false;
 }
 
-function buildDeck(container, dataArr, type){
-  container.innerHTML = '';
-  dataArr.forEach((item) => {
-    const el = document.createElement('div');
-    el.className = 'card-back';
-    el.innerHTML = '<svg style="width:26px;height:26px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.3"/></svg>';
-    el.onclick = () => {
-      container.querySelectorAll('.card-back').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      if(type==='main') selectedMain = item;
-      if(type==='aux') selectedAux = item;
-      if(type==='life') selectedLife = item;
-      updateModalState();
-    };
-    container.appendChild(el);
-  });
-}
+function setupManualStep(){
+  currentSelected = null;
+  $modalConfirm.disabled = true;
+  $modalConfirm.style.opacity = '0.5';
 
-function updateModalState(){
-  document.getElementById('lbl-m').textContent = `主星牌 (14張) - 已選 ${selectedMain ? 1 : 0}/1`;
-  document.getElementById('lbl-a').textContent = `輔星牌 (18張) - 已選 ${selectedAux ? 1 : 0}/1`;
-  document.getElementById('lbl-l').textContent = `長生牌 (12張) - 已選 ${selectedLife ? 1 : 0}/1`;
-
-  if(selectedMain && selectedAux && selectedLife){
-    $modalConfirm.disabled = false;
-    $modalConfirm.style.opacity = '1';
-  } else {
-    $modalConfirm.disabled = true;
-    $modalConfirm.style.opacity = '0.5';
+  if(manualStep === 1){
+    $modalTitle.textContent = "✧ 手動抽牌 ── 主星牌";
+    $modalSubtitle.textContent = "請從下方 14 張主星牌中選擇 1 張";
+    buildStack(MAIN, [5, 5, 4], (item) => { currentSelected = item; updateConfirmState(); });
+  } else if(manualStep === 2){
+    $modalTitle.textContent = "✧ 手動抽牌 ── 輔星牌";
+    $modalSubtitle.textContent = "請從下方 18 張輔星牌中選擇 1 張";
+    buildStack(AUX, [6, 6, 6], (item) => { currentSelected = item; updateConfirmState(); });
+  } else if(manualStep === 3){
+    $modalTitle.textContent = "✧ 手動抽牌 ── 長生牌";
+    $modalSubtitle.textContent = "請從下方 12 張長生牌中選擇 1 張";
+    buildStack(LIFE, [4, 4, 4], (item) => { currentSelected = item; updateConfirmState(); });
+    $modalConfirm.textContent = "完成抽牌";
   }
 }
 
-function confirmManualDraw(){
-  if(!selectedMain || !selectedAux || !selectedLife) return;
-  cur = { m: selectedMain, a: selectedAux, l: selectedLife };
-  drawTime = getFormattedTime();
-  $modal.hidden = true;
+function buildStack(dataArr, rowCounts, onSelect){
+  $stackArea.innerHTML = '';
+  let dataIndex = 0;
   
-  $c.innerHTML = '<div class="slot"><div class="ph" style="animation: pulse 1s infinite;">翻牌中...</div></div>'.repeat(3);
-  
-  setTimeout(() => {
-    sound();
+  rowCounts.forEach(count => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'card-row';
+    for(let i=0; i<count && dataIndex < dataArr.length; i++){
+      const item = dataArr[dataIndex++];
+      const el = document.createElement('div');
+      el.className = 'card-back';
+      el.innerHTML = '<svg style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.3"/></svg>';
+      el.onclick = () => {
+        $stackArea.querySelectorAll('.card-back').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        onSelect(item);
+      };
+      rowEl.appendChild(el);
+    }
+    $stackArea.appendChild(rowEl);
+  });
+}
+
+function updateConfirmState(){
+  if(currentSelected){
+    $modalConfirm.disabled = false;
+    $modalConfirm.style.opacity = '1';
+  }
+}
+
+function confirmManualStep(){
+  if(!currentSelected) return;
+  if(manualStep === 1){
+    tempMain = currentSelected;
+    manualStep = 2;
+    setupManualStep();
+  } else if(manualStep === 2){
+    tempAux = currentSelected;
+    manualStep = 3;
+    setupManualStep();
+  } else if(manualStep === 3){
+    tempLife = currentSelected;
+    cur = { m: tempMain, a: tempAux, l: tempLife };
+    drawTime = getFormattedTime();
+    $modal.hidden = true;
+    
+    // 初始化空白預留槽，準備依序揭曉
     showResultView();
-    $c.innerHTML = cardHTML(0,"主星",cur.m,0) + cardHTML(1,"輔星",cur.a,0.2) + cardHTML(2,"長生",cur.l,0.4);
-    $t.textContent = "";
-  }, 350);
+    $c.innerHTML = '<div class="slot"><div class="ph">主星</div></div><div class="slot"><div class="ph">輔星</div></div><div class="slot"><div class="ph">長生</div></div>';
+    $a.style.opacity = "0"; // 先隱藏下方按鈕，等三張牌都翻開後再顯示
+    
+    setTimeout(() => {
+      sound();
+      $c.children[0].outerHTML = cardHTML(0, "主星", cur.m, 0);
+    }, 400);
+    setTimeout(() => {
+      sound();
+      $c.children[1].outerHTML = cardHTML(1, "輔星", cur.a, 0);
+    }, 900);
+    setTimeout(() => {
+      sound();
+      $c.children[2].outerHTML = cardHTML(2, "長生", cur.l, 0);
+      $t.textContent = "";
+      $a.style.opacity = "1"; // 揭曉完畢，顯示操作按鈕
+    }, 1400);
+  }
 }
 
 function toast(m){
@@ -687,7 +725,7 @@ function exitScreenshotMode(){
 $btnQuick.addEventListener("click", quickDraw);
 $btnManual.addEventListener("click", openManualModal);
 $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
-$modalConfirm.addEventListener("click", confirmManualDraw);
+$modalConfirm.addEventListener("click", confirmManualStep);
 document.getElementById("copy").addEventListener("click", copy);
 document.getElementById("save-img").addEventListener("click", enterScreenshotMode);
 document.getElementById("exit-screenshot").addEventListener("click", exitScreenshotMode);
