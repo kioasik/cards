@@ -96,7 +96,7 @@ h1{
   font-size:15px; 
   line-height:2.0; 
   letter-spacing:.08em; 
-  margin:0 auto 30px; 
+  margin:0 auto 24px; 
   max-width:32em;
   white-space: pre-line;
 }
@@ -119,6 +119,10 @@ h1{
 .btn-purple{
   background: linear-gradient(135deg, var(--accent), var(--accent-d));
   box-shadow: 0 8px 22px rgba(126,93,149,0.3);
+}
+.btn-green{
+  background: linear-gradient(135deg, #729b84, #527963);
+  box-shadow: 0 8px 22px rgba(82,121,99,0.3);
 }
 
 .snd-group{
@@ -222,8 +226,8 @@ h1{
   opacity: 1;
 }
 
-/* 手動抽牌彈跳視窗 */
-#manual-modal{
+/* 共通彈跳視窗底色 */
+.modal-overlay{
   position:fixed; inset:0; background:rgba(42,35,48,0.82); backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);
   z-index:50; display:flex; justify-content:center; align-items:center; padding:16px; overflow-y:auto;
@@ -236,7 +240,70 @@ h1{
 .modal-title{font-size:20px; font-weight:700; letter-spacing:.2em; margin-bottom:4px; color:var(--text)}
 .modal-subtitle{font-size:13px; color:var(--muted); letter-spacing:.1em; margin-bottom:20px}
 
-/* 卡牌立體堆疊排列區（2排，放大尺寸） */
+/* 占卜須知視窗內部精美排版樣式 */
+.notice-content {
+  text-align: left;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.notice-intro {
+  font-size: 14.5px;
+  color: var(--text);
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--line);
+}
+.notice-item {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(130,100,150,0.04);
+}
+.notice-item h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-d);
+  margin: 0 0 6px;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.notice-item p {
+  font-size: 13.5px;
+  color: #554d5e;
+  margin: 0;
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+}
+.notice-quote {
+  background: linear-gradient(135deg, rgba(157,127,178,0.1), rgba(126,93,149,0.15));
+  border-left: 4px solid var(--accent);
+  border-radius: 0 14px 14px 0;
+  padding: 16px;
+  margin-top: 4px;
+}
+.notice-quote h4 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--accent-d);
+  margin: 0 0 6px;
+  letter-spacing: 0.1em;
+}
+.notice-quote p {
+  font-size: 13.5px;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.8;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+/* 手動抽牌彈跳視窗 */
 .card-stack-area {
   display: flex;
   flex-direction: column;
@@ -260,7 +327,7 @@ h1{
   transition:transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color .15s, box-shadow .15s; 
   display:flex; flex-direction:column; align-items:center; justify-content:center; color: #d1bce3;
   box-shadow: -5px 5px 14px rgba(0,0,0,0.4);
-  margin-left: -28px; /* 完美堆疊感 */
+  margin-left: -28px;
 }
 .card-row .card-back:first-child {
   margin-left: 0;
@@ -329,6 +396,7 @@ footer{
     <div class="btn-group">
       <button class="btn btn-orange" id="draw-quick" type="button">☽ 一鍵抽卡</button>
       <button class="btn btn-purple" id="draw-manual" type="button">✧ 手動抽卡</button>
+      <button class="btn btn-green" id="open-notice" type="button">📖 占卜須知</button>
     </div>
   </div>
 
@@ -361,8 +429,61 @@ footer{
   <footer>Made with 💜 by YAN-HAN</footer>
 </main>
 
+<!-- 占卜須知說明視窗 -->
+<div class="modal-overlay" id="notice-modal" hidden>
+  <div class="modal-box" style="max-width: 650px;">
+    <div class="modal-title">📖 占卜須知指南</div>
+    <div class="modal-subtitle">請在抽牌前撥冗閱讀，讓占卜指引更為清晰</div>
+    
+    <div class="notice-content">
+      <div class="notice-intro">
+        為了讓占卜結果更清晰、準確，請在抽牌前留意以下事項：
+      </div>
+      
+      <div class="notice-item">
+        <h3>✦ 一、一事不二問</h3>
+        <p>同一件事請勿反覆抽牌、重複占卜。若事情有新的發展或條件改變，再進行下一次占卜。（若不確定提問方向，可以和占卜師先討論）</p>
+      </div>
+
+      <div class="notice-item">
+        <h3>✦ 二、以三個月內的事情為限</h3>
+        <p>紫靈牌適合占卜近期事件及短期發展，建議以<strong>未來三個月內</strong>可能發生的事情為主，避免詢問過於遙遠的未來。</p>
+      </div>
+
+      <div class="notice-item">
+        <h3>✦ 三、問題越明確越好</h3>
+        <p>占卜前請先釐清自己真正想知道的事情，盡量提出具體、明確的問題，避免過於籠統或模糊的提問。</p>
+      </div>
+
+      <div class="notice-item">
+        <h3>✦ 四、一次專注於一個問題</h3>
+        <p>請勿將多個不相關的問題混合在同一次占卜中。一次占卜聚焦一件事情，能讓牌卡呈現的訊息更容易解讀。</p>
+      </div>
+
+      <div class="notice-item">
+        <h3>✦ 五、保持平靜，避免情緒化占卜</h3>
+        <p>當心情過於焦慮、憤怒、悲傷，或急於得到特定答案時，建議先讓自己沉澱，再進行占卜。</p>
+      </div>
+
+      <div class="notice-item">
+        <h3>✦ 六、占卜結果僅供參考</h3>
+        <p>牌卡提供的是一種趨勢觀察與自我探索的參考，並非絕對的命運定論。未來仍會受到個人選擇、環境及外在因素影響，請理性看待占卜結果。</p>
+      </div>
+
+      <div class="notice-quote">
+        <h4>☽ 最後，請記得：</h4>
+        <p>占卜不是為了尋求一個自己想聽的答案，而是透過牌卡，重新看見事情的可能性與自己尚未察覺的方向。</p>
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top: 24px;">
+      <button class="btn btn-purple" id="close-notice" type="button" style="padding: 10px 36px; font-size: 15px;">我知道了</button>
+    </div>
+  </div>
+</div>
+
 <!-- 分階段手動抽牌彈跳視窗 -->
-<div id="manual-modal" hidden>
+<div class="modal-overlay" id="manual-modal" hidden>
   <div class="modal-box">
     <div class="modal-title" id="modal-title">手動選牌</div>
     <div class="modal-subtitle" id="modal-subtitle">請從下方牌堆中選擇一張卡片</div>
@@ -518,7 +639,9 @@ function stopBgm(){
 let cur=null, drawTime="", busy=false, tt;
 const $c=document.getElementById("cards"), $a=document.getElementById("actions"), $t=document.getElementById("toast");
 const $welcome = document.getElementById("welcome-section");
-const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual");
+const $btnQuick = document.getElementById("draw-quick"), $btnManual = document.getElementById("draw-manual"), $openNotice = document.getElementById("open-notice");
+const $noticeModal = document.getElementById("notice-modal"), $closeNotice = document.getElementById("close-notice");
+
 const $modal = document.getElementById("manual-modal");
 const $modalTitle = document.getElementById("modal-title");
 const $modalSubtitle = document.getElementById("modal-subtitle");
@@ -553,7 +676,7 @@ function resetDraw(){
 
 function quickDraw(){
   if(busy)return; busy=true;
-  $btnQuick.disabled=true; $btnManual.disabled=true;
+  $btnQuick.disabled=true; $btnManual.disabled=true; $openNotice.disabled=true;
   
   $c.innerHTML = '<div class="slot"><div class="ph" style="animation: pulse 1s infinite;">洗牌中...</div></div>'.repeat(3);
   
@@ -576,7 +699,7 @@ function quickDraw(){
       sound();
       $c.children[2].outerHTML = cardHTML(2, "長生", cur.l, 0);
       $t.textContent="";
-      busy=false; $btnQuick.disabled=false; $btnManual.disabled=false;
+      busy=false; $btnQuick.disabled=false; $btnManual.disabled=false; $openNotice.disabled=false;
     }, 1400);
   }, 450);
 }
@@ -737,6 +860,9 @@ function exitScreenshotMode(){
 
 $btnQuick.addEventListener("click", quickDraw);
 $btnManual.addEventListener("click", openManualModal);
+$openNotice.addEventListener("click", () => { $noticeModal.hidden = false; });
+$closeNotice.addEventListener("click", () => { $noticeModal.hidden = true; });
+
 $modalCancel.addEventListener("click", () => { $modal.hidden = true; });
 $modalConfirm.addEventListener("click", confirmManualStep);
 document.getElementById("copy").addEventListener("click", copy);
